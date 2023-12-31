@@ -14,10 +14,15 @@ class _FlippingCardState extends State<FlippingCard> {
   Widget build(BuildContext context) {
     return FlipCard(
       front: Card(
-        child: Text("Front page and question ${widget.number}"),
+        elevation: 20,
+        borderOnForeground: true,
+        color: Colors.redAccent.shade400,
+        child: SizedBox(height: 550, width: 280, child: Center(child: Text("Front page and question ${widget.number}"))),
       ),
       back: Card(
-        child: Text("Back page and answers ${widget.number}"),
+        elevation: 20,
+        color: Colors.deepPurpleAccent.shade700,
+        child: SizedBox(height: 550, width: 280, child: Center(child: Text("Back page and answers ${widget.number}"))),
       ),
     );
   }
