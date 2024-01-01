@@ -1,8 +1,19 @@
 import 'package:cards/Widgets/card.dart';
+import 'package:cards/classes/hive_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(FlashcardAdapter());
+  await Hive.openBox<Flashcard>('flashcards');
+  Hive.registerAdapter(SubjectAdapter());
+  await Hive.openBox<Subject>('subjects');
+  Hive.registerAdapter(TopicAdapter());
+  await Hive.openBox<Topic>('topics');
+  Hive.registerAdapter(DeckAdapter());
+  await Hive.openBox<Deck>('decks');
   runApp(const MyApp());
 }
 

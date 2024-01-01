@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AnswerFace extends StatelessWidget {
   final int number;
@@ -11,11 +12,18 @@ class AnswerFace extends StatelessWidget {
       Colors.red,
       Colors.green,
       Colors.blue,
+      Colors.black,
+    ];
+    List<Color> colS = [
+      Color.fromARGB(255, 116, 50, 0),
+      const Color.fromARGB(255, 89, 0, 0),
+      const Color.fromARGB(255, 0, 38, 3),
+      const Color.fromARGB(255, 0, 27, 68),
       Colors.white,
     ];
     return Card(
       elevation: 20,
-      color: col[number],
+      color: colS[number],
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         height: 550,
@@ -24,7 +32,11 @@ class AnswerFace extends StatelessWidget {
           child: Text(
             "Back page and answers $number",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, shadows: [Shadow(color: Colors.grey.shade700, blurRadius: 15)]),
+            style: GoogleFonts.aBeeZee(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: col[number],
+            ),
           ),
         ),
       ),

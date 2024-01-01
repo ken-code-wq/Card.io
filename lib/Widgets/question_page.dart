@@ -12,12 +12,12 @@ class QuestionFace extends StatelessWidget {
       Colors.red,
       Colors.green,
       Colors.blue,
-      Colors.white,
+      Colors.black,
     ];
     return Card(
       elevation: 20,
       borderOnForeground: true,
-      color: Colors.grey.shade900,
+      // color: Colors.grey.shade900,
       child: SizedBox(
         height: 550,
         width: 280,
@@ -33,7 +33,7 @@ class QuestionFace extends StatelessWidget {
                   child: Text(
                     "Front page and question $number",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.pacifico(fontSize: 40, fontWeight: FontWeight.bold, shadows: [Shadow(color: Colors.grey.shade700, blurRadius: 15)]),
+                    style: GoogleFonts.aBeeZee(fontSize: 40, fontWeight: FontWeight.bold, shadows: [Shadow(color: Colors.grey.shade700, blurRadius: 15)]),
                   ),
                 ),
               ),
