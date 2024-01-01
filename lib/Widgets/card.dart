@@ -1,5 +1,9 @@
+import 'package:cards/Widgets/question_page.dart';
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
+
+import 'answer_page.dart';
 
 class FlippingCard extends StatefulWidget {
   final int number;
@@ -10,20 +14,23 @@ class FlippingCard extends StatefulWidget {
 }
 
 class _FlippingCardState extends State<FlippingCard> {
+  FlipCardController cardController = FlipCardController();
+
   @override
   Widget build(BuildContext context) {
+    try {
+      if (!cardController.state!.isFront) {
+        cardController.toggleCardWithoutAnimation();
+      }
+    } catch (e) {
+      print(e);
+    }
     return FlipCard(
-      front: Card(
-        elevation: 20,
-        borderOnForeground: true,
-        color: Colors.redAccent.shade400,
-        child: SizedBox(height: 550, width: 280, child: Center(child: Text("Front page and question ${widget.number}"))),
+      controller: cardController,
+      front: QuestionFace(
+        number: widget.number,
       ),
-      back: Card(
-        elevation: 20,
-        color: Colors.deepPurpleAccent.shade700,
-        child: SizedBox(height: 550, width: 280, child: Center(child: Text("Back page and answers ${widget.number}"))),
-      ),
+      back: AnswerFace(number: widget.number),
     );
   }
 }

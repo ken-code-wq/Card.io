@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -61,10 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: CardSwiper(
                 controller: controller,
                 cardsCount: cards.length,
-                allowedSwipeDirection: AllowedSwipeDirection.symmetric(horizontal: true),
+                // allowedSwipeDirection: AllowedSwipeDirection.symmetric(horizontal: true),
                 scale: .8,
                 onSwipe: _onSwipe,
-                onUndo: _onUndo,
                 numberOfCardsDisplayed: 3,
                 backCardOffset: const Offset(40, 10),
                 padding: const EdgeInsets.only(left: 40.0, top: 50),
@@ -75,38 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   verticalThresholdPercentage,
                 ) =>
                     cards[index],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FloatingActionButton(
-                    onPressed: controller.undo,
-                    child: const Icon(Icons.rotate_left),
-                  ),
-                  FloatingActionButton(
-                    onPressed: controller.swipe,
-                    child: const Icon(Icons.rotate_right),
-                  ),
-                  FloatingActionButton(
-                    onPressed: controller.swipeLeft,
-                    child: const Icon(Icons.keyboard_arrow_left),
-                  ),
-                  FloatingActionButton(
-                    onPressed: controller.swipeRight,
-                    child: const Icon(Icons.keyboard_arrow_right),
-                  ),
-                  FloatingActionButton(
-                    onPressed: controller.swipeTop,
-                    child: const Icon(Icons.keyboard_arrow_up),
-                  ),
-                  FloatingActionButton(
-                    onPressed: controller.swipeBottom,
-                    child: const Icon(Icons.keyboard_arrow_down),
-                  ),
-                ],
               ),
             ),
           ],
@@ -139,7 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       );
-    } else {
+      return true;
+    } else if (direction == CardSwiperDirection.left) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),
@@ -155,18 +124,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       );
+      return true;
+    } else {
+      return false;
     }
-    return true;
-  }
-
-  bool _onUndo(
-    int? previousIndex,
-    int currentIndex,
-    CardSwiperDirection direction,
-  ) {
-    debugPrint(
-      'The card $currentIndex was undod from the ${direction.name}',
-    );
-    return true;
   }
 }
