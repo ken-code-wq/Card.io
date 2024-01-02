@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
+
+import '../classes/hive_adapter.dart';
 
 class AnswerFace extends StatelessWidget {
   final int number;
@@ -7,6 +10,7 @@ class AnswerFace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cards = Hive.box<Flashcard>('flashcards');
     List<Color> col = [
       Colors.amber,
       Colors.red,
@@ -21,21 +25,22 @@ class AnswerFace extends StatelessWidget {
       const Color.fromARGB(255, 0, 27, 68),
       Colors.white,
     ];
+    String none = "none";
     return Card(
       elevation: 20,
-      color: colS[number],
+      color: colS[number % 4],
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         height: 550,
         width: 280,
         child: Center(
           child: Text(
-            "Back page and answers $number",
+            "${Hive.box<Flashcard>('flashcards').values.toList()[number]?.answer ?? none}",
             textAlign: TextAlign.center,
             style: GoogleFonts.aBeeZee(
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: col[number],
+              color: col[number % 4],
             ),
           ),
         ),

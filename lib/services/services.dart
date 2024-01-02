@@ -5,12 +5,12 @@ import 'package:hive/hive.dart';
 
 import '../classes/hive_adapter.dart';
 
-final cards = Hive.box<Flashcard>('flashcards');
+final cardss = Hive.box<Flashcard>('flashcards');
 final subjects = Hive.box<Subject>('subjects');
 final topics = Hive.box<Topic>('topics');
 final decks = Hive.box<Deck>('decks');
 
-final int cardLength = cards.length;
+final int cardLength = cardss.length;
 final int subjectsLength = subjects.length;
 final int topicsLength = topics.length;
 final int decksLength = decks.length;
@@ -26,8 +26,8 @@ class CardServices {
     required int usefullness,
     required List<int> fonts,
   }) async {
-    await cards.put(
-      cardLength,
+    await cardss.put(
+      id,
       Flashcard(
         id: id,
         topic_id: topic_id,
@@ -48,7 +48,7 @@ class CardServices {
   Future removeCard({
     required int id,
   }) async {
-    await cards.delete(id);
+    await Hive.box<Flashcard>('flashcards').deleteAt(id);
   }
 
   Future editCard({
@@ -68,8 +68,8 @@ class CardServices {
     int? usefullness,
     List<int>? fonts,
   }) async {
-    final card = cards.get(id);
-    await cards.put(
+    final card = cardss.get(id);
+    await cardss.put(
       cardLength,
       Flashcard(
         id: id,
