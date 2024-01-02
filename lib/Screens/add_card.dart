@@ -57,6 +57,7 @@ class _AddCartState extends State<AddCart> {
               difficulty_user: 3,
               usefullness: 5,
               fonts: [0, 0],
+              isImage: false,
             );
             Navigator.pop(context);
           } else {

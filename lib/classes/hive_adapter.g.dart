@@ -32,13 +32,15 @@ class FlashcardAdapter extends TypeAdapter<Flashcard> {
       ratings: (fields[12] as List).cast<int>(),
       fonts: (fields[13] as List).cast<int>(),
       adjusted_difficulty: fields[14] as double?,
+      isImage: fields[15] as bool,
+      imageURLs: (fields[16] as List?)?.cast<dynamic>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Flashcard obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -68,7 +70,11 @@ class FlashcardAdapter extends TypeAdapter<Flashcard> {
       ..writeByte(13)
       ..write(obj.fonts)
       ..writeByte(14)
-      ..write(obj.adjusted_difficulty);
+      ..write(obj.adjusted_difficulty)
+      ..writeByte(15)
+      ..write(obj.isImage)
+      ..writeByte(16)
+      ..write(obj.imageURLs);
   }
 
   @override

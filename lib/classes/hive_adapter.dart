@@ -51,6 +51,12 @@ class Flashcard {
   @HiveField(14)
   double? adjusted_difficulty;
 
+  @HiveField(15)
+  bool isImage;
+
+  @HiveField(16)
+  List? imageURLs;
+
   Flashcard({
     required this.id,
     required this.topic_id,
@@ -67,6 +73,8 @@ class Flashcard {
     required this.ratings,
     required this.fonts,
     this.adjusted_difficulty,
+    required this.isImage,
+    this.imageURLs,
   });
 
   // Flashcard({
@@ -144,13 +152,13 @@ class Topic {
   int font;
 
   @HiveField(5)
-  int deck_id;
+  int? deck_id;
 
   @HiveField(6)
   int difficulty;
 
   @HiveField(7)
-  int rate_of_appearance;
+  int? rate_of_appearance;
 
   @HiveField(8)
   String? subtitle;
@@ -161,9 +169,9 @@ class Topic {
     required this.card_ids,
     required this.color,
     required this.font,
-    required this.deck_id,
+    this.deck_id,
     required this.difficulty,
-    required this.rate_of_appearance,
+    this.rate_of_appearance,
     this.subtitle,
   });
 }
@@ -177,13 +185,13 @@ class Deck {
   String name;
 
   @HiveField(2)
-  List<int> card_ids;
+  List<int>? card_ids;
 
   @HiveField(3)
-  List<int> subject_ids;
+  List<int>? subject_ids;
 
   @HiveField(4)
-  List<int> topic_ids;
+  List<int>? topic_ids;
 
   @HiveField(5)
   int color;
@@ -192,19 +200,19 @@ class Deck {
   int font;
 
   @HiveField(7)
-  String subtitle;
+  String? subtitle;
 
   @HiveField(8)
   Map? data;
   Deck({
     required this.id,
     required this.name,
-    required this.card_ids,
-    required this.subject_ids,
-    required this.topic_ids,
+    this.card_ids,
+    this.subject_ids,
+    this.topic_ids,
     required this.color,
     required this.font,
-    required this.subtitle,
+    this.subtitle,
     this.data,
   });
 }
