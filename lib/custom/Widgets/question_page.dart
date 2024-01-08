@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 
-import '../classes/hive_adapter.dart';
+import '../../classes/hive_adapter.dart';
 
 class QuestionFace extends StatelessWidget {
   final int number;
@@ -42,7 +42,7 @@ class QuestionFace extends StatelessWidget {
                       child: Text(
                         "${Hive.box<Flashcard>('flashcards').values.toList()[number]?.question ?? none}",
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.aBeeZee(
+                        style: GoogleFonts.acme(
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
                           shadows: [

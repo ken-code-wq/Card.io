@@ -1,4 +1,4 @@
-import 'package:cards/Widgets/question_page.dart';
+import 'package:cards/custom/Widgets/question_page.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';

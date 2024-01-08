@@ -1,5 +1,5 @@
-import 'package:cards/Widgets/card.dart';
-import 'package:cards/Widgets/empty_card.dart';
+import 'package:cards/custom/Widgets/card.dart';
+import 'package:cards/custom/Widgets/empty_card.dart';
 import 'package:cards/classes/hive_adapter.dart';
 import 'package:cards/services/services.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,12 +12,12 @@ import 'Screens/add_card.dart';
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(FlashcardAdapter());
-  await Hive.openBox<Flashcard>('flashcards');
   Hive.registerAdapter(SubjectAdapter());
-  await Hive.openBox<Subject>('subjects');
   Hive.registerAdapter(TopicAdapter());
-  await Hive.openBox<Topic>('topics');
   Hive.registerAdapter(DeckAdapter());
+  await Hive.openBox<Flashcard>('flashcards');
+  await Hive.openBox<Topic>('topics');
+  await Hive.openBox<Subject>('subjects');
   await Hive.openBox<Deck>('decks');
   runApp(const MyApp());
 }
@@ -25,7 +25,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -63,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,7 +93,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         horizontalThresholdPercentage,
                         verticalThresholdPercentage,
                       ) =>
-                          cards.isNotEmpty ? FlippingCard(number: index) : const Empty(),
+                          cards.isNotEmpty
+                              ? GestureDetector(
+                                  onHorizontalDragUpdate: (det) {
+                                    print(det.delta);
+                                  },
+                                  child: FlippingCard(number: index))
+                              : const Empty(),
                     ),
                   );
                 }),
@@ -102,7 +108,23 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, CupertinoPageRoute(builder: (context) => const AddCart()));
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              opaque: false,
+              pageBuilder: (_, __, ___) => const AddCart(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                const begin = Offset(1.0, 0.0);
+                const end = Offset.zero;
+                const curve = Curves.easeInOutCubic;
+
+                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                var offsetAnimation = animation.drive(tween);
+
+                return SlideTransition(position: offsetAnimation, child: child);
+              },
+            ),
+          );
         },
         child: const Icon(Icons.add),
       ),

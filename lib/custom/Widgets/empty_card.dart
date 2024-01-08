@@ -10,7 +10,25 @@ class Empty extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, CupertinoPageRoute(builder: (context) => AddCart()));
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (_, __, ___) => const AddCart(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(1.0, 0.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOutCubic;
+
+              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var offsetAnimation = animation.drive(tween);
+
+              return SlideTransition(position: offsetAnimation, child: child);
+            },
+          ),
+        );
+
+        // Navigator.pushNamed(context, '/addCard');
       },
       child: Card(
         elevation: 20,
@@ -28,7 +46,7 @@ class Empty extends StatelessWidget {
                 child: Text(
                   "No cards available, add a new card",
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.aBeeZee(fontSize: 40, fontWeight: FontWeight.bold, shadows: [Shadow(color: Colors.grey.shade700, blurRadius: 15)]),
+                  style: GoogleFonts.acme(fontSize: 40, fontWeight: FontWeight.bold, shadows: [Shadow(color: Colors.grey.shade700, blurRadius: 15)]),
                 ),
               ),
             ),

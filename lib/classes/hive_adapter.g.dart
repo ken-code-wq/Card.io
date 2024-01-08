@@ -168,9 +168,9 @@ class TopicAdapter extends TypeAdapter<Topic> {
       card_ids: (fields[2] as List).cast<int>(),
       color: fields[3] as int,
       font: fields[4] as int,
-      deck_id: fields[5] as int,
+      deck_id: fields[5] as int?,
       difficulty: fields[6] as int,
-      rate_of_appearance: fields[7] as int,
+      rate_of_appearance: fields[7] as int?,
       subtitle: fields[8] as String?,
     );
   }
@@ -223,12 +223,12 @@ class DeckAdapter extends TypeAdapter<Deck> {
     return Deck(
       id: fields[0] as int,
       name: fields[1] as String,
-      card_ids: (fields[2] as List).cast<int>(),
-      subject_ids: (fields[3] as List).cast<int>(),
-      topic_ids: (fields[4] as List).cast<int>(),
+      card_ids: (fields[2] as List?)?.cast<int>(),
+      subject_ids: (fields[3] as List?)?.cast<int>(),
+      topic_ids: (fields[4] as List?)?.cast<int>(),
       color: fields[5] as int,
       font: fields[6] as int,
-      subtitle: fields[7] as String,
+      subtitle: fields[7] as String?,
       data: (fields[8] as Map?)?.cast<dynamic, dynamic>(),
     );
   }
