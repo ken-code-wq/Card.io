@@ -1,4 +1,7 @@
+import 'package:cards/classes/hive_adapter.dart';
+import 'package:cards/services/services.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../constants/constants.dart';
@@ -11,12 +14,25 @@ class AddTopic extends StatefulWidget {
   State<AddTopic> createState() => _AddTopicState();
 }
 
+int col = 0;
+
+TextEditingController name = TextEditingController();
+
 class _AddTopicState extends State<AddTopic> {
   @override
   Widget build(BuildContext context) {
-    TextEditingController name = TextEditingController();
+    var topics = Hive.box<Topic>('topics');
     return Scaffold(
       backgroundColor: Colors.transparent,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          if (name.text.trim().isNotEmpty) {
+            await TopicServices().create(id: topics.length + 1, name: name.text, color: col, font: 0, difficulty: difficulty_topic);
+            Navigator.pop(context);
+          }
+        },
+        child: const Icon(Icons.done),
+      ),
       body: Dismissible(
         key: const Key('AddTopic'),
         direction: DismissDirection.down,
@@ -77,7 +93,7 @@ class _AddTopicState extends State<AddTopic> {
                         textCapitalization: TextCapitalization.sentences,
                         maxLines: 4,
                         minLines: 1,
-                        decoration: const InputDecoration(hintText: "Question...", border: InputBorder.none),
+                        decoration: const InputDecoration(hintText: "Topic", border: InputBorder.none),
                         keyboardType: TextInputType.name,
                       ).animatedBox.animDuration(const Duration(milliseconds: 500)).easeIn.color(Colors.grey.shade800).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
                       const SizedBox(
@@ -94,8 +110,37 @@ class _AddTopicState extends State<AddTopic> {
                       const SizedBox(
                         height: 40,
                       ),
+                      "Select color".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
+                      const Divider().px20().px2(),
                       const SizedBox(
                         height: 15,
+                      ),
+                      PopupMenuButton(
+                        child: ListTile(
+                          title: const Text("Select your color"),
+                          trailing: CircleAvatar(backgroundColor: Color(boxColor[col])),
+                        ),
+                        onSelected: (value) {
+                          setState(() {
+                            col = value;
+                          });
+                        },
+                        shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        itemBuilder: (BuildContext bc) {
+                          return List.generate(
+                            boxColor.length,
+                            (index) => PopupMenuItem(
+                              value: index,
+                              child: CircleAvatar(backgroundColor: Color(boxColor[index])),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const SizedBox(
+                        height: 70,
                       ),
                     ],
                   ),

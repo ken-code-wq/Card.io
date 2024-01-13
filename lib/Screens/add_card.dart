@@ -1,4 +1,5 @@
 import 'package:cards/constants/constants.dart';
+import 'package:cards/services/tester.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
@@ -73,6 +74,12 @@ class _AddCartState extends State<AddCart> {
                       const SizedBox(
                         height: 20,
                       ),
+                      "Select the topic".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
+                      const Divider().px20().px2(),
+                      topicSelector(),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       "Front of the card".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
                       const Divider().px20().px2(),
                       const SizedBox(
@@ -85,50 +92,108 @@ class _AddCartState extends State<AddCart> {
                         minLines: 1,
                         decoration: const InputDecoration(hintText: "Question...", border: InputBorder.none),
                         keyboardType: TextInputType.name,
+                        onChanged: (val) {
+                          setState(() {});
+                        },
                       ).animatedBox.animDuration(const Duration(milliseconds: 500)).easeIn.color(Colors.grey.shade800).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
                       const SizedBox(
                         height: 40,
                       ),
-                      "Back of the card".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
+                      "Definition".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
                       const Divider().px20().px2(),
                       const SizedBox(
                         height: 15,
                       ),
-                      TextFormField(
-                        onTap: () async {
-                          try {
-                            List<Map> defs = [];
-                            List definitions = await getDefinition(term: "question");
-                            for (Map info in definitions) {
-                              List meanings = info["meanings"];
-                              for (Map partOfSpeech in meanings) {
-                                Map result = {'partOfSpeech': partOfSpeech['partOfSpeech']};
-                                List ds = partOfSpeech['definitions'];
-                                for (Map definition in ds) {
-                                  Map add = {'definition': definition['definition']};
-                                  result.addAll(add);
-                                  //("done $result");
-                                  //("done $add");
-                                  //({'partOfSpeech': partOfSpeech['partOfSpeech'], 'definition': definition['definition']});
-                                  defs.add({
-                                    'partOfSpeech': partOfSpeech['partOfSpeech'],
-                                    'definition': definition['definition'],
-                                  });
+                      AnimatedContainer(
+                        duration: const Duration(microseconds: 900),
+                        child: Column(
+                          children: [
+                            FutureBuilder(
+                                future: definitions(query: question.text.trim()),
+                                builder: (context, snapshot) {
+                                  if (question.text == '' || question.text == null) {
+                                    return const Row();
+                                  } else if (snapshot.hasData) {
+                                    try {
+                                      return SizedBox(
+                                        width: context.screenWidth,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          physics: const BouncingScrollPhysics(),
+                                          child: Row(
+                                            children: List.generate(snapshot.data!.length, (index) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    answer.clear();
+                                                    answer.text = snapshot.data![index]['definition'];
+                                                  });
+                                                },
+                                                child: Container(
+                                                  height: context.screenHeight * 0.15,
+                                                  width: context.screenWidth * 0.3,
+                                                  margin: const EdgeInsets.only(bottom: 15, left: 10),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(15),
+                                                    color: Colors.grey.shade800,
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                                                    child: Text(snapshot.data![index]['definition']),
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                          ),
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      return "No such word".text.makeCentered();
+                                    }
+                                  } else if (snapshot.error != null) {
+                                    return 'Error'.text.makeCentered();
+                                  } else {
+                                    return const CircularProgressIndicator().centered();
+                                  }
+                                }),
+                            TextFormField(
+                              onTap: () async {
+                                try {
+                                  List<Map> defs = [];
+                                  List definitions = await getDefinition(term: question.text.trim());
+                                  for (Map info in definitions) {
+                                    List meanings = info["meanings"];
+                                    for (Map partOfSpeech in meanings) {
+                                      Map result = {'partOfSpeech': partOfSpeech['partOfSpeech']};
+                                      List ds = partOfSpeech['definitions'];
+                                      for (Map definition in ds) {
+                                        Map add = {'definition': definition['definition']};
+                                        result.addAll(add);
+                                        //("done $result");
+                                        //("done $add");
+                                        //({'partOfSpeech': partOfSpeech['partOfSpeech'], 'definition': definition['definition']});
+                                        defs.add({
+                                          'partOfSpeech': partOfSpeech['partOfSpeech'],
+                                          'definition': definition['definition'],
+                                        });
+                                      }
+                                    }
+                                  }
+                                  print(defs);
+                                } catch (e) {
+                                  print(e);
                                 }
-                              }
-                            }
-                            print(defs);
-                          } catch (e) {
-                            print(e);
-                          }
-                        },
-                        controller: answer,
-                        textCapitalization: TextCapitalization.sentences,
-                        decoration: const InputDecoration(hintText: "Type answer", border: InputBorder.none),
-                        keyboardType: TextInputType.multiline,
-                        minLines: 1,
-                        maxLines: 9,
-                      ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(Colors.grey.shade800).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                              },
+                              controller: answer,
+                              textCapitalization: TextCapitalization.sentences,
+                              decoration: const InputDecoration(hintText: "Type answer", border: InputBorder.none),
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              maxLines: 9,
+                            ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(Colors.grey.shade800).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                          ],
+                        ),
+                      ),
                       const SizedBox(
                         height: 40,
                       ),
@@ -143,12 +208,6 @@ class _AddCartState extends State<AddCart> {
                       const SizedBox(
                         height: 40,
                       ),
-                      "Select the topic".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
-                      const Divider().px20().px2(),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      topicSelector(),
                     ],
                   ),
                 ),
@@ -158,6 +217,7 @@ class _AddCartState extends State<AddCart> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'add',
         onPressed: () async {
           if (answer.text.trim().isNotEmpty && question.text.trim().isNotEmpty) {
             await CardServices().createCard(
@@ -170,6 +230,8 @@ class _AddCartState extends State<AddCart> {
               fonts: [0, 0],
               isImage: false,
             );
+            question.clear();
+            answer.clear();
             Navigator.pop(context);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -208,34 +270,60 @@ class _AddCartState extends State<AddCart> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(
-                  data.length,
-                  (index) => InkWell(
-                    borderRadius: BorderRadius.circular(10),
-                    onTap: () {
-                      setState(() {
-                        topic = index;
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 500),
-                      height: context.screenHeight * 0.08 + (topic == index ? 10 : 0),
-                      width: context.screenWidth * 0.2 + (topic == index ? 10 : 0),
-                      margin: const EdgeInsets.only(right: 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey.shade800,
-                        border: Border.fromBorderSide(
-                          BorderSide(
-                            color: topic == index ? Color(levelsBoxes[difficulty_card]['color']) : Colors.transparent,
-                            width: 3,
+                children: List.generate(data.length + 1, (index) {
+                  if (index != data.length) {
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: () {
+                        setState(() {
+                          topic = index;
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        height: context.screenHeight * 0.08 + (topic == index ? 10 : 0),
+                        width: context.screenWidth * 0.4 + (topic == index ? 10 : -40),
+                        margin: const EdgeInsets.only(right: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey.shade800,
+                          border: Border.fromBorderSide(
+                            BorderSide(
+                              color: topic == index ? Color(boxColor[data.values.toList()[index].color]) : Colors.transparent,
+                              width: 3,
+                            ),
                           ),
                         ),
+                        child: "${data.values.toList()[index].name}".text.ellipsis.scale(1.1).fontWeight(FontWeight.w500).makeCentered(),
                       ),
-                      child: "${index}".text.scale(1.1).fontWeight(FontWeight.w500).makeCentered(),
-                    ),
-                  ),
-                ),
+                    );
+                  } else {
+                    return FloatingActionButton(
+                      heroTag: "Topic",
+                      backgroundColor: Colors.grey.shade900,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            opaque: false,
+                            pageBuilder: (_, __, ___) => const AddTopic(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              const begin = Offset(1.0, 0.0);
+                              const end = Offset.zero;
+                              const curve = Curves.easeInOutCubic;
+
+                              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                              var offsetAnimation = animation.drive(tween);
+
+                              return SlideTransition(position: offsetAnimation, child: child);
+                            },
+                          ),
+                        );
+                      },
+                      child: Icon(Icons.add),
+                    );
+                  }
+                }),
               ),
             ).box.height(context.screenHeight * 0.11).width(context.screenWidth).px4.make();
           } else {
@@ -262,7 +350,7 @@ class _AddCartState extends State<AddCart> {
                 },
                 label: "Add Topic".text.make().px64(),
                 backgroundColor: Colors.grey[800],
-                icon: Icon(
+                icon: const Icon(
                   Icons.add,
                   // color: Colors.green[500],
                 ),

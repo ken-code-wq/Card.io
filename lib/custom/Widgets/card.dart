@@ -18,13 +18,13 @@ class _FlippingCardState extends State<FlippingCard> {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      if (!cardController.state!.isFront) {
-        cardController.toggleCardWithoutAnimation();
-      }
-    } catch (e) {
-      print(e);
-    }
+    // try {
+    //   if (!cardController.state!.isFront) {
+    //     cardController.toggleCardWithoutAnimation();
+    //   }
+    // } catch (e) {
+    //   print(e);
+    // }
     return FlipCard(
       controller: cardController,
       front: QuestionFace(

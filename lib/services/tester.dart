@@ -1,14 +1,14 @@
 import 'package:cards/services/definitions.dart';
 
-void main() async {
-  final defs = await definitions();
-  print(defs);
-}
+// void main() async {
+//   // final defs = await definitions();
+//   // print(defs);
+// }
 
-Future<List> definitions() async {
+Future<List> definitions({required String query}) async {
   try {
     List<Map> defs = [];
-    List definitions = await getDefinition(term: "question");
+    List definitions = await getDefinition(term: query);
     for (Map info in definitions) {
       List meanings = info["meanings"];
       for (Map partOfSpeech in meanings) {

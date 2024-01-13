@@ -1,3 +1,4 @@
+import 'package:cards/constants/constants.dart';
 import 'package:cards/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,13 +13,6 @@ class QuestionFace extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cards = Hive.box<Flashcard>('flashcards');
-    List<Color> col = [
-      Colors.amber,
-      Colors.red,
-      Colors.green,
-      Colors.blue,
-      Colors.black,
-    ];
     String none = "none";
     return Card(
       elevation: 20,
@@ -59,30 +53,27 @@ class QuestionFace extends StatelessWidget {
             RotatedBox(
               quarterTurns: 1,
               child: SizedBox(
-                height: 60,
+                height: 70,
                 width: 550,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 8),
+                      margin: EdgeInsets.only(top: 8, left: 10, right: 10),
                       height: 10,
                       width: 500,
                       decoration: BoxDecoration(
-                        color: col[number % 4],
+                        color: Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').values.toList()[number].topic_id].color]),
                         borderRadius: BorderRadius.circular(25),
                       ),
                     ),
-                    RotatedBox(
-                      quarterTurns: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: Text(
-                          number.toString(),
-                          style: GoogleFonts.abel(fontSize: 40, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 4.0),
+                      child: Text(
+                        Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').values.toList()[number].topic_id].name,
+                        style: GoogleFonts.abel(fontSize: 40, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ],

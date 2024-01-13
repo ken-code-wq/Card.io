@@ -1,13 +1,13 @@
-import 'package:cards/custom/Widgets/card.dart';
-import 'package:cards/custom/Widgets/empty_card.dart';
 import 'package:cards/classes/hive_adapter.dart';
-import 'package:cards/services/services.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cards/tabs/add_new.dart';
+import 'package:cards/tabs/home.dart';
+import 'package:cards/tabs/learn.dart';
+import 'package:cards/tabs/library.dart';
+import 'package:cards/tabs/more.dart';
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-import 'Screens/add_card.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -50,151 +50,133 @@ class MyHomePage extends StatefulWidget {
 
 // final c = List.generate(cardBox.length, (index) =>);
 
+int currentIndex = 0;
+List pages = [
+  const Home(),
+  const Library(),
+  const Learn(),
+  const More(),
+];
+List icons = [Icons.home_rounded, Icons.book_rounded, Icons.local_library_rounded, Icons.more_horiz];
+List tabNames = <String>[
+  "Home",
+  "Library",
+  "Learn",
+  "More",
+];
+
 class _MyHomePageState extends State<MyHomePage> {
-  final CardSwiperController controller = CardSwiperController();
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ValueListenableBuilder(
-                valueListenable: Hive.box<Flashcard>('flashcards').listenable(),
-                builder: (context, cards, child) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    width: MediaQuery.of(context).size.width,
-                    child: CardSwiper(
-                      controller: controller,
-                      cardsCount: cards.isNotEmpty ? cards.length : 1,
-                      // allowedSwipeDirection: AllowedSwipeDirection.symmetric(horizontal: true),
-                      scale: .8,
-                      onSwipe: _onSwipe,
-                      numberOfCardsDisplayed: cards.length >= 3
-                          ? 3
-                          : cards.length == 2
-                              ? 2
-                              : 1,
-                      backCardOffset: const Offset(40, 10),
-                      padding: const EdgeInsets.only(left: 25, right: 25, bottom: 25),
-                      cardBuilder: (
-                        context,
-                        index,
-                        horizontalThresholdPercentage,
-                        verticalThresholdPercentage,
-                      ) =>
-                          cards.isNotEmpty
-                              ? GestureDetector(
-                                  onHorizontalDragUpdate: (det) {
-                                    print(det.delta);
-                                  },
-                                  child: FlippingCard(number: index))
-                              : const Empty(),
-                    ),
-                  );
-                }),
-          ],
-        ),
-      ),
+      body: pages[currentIndex],
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        shape: const CircleBorder(),
         onPressed: () {
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              opaque: false,
-              pageBuilder: (_, __, ___) => const AddCart(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                const begin = Offset(1.0, 0.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOutCubic;
-
-                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                var offsetAnimation = animation.drive(tween);
-
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-            ),
-          );
+          showModalBottomSheet(
+              context: context,
+              constraints: BoxConstraints(maxHeight: context.screenHeight * 0.35),
+              builder: (context) {
+                return const AddNew();
+              });
         },
         child: const Icon(Icons.add),
       ),
-    );
-  }
+      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+        backgroundColor: Colors.black,
+        height: context.screenHeight * 0.1,
+        leftCornerRadius: 0,
+        rightCornerRadius: 0,
+        itemCount: 4,
+        tabBuilder: ((index, isActive) {
+          return Tab(
+            child: "${tabNames[index]}".text.color(isActive ? Colors.white : Colors.grey.shade600).make(),
+            icon: Icon(
+              icons[index],
+              color: isActive ? Colors.white : Colors.grey.shade600,
+            ),
+          );
+        }),
+        activeIndex: currentIndex,
+        gapLocation: GapLocation.center,
+        notchSmoothness: NotchSmoothness.verySmoothEdge,
+        onTap: (index) {
+          setState(() => currentIndex = index);
+          print(currentIndex);
+        },
+        //other params
+      ),
+      // bottomNavigationBar: GNav(
+      //   selectedIndex: currentIndex != 2 ? currentIndex : 0,
+      //   onTabChange: (value) {
+      //     if (value != 2) {
+      //       setState(() {
+      //         currentIndex = value;
+      //         print("This $value");
+      //       });
+      //     } else {
+      //       showModalBottomSheet(
+      //           context: context,
+      //           builder: (context) {
+      //             return pages[value];
+      //           });
+      //     }
+      //     print("This! $value");
+      //     print("This1 $currentIndex");
+      //   },
+      //   padding: EdgeInsets.symmetric(horizontal: 10),
+      //   tabs: const [
+      //     GButton(
+      //       backgroundColor: Color.fromARGB(164, 122, 76, 250),
+      //       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      //       icon: Icons.home,
+      //       text: "Home",
+      //     ),
+      //     GButton(
+      //       backgroundColor: Color.fromARGB(164, 122, 76, 250),
+      //       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      //       icon: Icons.book_rounded,
+      //       text: "Library",
+      //     ),
+      //     GButton(
+      //       backgroundColor: Color.fromARGB(164, 122, 76, 250),
+      //       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      //       icon: Icons.local_library_rounded,
+      //       text: "Learn",
+      //     ),
+      //     GButton(
+      //       backgroundColor: Color.fromARGB(164, 122, 76, 250),
+      //       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      //       icon: Icons.more_horiz,
+      //       text: "More",
+      //     ),
+      //   ],
+      // ).box.width(context.screenWidth).height(context.screenHeight * 0.1).padding(EdgeInsets.symmetric(horizontal: 10)).make(),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       PageRouteBuilder(
+      //         opaque: false,
+      //         pageBuilder: (_, __, ___) => const AddCart(),
+      //         transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      //           const begin = Offset(1.0, 0.0);
+      //           const end = Offset.zero;
+      //           const curve = Curves.easeInOutCubic;
 
-  Future<bool> _onSwipe(
-    int previousIndex,
-    int? currentIndex,
-    CardSwiperDirection direction,
-  ) async {
-    debugPrint(
-      'The card $previousIndex was swiped to the ${direction.name}. Now the card $currentIndex is on top',
+      //           var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      //           var offsetAnimation = animation.drive(tween);
+
+      //           return SlideTransition(position: offsetAnimation, child: child);
+      //         },
+      //       ),
+      //     );
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
     );
-    if (direction == CardSwiperDirection.right && cards.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          duration: const Duration(seconds: 1),
-          elevation: 6,
-          backgroundColor: Colors.grey[900],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          behavior: SnackBarBehavior.floating,
-          content: const Text(
-            "Understood 👍",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
-      return true;
-    } else if (direction == CardSwiperDirection.left && cards.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          duration: const Duration(seconds: 1),
-          elevation: 6,
-          backgroundColor: Colors.grey[900],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          behavior: SnackBarBehavior.floating,
-          content: const Text(
-            "Will show this more often 😉 Keep pushing",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
-      return true;
-    } else if (direction == CardSwiperDirection.top && cards.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          duration: const Duration(seconds: 1),
-          elevation: 6,
-          backgroundColor: Colors.red[900],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          behavior: SnackBarBehavior.floating,
-          content: const Text(
-            "Deleted",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
-      Future.delayed(Duration(milliseconds: 210), () async {
-        await CardServices().removeCard(id: currentIndex ?? 0);
-      });
-      return true;
-    } else {
-      return false;
-    }
   }
 }
