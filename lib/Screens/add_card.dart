@@ -10,6 +10,7 @@ import '../custom/Widgets/difficulty_selector.dart';
 import '../custom/custom_physics.dart';
 import '../services/services.dart';
 import 'add_topic.dart';
+import '../services/definitions.dart';
 
 class AddCart extends StatefulWidget {
   const AddCart({super.key});
@@ -94,6 +95,33 @@ class _AddCartState extends State<AddCart> {
                         height: 15,
                       ),
                       TextFormField(
+                        onTap: () async {
+                          try {
+                            List<Map> defs = [];
+                            List definitions = await getDefinition(term: "question");
+                            for (Map info in definitions) {
+                              List meanings = info["meanings"];
+                              for (Map partOfSpeech in meanings) {
+                                Map result = {'partOfSpeech': partOfSpeech['partOfSpeech']};
+                                List ds = partOfSpeech['definitions'];
+                                for (Map definition in ds) {
+                                  Map add = {'definition': definition['definition']};
+                                  result.addAll(add);
+                                  //("done $result");
+                                  //("done $add");
+                                  //({'partOfSpeech': partOfSpeech['partOfSpeech'], 'definition': definition['definition']});
+                                  defs.add({
+                                    'partOfSpeech': partOfSpeech['partOfSpeech'],
+                                    'definition': definition['definition'],
+                                  });
+                                }
+                              }
+                            }
+                            print(defs);
+                          } catch (e) {
+                            print(e);
+                          }
+                        },
                         controller: answer,
                         textCapitalization: TextCapitalization.sentences,
                         decoration: const InputDecoration(hintText: "Type answer", border: InputBorder.none),

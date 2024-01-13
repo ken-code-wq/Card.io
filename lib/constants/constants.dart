@@ -2,12 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-// List<Map> levelsNames = [
-//   {'name': 'Easy', 'color': Colors.green.shade900.value},
-//   {'name': 'Okay', 'color': Colors.blue.shade900},
-//   {'name': 'Hard', 'color': Colors.orange.shade900},
-//   {'name': 'Tough', 'color': Colors.red.shade900},
-// ];
+
 List<Map> levelsBoxes = [
   {'name': 'Easy', 'color': Colors.green.shade500.value},
   {'name': 'Okay', 'color': Colors.blue.shade500.value},

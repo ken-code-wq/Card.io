@@ -42,7 +42,7 @@ class QuestionFace extends StatelessWidget {
                       child: Text(
                         "${Hive.box<Flashcard>('flashcards').values.toList()[number]?.question ?? none}",
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.acme(
+                        style: GoogleFonts.aBeeZee(
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
                           shadows: [

@@ -35,9 +35,9 @@ class AnswerFace extends StatelessWidget {
         width: 280,
         child: Center(
           child: Text(
-            "${Hive.box<Flashcard>('flashcards').values.toList()[number]?.answer ?? none}",
+            "${Hive.box<Flashcard>('flashcards').values.toList()[number].answer ?? none}",
             textAlign: TextAlign.center,
-            style: GoogleFonts.acme(
+            style: GoogleFonts.aBeeZee(
               fontSize: 30,
               fontWeight: FontWeight.bold,
               color: col[number % 4],

@@ -46,7 +46,7 @@ class Empty extends StatelessWidget {
                 child: Text(
                   "No cards available, add a new card",
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.acme(fontSize: 40, fontWeight: FontWeight.bold, shadows: [Shadow(color: Colors.grey.shade700, blurRadius: 15)]),
+                  style: GoogleFonts.aBeeZee(fontSize: 40, fontWeight: FontWeight.bold, shadows: [Shadow(color: Colors.grey.shade700, blurRadius: 15)]),
                 ),
               ),
             ),
