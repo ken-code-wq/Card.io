@@ -11,9 +11,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:cards/config/config.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+// ...
 
 void main() async {
   await Hive.initFlutter();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   Hive.registerAdapter(FlashcardAdapter());
   Hive.registerAdapter(SubjectAdapter());
   Hive.registerAdapter(TopicAdapter());

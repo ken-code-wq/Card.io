@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1066422850226",
+    "project_id": "cards-a632b",
+    "storage_bucket": "cards-a632b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066422850226:android:6ebd029850704ca2712fab",
+        "android_client_info": {
+          "package_name": "com.example.cards"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZo4N_NUlJNsBzNKS_tkfPmNtwcCjK6fo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
