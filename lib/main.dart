@@ -6,8 +6,11 @@ import 'package:cards/tabs/library.dart';
 import 'package:cards/tabs/more.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:cards/config/config.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -19,6 +22,7 @@ void main() async {
   await Hive.openBox<Topic>('topics');
   await Hive.openBox<Subject>('subjects');
   await Hive.openBox<Deck>('decks');
+  await Hive.openBox('prefs');
   runApp(const MyApp());
 }
 
@@ -27,14 +31,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData.dark(
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ValueListenableBuilder(
+      valueListenable: Hive.box('prefs').listenable(),
+      builder: (context, dark, child) => MaterialApp(
+        title: 'Flutter Demo',
+        theme: MyTheme().isDark
+            ? ThemeData.dark(
+                // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                useMaterial3: true,
+              )
+            : ThemeData.light(
+                // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                useMaterial3: true,
+              ),
+        debugShowCheckedModeBanner: false,
+        home: const MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-      debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -57,126 +69,97 @@ List pages = [
   const Learn(),
   const More(),
 ];
-List icons = [Icons.home_rounded, Icons.book_rounded, Icons.local_library_rounded, Icons.more_horiz];
+List icons = [Icons.home_rounded, Icons.book_rounded, Icons.search, Icons.more_horiz];
 List tabNames = <String>[
   "Home",
   "Library",
-  "Learn",
+  "Discover",
   "More",
 ];
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: pages[currentIndex],
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        shape: const CircleBorder(),
-        onPressed: () {
-          showModalBottomSheet(
-              context: context,
-              constraints: BoxConstraints(maxHeight: context.screenHeight * 0.35),
-              builder: (context) {
-                return const AddNew();
-              });
-        },
-        child: const Icon(Icons.add),
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(systemNavigationBarColor: MyTheme().isDark ? Colors.black : Colors.white),
+      child: ValueListenableBuilder(
+        valueListenable: Hive.box('prefs').listenable(),
+        builder: (context, isDark, child) => Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: pages[currentIndex],
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FloatingActionButton(
+            // backgroundColor: MyTheme().isDark ? Colors.black : Colors.purple,
+            shape: const CircleBorder(),
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  constraints: BoxConstraints(maxHeight: context.screenHeight * 0.45),
+                  builder: (context) {
+                    return const AddNew();
+                  });
+            },
+            child: const Icon(Icons.add),
+          ),
+          bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+            backgroundColor: MyTheme().isDark ? Colors.black : const Color.fromARGB(255, 199, 183, 227).withOpacity(1),
+            height: context.screenHeight * 0.1,
+            leftCornerRadius: 0,
+            rightCornerRadius: 0,
+            elevation: 5,
+            notchMargin: -50,
+            itemCount: 4,
+            tabBuilder: ((index, isActive) {
+              return Tab(
+                icon: Icon(
+                  icons[index],
+                  color: isActive
+                      ? MyTheme().isDark
+                          ? Colors.white
+                          : Colors.white
+                      : MyTheme().isDark
+                          ? Colors.grey.shade600
+                          : Colors.black,
+                ),
+                child: "${tabNames[index]}"
+                    .text
+                    .color(isActive
+                        ? Colors.white
+                        : MyTheme().isDark
+                            ? Colors.grey.shade600
+                            : Colors.black)
+                    .make(),
+              );
+            }),
+            activeIndex: currentIndex,
+            gapLocation: GapLocation.center,
+            notchSmoothness: NotchSmoothness.verySmoothEdge,
+            onTap: (index) {
+              setState(() => currentIndex = index);
+              print(currentIndex);
+            },
+            //other params
+          ),
+        ),
       ),
-      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-        backgroundColor: Colors.black,
-        height: context.screenHeight * 0.1,
-        leftCornerRadius: 0,
-        rightCornerRadius: 0,
-        itemCount: 4,
-        tabBuilder: ((index, isActive) {
-          return Tab(
-            child: "${tabNames[index]}".text.color(isActive ? Colors.white : Colors.grey.shade600).make(),
-            icon: Icon(
-              icons[index],
-              color: isActive ? Colors.white : Colors.grey.shade600,
-            ),
-          );
-        }),
-        activeIndex: currentIndex,
-        gapLocation: GapLocation.center,
-        notchSmoothness: NotchSmoothness.verySmoothEdge,
-        onTap: (index) {
-          setState(() => currentIndex = index);
-          print(currentIndex);
-        },
-        //other params
-      ),
-      // bottomNavigationBar: GNav(
-      //   selectedIndex: currentIndex != 2 ? currentIndex : 0,
-      //   onTabChange: (value) {
-      //     if (value != 2) {
-      //       setState(() {
-      //         currentIndex = value;
-      //         print("This $value");
-      //       });
-      //     } else {
-      //       showModalBottomSheet(
-      //           context: context,
-      //           builder: (context) {
-      //             return pages[value];
-      //           });
-      //     }
-      //     print("This! $value");
-      //     print("This1 $currentIndex");
-      //   },
-      //   padding: EdgeInsets.symmetric(horizontal: 10),
-      //   tabs: const [
-      //     GButton(
-      //       backgroundColor: Color.fromARGB(164, 122, 76, 250),
-      //       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      //       icon: Icons.home,
-      //       text: "Home",
-      //     ),
-      //     GButton(
-      //       backgroundColor: Color.fromARGB(164, 122, 76, 250),
-      //       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      //       icon: Icons.book_rounded,
-      //       text: "Library",
-      //     ),
-      //     GButton(
-      //       backgroundColor: Color.fromARGB(164, 122, 76, 250),
-      //       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      //       icon: Icons.local_library_rounded,
-      //       text: "Learn",
-      //     ),
-      //     GButton(
-      //       backgroundColor: Color.fromARGB(164, 122, 76, 250),
-      //       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      //       icon: Icons.more_horiz,
-      //       text: "More",
-      //     ),
-      //   ],
-      // ).box.width(context.screenWidth).height(context.screenHeight * 0.1).padding(EdgeInsets.symmetric(horizontal: 10)).make(),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       PageRouteBuilder(
-      //         opaque: false,
-      //         pageBuilder: (_, __, ___) => const AddCart(),
-      //         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      //           const begin = Offset(1.0, 0.0);
-      //           const end = Offset.zero;
-      //           const curve = Curves.easeInOutCubic;
-
-      //           var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-      //           var offsetAnimation = animation.drive(tween);
-
-      //           return SlideTransition(position: offsetAnimation, child: child);
-      //         },
-      //       ),
-      //     );
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
     );
+  }
+
+  darkModeSwitch() {
+    return ListTile(
+      title: Text(
+        "Dark theme",
+        style: GoogleFonts.aBeeZee(fontSize: 18),
+      ),
+      leading: Icon(Icons.dark_mode_rounded),
+      trailing: Switch(
+        onChanged: (val) {
+          setState(() {
+            Hive.box('prefs').put('isDark', val);
+          });
+        },
+        value: MyTheme().isDark,
+      ),
+    ).box.color(MyTheme().isDark ? Colors.black : Colors.grey.shade300).rounded.py1.py1.make().py4().px4();
   }
 }

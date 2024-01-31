@@ -163,6 +163,13 @@ class Topic {
   @HiveField(8)
   String? subtitle;
 
+  @HiveField(9)
+  int? subject_id;
+
+  @HiveField(10)
+  Map<String, List>? directions;
+  //For revisions, cards that were easy, hard, tough, etc. To feed the algorithm with enough info
+
   Topic({
     required this.id,
     required this.name,
@@ -173,6 +180,8 @@ class Topic {
     required this.difficulty,
     this.rate_of_appearance,
     this.subtitle,
+    this.subject_id,
+    this.directions,
   });
 }
 

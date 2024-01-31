@@ -8,8 +8,8 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../classes/hive_adapter.dart';
 import '../custom/Widgets/difficulty_selector.dart';
-import '../custom/custom_physics.dart';
 import '../services/services.dart';
+import 'package:cards/config/config.dart';
 import 'add_topic.dart';
 import '../services/definitions.dart';
 
@@ -30,7 +30,7 @@ class _AddCartState extends State<AddCart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black45,
       body: Dismissible(
         key: const Key('Addcard'),
         direction: DismissDirection.down,
@@ -42,9 +42,9 @@ class _AddCartState extends State<AddCart> {
           margin: EdgeInsets.only(top: context.screenHeight * 0.1),
           height: context.screenHeight * 0.9,
           width: context.screenWidth,
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 56, 56, 56),
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: MyTheme().isDark ? const Color.fromARGB(255, 56, 56, 56) : Colors.white,
+            borderRadius: const BorderRadius.only(
               topRight: Radius.circular(18),
               topLeft: Radius.circular(18),
             ),
@@ -95,7 +95,7 @@ class _AddCartState extends State<AddCart> {
                         onChanged: (val) {
                           setState(() {});
                         },
-                      ).animatedBox.animDuration(const Duration(milliseconds: 500)).easeIn.color(Colors.grey.shade800).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                      ).animatedBox.animDuration(const Duration(milliseconds: 500)).easeIn.color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
                       const SizedBox(
                         height: 40,
                       ),
@@ -135,7 +135,7 @@ class _AddCartState extends State<AddCart> {
                                                   margin: const EdgeInsets.only(bottom: 15, left: 10),
                                                   decoration: BoxDecoration(
                                                     borderRadius: BorderRadius.circular(15),
-                                                    color: Colors.grey.shade800,
+                                                    color: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300,
                                                   ),
                                                   child: Padding(
                                                     padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
@@ -190,7 +190,7 @@ class _AddCartState extends State<AddCart> {
                               keyboardType: TextInputType.multiline,
                               minLines: 1,
                               maxLines: 9,
-                            ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(Colors.grey.shade800).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                            ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
                           ],
                         ),
                       ),
@@ -221,7 +221,7 @@ class _AddCartState extends State<AddCart> {
         onPressed: () async {
           if (answer.text.trim().isNotEmpty && question.text.trim().isNotEmpty) {
             await CardServices().createCard(
-              id: cards.length + 1,
+              id: Hive.box<Flashcard>('flashcards').length + 1,
               topic_id: topic,
               question: question.text.trim(),
               answer: answer.text.trim(),
@@ -237,8 +237,8 @@ class _AddCartState extends State<AddCart> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 duration: const Duration(seconds: 4, milliseconds: 500),
-                elevation: 6,
-                backgroundColor: Colors.grey[700],
+                elevation: 15,
+                backgroundColor: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade400,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -251,7 +251,7 @@ class _AddCartState extends State<AddCart> {
             );
           }
         },
-        backgroundColor: Colors.grey[800],
+        backgroundColor: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade500,
         child: Icon(
           Icons.check,
           color: Colors.green[500],
@@ -286,7 +286,7 @@ class _AddCartState extends State<AddCart> {
                         margin: const EdgeInsets.only(right: 5),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.grey.shade800,
+                          color: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300,
                           border: Border.fromBorderSide(
                             BorderSide(
                               color: topic == index ? Color(boxColor[data.values.toList()[index].color]) : Colors.transparent,
@@ -300,7 +300,7 @@ class _AddCartState extends State<AddCart> {
                   } else {
                     return FloatingActionButton(
                       heroTag: "Topic",
-                      backgroundColor: Colors.grey.shade900,
+                      backgroundColor: MyTheme().isDark ? Colors.grey.shade900 : Colors.grey.shade400,
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -320,7 +320,7 @@ class _AddCartState extends State<AddCart> {
                           ),
                         );
                       },
-                      child: Icon(Icons.add),
+                      child: const Icon(Icons.add),
                     );
                   }
                 }),
@@ -349,7 +349,7 @@ class _AddCartState extends State<AddCart> {
                   );
                 },
                 label: "Add Topic".text.make().px64(),
-                backgroundColor: Colors.grey[800],
+                backgroundColor: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300,
                 icon: const Icon(
                   Icons.add,
                   // color: Colors.green[500],

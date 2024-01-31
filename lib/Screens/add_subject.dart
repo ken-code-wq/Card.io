@@ -1,41 +1,41 @@
 import 'package:cards/classes/hive_adapter.dart';
 import 'package:cards/services/services.dart';
 import 'package:flutter/material.dart';
-import 'package:cards/config/config.dart';
 import 'package:hive/hive.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:cards/config/config.dart';
 
 import '../constants/constants.dart';
 import '../custom/Widgets/difficulty_selector.dart';
 
-class AddTopic extends StatefulWidget {
-  const AddTopic({super.key});
+class AddSubject extends StatefulWidget {
+  const AddSubject({super.key});
 
   @override
-  State<AddTopic> createState() => _AddTopicState();
+  State<AddSubject> createState() => _AddSubjectState();
 }
 
 int col = 0;
 
 TextEditingController name = TextEditingController();
 
-class _AddTopicState extends State<AddTopic> {
+class _AddSubjectState extends State<AddSubject> {
   @override
   Widget build(BuildContext context) {
-    var topics = Hive.box<Topic>('topics');
+    var subjects = Hive.box<Subject>('subjects');
     return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           if (name.text.trim().isNotEmpty) {
-            await TopicServices().create(id: topics.length + 1, name: name.text, color: col, font: 0, difficulty: difficulty_topic);
+            await SubjectServices().create(id: subjects.length + 1, name: name.text, color: col, font: 0, difficulty: difficulty_subject);
             Navigator.pop(context);
           }
         },
         child: const Icon(Icons.done),
       ),
       body: Dismissible(
-        key: const Key('AddTopic'),
+        key: const Key('AddSubject'),
         direction: DismissDirection.down,
         background: const ColoredBox(color: Colors.transparent),
         onDismissed: (d) {
@@ -54,7 +54,7 @@ class _AddTopicState extends State<AddTopic> {
                 spreadRadius: 2500,
               )
             ],
-            borderRadius: const BorderRadius.only(
+            borderRadius: BorderRadius.only(
               topRight: Radius.circular(18),
               topLeft: Radius.circular(18),
             ),
@@ -84,7 +84,7 @@ class _AddTopicState extends State<AddTopic> {
                       const SizedBox(
                         height: 20,
                       ),
-                      "Name of the topic".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
+                      "Name of the subject".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
                       const Divider().px20().px2(),
                       const SizedBox(
                         height: 15,
@@ -94,7 +94,7 @@ class _AddTopicState extends State<AddTopic> {
                         textCapitalization: TextCapitalization.sentences,
                         maxLines: 4,
                         minLines: 1,
-                        decoration: const InputDecoration(hintText: "Topic", border: InputBorder.none),
+                        decoration: const InputDecoration(hintText: "Subject", border: InputBorder.none),
                         keyboardType: TextInputType.name,
                       ).animatedBox.animDuration(const Duration(milliseconds: 500)).easeIn.color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
                       const SizedBox(

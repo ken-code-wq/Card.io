@@ -1,3 +1,4 @@
+import 'package:cards/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -57,7 +58,11 @@ class _DifficultySelectorState extends State<DifficultySelector> {
               color: Color(levelsBoxes[index]['color']).withOpacity(.5),
               border: Border.fromBorderSide(
                 BorderSide(
-                  color: improvDif == index ? Colors.white : Colors.transparent,
+                  color: improvDif == index
+                      ? MyTheme().isDark
+                          ? Colors.white
+                          : Colors.black
+                      : Colors.transparent,
                   width: 2.1,
                 ),
               ),

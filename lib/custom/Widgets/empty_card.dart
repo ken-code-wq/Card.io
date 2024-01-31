@@ -2,6 +2,8 @@ import 'package:cards/Screens/add_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cards/config/config.dart';
+import 'package:hive/hive.dart';
 
 class Empty extends StatelessWidget {
   const Empty({super.key});
@@ -33,7 +35,7 @@ class Empty extends StatelessWidget {
       child: Card(
         elevation: 20,
         borderOnForeground: true,
-        color: Colors.grey.shade900,
+        color: MyTheme().isDark ? Colors.grey.shade900 : Colors.grey.shade300,
         child: SizedBox(
           height: 550,
           width: 280,
@@ -46,7 +48,7 @@ class Empty extends StatelessWidget {
                 child: Text(
                   "No cards available, add a new card",
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.aBeeZee(fontSize: 40, fontWeight: FontWeight.bold, shadows: [Shadow(color: Colors.grey.shade700, blurRadius: 15)]),
+                  style: GoogleFonts.aBeeZee(fontSize: 40, fontWeight: FontWeight.bold, shadows: [Shadow(color: Colors.grey.shade600, blurRadius: 15)]),
                 ),
               ),
             ),

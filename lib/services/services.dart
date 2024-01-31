@@ -46,6 +46,7 @@ class CardServices {
           isImage: isImage,
           imageURLs: imageURLs),
     );
+    await TopicServices().addCard(id: topic_id, card_id: id);
   }
 
   Future removeCard({
@@ -104,7 +105,6 @@ class SubjectServices {
     required int difficulty,
     required int color,
     required int font,
-    required int subject_id,
     String? subtitle,
   }) async {
     await Hive.box<Subject>('subjects').put(

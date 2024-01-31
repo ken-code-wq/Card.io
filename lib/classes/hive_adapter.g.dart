@@ -81,11 +81,7 @@ class FlashcardAdapter extends TypeAdapter<Flashcard> {
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FlashcardAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+  bool operator ==(Object other) => identical(this, other) || other is FlashcardAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }
 
 class SubjectAdapter extends TypeAdapter<Subject> {
@@ -145,11 +141,7 @@ class SubjectAdapter extends TypeAdapter<Subject> {
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SubjectAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+  bool operator ==(Object other) => identical(this, other) || other is SubjectAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }
 
 class TopicAdapter extends TypeAdapter<Topic> {
@@ -172,6 +164,8 @@ class TopicAdapter extends TypeAdapter<Topic> {
       difficulty: fields[6] as int,
       rate_of_appearance: fields[7] as int?,
       subtitle: fields[8] as String?,
+      subject_id: fields[9] as int?,
+      directions: fields[10] as Map<String, List>?,
     );
   }
 
@@ -196,18 +190,18 @@ class TopicAdapter extends TypeAdapter<Topic> {
       ..writeByte(7)
       ..write(obj.rate_of_appearance)
       ..writeByte(8)
-      ..write(obj.subtitle);
+      ..write(obj.subtitle)
+      ..writeByte(9)
+      ..write(obj.subject_id)
+      ..writeByte(10)
+      ..write(obj.directions);
   }
 
   @override
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TopicAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+  bool operator ==(Object other) => identical(this, other) || other is TopicAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }
 
 class DeckAdapter extends TypeAdapter<Deck> {
@@ -261,9 +255,5 @@ class DeckAdapter extends TypeAdapter<Deck> {
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DeckAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+  bool operator ==(Object other) => identical(this, other) || other is DeckAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }
