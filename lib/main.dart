@@ -13,6 +13,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:cards/config/config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'gamification/vibration_tap.dart';
 
 // ...
 
@@ -83,6 +84,12 @@ List tabNames = <String>[
   "Discover",
   "More",
 ];
+List images = [
+  'assets/home.png',
+  'assets/books_library_1.png',
+  'assets/compass.png',
+  'assets/more.png',
+];
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
@@ -92,6 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: ValueListenableBuilder(
         valueListenable: Hive.box('prefs').listenable(),
         builder: (context, isDark, child) => Scaffold(
+          // backgroundColor: Colors.grey.shade900,
           resizeToAvoidBottomInset: false,
           body: pages[currentIndex],
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -99,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // backgroundColor: MyTheme().isDark ? Colors.black : Colors.purple,
             shape: const CircleBorder(),
             onPressed: () {
+              vibrate(amplitude: 20, duration: 30);
               showModalBottomSheet(
                   context: context,
                   constraints: BoxConstraints(maxHeight: context.screenHeight * 0.45),
@@ -108,8 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             child: const Icon(Icons.add),
           ),
-          bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-            backgroundColor: MyTheme().isDark ? Colors.black : const Color.fromARGB(255, 199, 183, 227).withOpacity(1),
+          bottomSheet: AnimatedBottomNavigationBar.builder(
             height: context.screenHeight * 0.1,
             leftCornerRadius: 0,
             rightCornerRadius: 0,
@@ -118,35 +126,42 @@ class _MyHomePageState extends State<MyHomePage> {
             itemCount: 4,
             tabBuilder: ((index, isActive) {
               return Tab(
-                icon: Icon(
-                  icons[index],
-                  color: isActive
-                      ? MyTheme().isDark
-                          ? Colors.white
-                          : Colors.white
-                      : MyTheme().isDark
-                          ? Colors.grey.shade600
-                          : Colors.black,
+                icon: Image(
+                  image: AssetImage(
+                    images[index],
+                  ),
+                  height: isActive ? context.screenHeight * 0.07 : context.screenHeight * 0.03,
                 ),
-                child: "${tabNames[index]}"
-                    .text
-                    .color(isActive
-                        ? Colors.white
-                        : MyTheme().isDark
-                            ? Colors.grey.shade600
-                            : Colors.black)
-                    .make(),
+                // child: "${tabNames[index]}"
+                //     .text
+                //     .color(isActive
+                //         ? Colors.white
+                //         : MyTheme().isDark
+                //             ? Colors.grey.shade600
+                //             : Colors.black)
+                //     .make(),
               );
             }),
             activeIndex: currentIndex,
             gapLocation: GapLocation.center,
             notchSmoothness: NotchSmoothness.verySmoothEdge,
             onTap: (index) {
+              vibrate(amplitude: 10, duration: 30);
               setState(() => currentIndex = index);
-              print(currentIndex);
             },
             //other params
           ),
+          // bottomNavigationBar: Container(
+          // decoration: BoxDecoration(
+          //   color: Colors.blue,
+          //   gradient: LinearGradient(
+          //     colors: [Colors.blue, ThemeData().scaffoldBackgroundColor],
+          //     begin: Alignment.bottomCenter,
+          //     end: Alignment.topCenter,
+          //   ),
+          // ),
+          //   child:
+          // ),
         ),
       ),
     );
@@ -158,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
         "Dark theme",
         style: GoogleFonts.aBeeZee(fontSize: 18),
       ),
-      leading: Icon(Icons.dark_mode_rounded),
+      leading: const Icon(Icons.dark_mode_rounded),
       trailing: Switch(
         onChanged: (val) {
           setState(() {
