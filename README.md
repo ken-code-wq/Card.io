@@ -15,7 +15,7 @@ flutter environment if you haven't already.
 	  and a full API reference.
 
 * Fork this repo and create your own branch of this code base
-	(all codes should be done on your own branch and never on the
+	(all code should be done on your own branch and never on the
 	 forked repo)
 
 * Create a new branch off of the new repo you created from the fork.
