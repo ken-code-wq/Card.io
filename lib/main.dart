@@ -68,8 +68,6 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-// final c = List.generate(cardBox.length, (index) =>);
-
 int currentIndex = 0;
 List pages = [
   const Home(),
@@ -99,7 +97,6 @@ class _MyHomePageState extends State<MyHomePage> {
       child: ValueListenableBuilder(
         valueListenable: Hive.box('prefs').listenable(),
         builder: (context, isDark, child) => Scaffold(
-          // backgroundColor: Colors.grey.shade900,
           resizeToAvoidBottomInset: false,
           body: pages[currentIndex],
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -117,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             child: const Icon(Icons.add),
           ),
-          bottomSheet: AnimatedBottomNavigationBar.builder(
+          bottomNavigationBar: AnimatedBottomNavigationBar.builder(
             height: context.screenHeight * 0.1,
             leftCornerRadius: 0,
             rightCornerRadius: 0,
@@ -149,19 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
               vibrate(amplitude: 10, duration: 30);
               setState(() => currentIndex = index);
             },
-            //other params
           ),
-          // bottomNavigationBar: Container(
-          // decoration: BoxDecoration(
-          //   color: Colors.blue,
-          //   gradient: LinearGradient(
-          //     colors: [Colors.blue, ThemeData().scaffoldBackgroundColor],
-          //     begin: Alignment.bottomCenter,
-          //     end: Alignment.topCenter,
-          //   ),
-          // ),
-          //   child:
-          // ),
         ),
       ),
     );

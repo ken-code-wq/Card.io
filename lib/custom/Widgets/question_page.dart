@@ -33,7 +33,6 @@ class QuestionFace extends StatelessWidget {
         ),
         Card(
           elevation: 20,
-          shadowColor: swipeC[swipeDirection],
           borderOnForeground: true,
           // color: Colors.grey.shade900,
           child: SizedBox(
@@ -62,7 +61,7 @@ class QuestionFace extends StatelessWidget {
                         padding: const EdgeInsets.only(right: 2.0),
                         child: Text(
                           Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].name,
-                          style: GoogleFonts.abel(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       ),

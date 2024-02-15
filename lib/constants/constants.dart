@@ -9,25 +9,22 @@ List<Map> levelsBoxes = [
   {'name': 'Tough', 'color': Colors.red.shade500.value},
 ];
 List<int> boxColor = [
-  Colors.amber.value,
-  Colors.blue.value,
-  Colors.blueGrey.value,
-  Colors.brown.value,
-  Colors.cyan.value,
-  Colors.deepOrange.value,
   Colors.deepPurple.value,
-  Colors.green.value,
-  Colors.indigo.value,
-  Colors.indigoAccent.value,
-  Colors.lightBlue.value,
-  Colors.orange.value,
-  Colors.pink.value,
-  Colors.pinkAccent.value,
-  Colors.purple.value,
-  Colors.purpleAccent.value,
   Colors.red.value,
-  Colors.teal.value,
-  Colors.yellow.value,
+  Colors.orange.value,
+  Colors.green.value,
+  Colors.blue.value,
+  Colors.brown.value,
+  Colors.purpleAccent.value,
+];
+List<int> boxLightColor = [
+  Colors.deepPurple.shade100.value,
+  Colors.red.shade100.value,
+  Colors.orange.shade100.value,
+  Colors.green.shade100.value,
+  Colors.blue.shade100.value,
+  Colors.brown.shade100.value,
+  Color.fromARGB(255, 244, 181, 255).value,
 ];
 
 int difficulty_card = 0;

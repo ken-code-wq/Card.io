@@ -32,6 +32,7 @@ dependencies:
   auto_size_text: ^3.0.0
   cloud_firestore: ^4.15.0
   cupertino_icons: ^1.0.2
+  dashed_circular_progress_bar: ^0.0.6
   firebase_auth: ^4.17.0
   firebase_core: ^2.25.0
   firebase_storage: ^11.6.1

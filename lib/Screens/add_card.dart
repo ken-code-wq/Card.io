@@ -30,190 +30,182 @@ class _AddCartState extends State<AddCart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black45,
-      body: Dismissible(
-        key: const Key('Addcard'),
-        direction: DismissDirection.down,
-        background: const ColoredBox(color: Colors.transparent),
-        onDismissed: (d) {
-          Navigator.pop(context);
-        },
-        child: Container(
-          margin: EdgeInsets.only(top: context.screenHeight * 0.1),
-          height: context.screenHeight * 0.9,
-          width: context.screenWidth,
-          decoration: BoxDecoration(
-            color: MyTheme().isDark ? const Color.fromARGB(255, 56, 56, 56) : Colors.white,
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(18),
-              topLeft: Radius.circular(18),
+      backgroundColor: Colors.transparent,
+      body: Container(
+        margin: EdgeInsets.only(top: context.screenHeight * 0.1),
+        height: context.screenHeight * 0.9,
+        width: context.screenWidth,
+        decoration: BoxDecoration(
+          color: MyTheme().isDark ? const Color.fromARGB(255, 56, 56, 56) : Colors.white,
+          borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(18),
+            topLeft: Radius.circular(18),
+          ),
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: context.screenHeight * 0.058,
+              width: context.screenWidth,
+              child: Center(
+                child: Container(
+                  height: 7,
+                  width: context.screenWidth * 0.3,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(.5),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
             ),
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: context.screenHeight * 0.058,
-                width: context.screenWidth,
-                child: Center(
-                  child: Container(
-                    height: 7,
-                    width: context.screenWidth * 0.3,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(.5),
-                      borderRadius: BorderRadius.circular(4),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      "Select the topic".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
-                      const Divider().px20().px2(),
-                      topicSelector(),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      "Front of the card".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
-                      const Divider().px20().px2(),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      TextFormField(
-                        controller: question,
-                        textCapitalization: TextCapitalization.sentences,
-                        maxLines: 4,
-                        minLines: 1,
-                        decoration: const InputDecoration(hintText: "Question...", border: InputBorder.none),
-                        keyboardType: TextInputType.name,
-                        onChanged: (val) {
-                          setState(() {});
-                        },
-                      ).animatedBox.animDuration(const Duration(milliseconds: 500)).easeIn.color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      "Definition".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
-                      const Divider().px20().px2(),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      AnimatedContainer(
-                        duration: const Duration(microseconds: 900),
-                        child: Column(
-                          children: [
-                            FutureBuilder(
-                                future: definitions(query: question.text.trim()),
-                                builder: (context, snapshot) {
-                                  if (question.text == '' || question.text == null) {
-                                    return const Row();
-                                  } else if (snapshot.hasData) {
-                                    try {
-                                      return SizedBox(
-                                        width: context.screenWidth,
-                                        child: SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          physics: const BouncingScrollPhysics(),
-                                          child: Row(
-                                            children: List.generate(snapshot.data!.length, (index) {
-                                              return InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    answer.clear();
-                                                    answer.text = snapshot.data![index]['definition'];
-                                                  });
-                                                },
-                                                child: Container(
-                                                  height: context.screenHeight * 0.15,
-                                                  width: context.screenWidth * 0.3,
-                                                  margin: const EdgeInsets.only(bottom: 15, left: 10),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(15),
-                                                    color: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300,
-                                                  ),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                                                    child: Text(snapshot.data![index]['definition']),
-                                                  ),
+                    "Select the topic".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
+                    const Divider().px20().px2(),
+                    topicSelector(),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    "Front of the card".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
+                    const Divider().px20().px2(),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      controller: question,
+                      textCapitalization: TextCapitalization.sentences,
+                      maxLines: 4,
+                      minLines: 1,
+                      decoration: const InputDecoration(hintText: "Question...", border: InputBorder.none),
+                      keyboardType: TextInputType.name,
+                      onChanged: (val) {
+                        setState(() {});
+                      },
+                    ).animatedBox.animDuration(const Duration(milliseconds: 500)).easeIn.color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    "Definition".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
+                    const Divider().px20().px2(),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    AnimatedContainer(
+                      duration: const Duration(microseconds: 900),
+                      child: Column(
+                        children: [
+                          FutureBuilder(
+                              future: definitions(query: question.text.trim()),
+                              builder: (context, snapshot) {
+                                if (question.text == '' || question.text == null) {
+                                  return const Row();
+                                } else if (snapshot.hasData) {
+                                  try {
+                                    return SizedBox(
+                                      width: context.screenWidth,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        physics: const BouncingScrollPhysics(),
+                                        child: Row(
+                                          children: List.generate(snapshot.data!.length, (index) {
+                                            return InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  answer.clear();
+                                                  answer.text = snapshot.data![index]['definition'];
+                                                });
+                                              },
+                                              child: Container(
+                                                height: context.screenHeight * 0.15,
+                                                width: context.screenWidth * 0.3,
+                                                margin: const EdgeInsets.only(bottom: 15, left: 10),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                  color: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300,
                                                 ),
-                                              );
-                                            }),
-                                          ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                                                  child: Text(snapshot.data![index]['definition']),
+                                                ),
+                                              ),
+                                            );
+                                          }),
                                         ),
-                                      );
-                                    } catch (e) {
-                                      return "No such word".text.makeCentered();
-                                    }
-                                  } else if (snapshot.error != null) {
-                                    return 'Error'.text.makeCentered();
-                                  } else {
-                                    return const CircularProgressIndicator().centered();
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    return "No such word".text.makeCentered();
                                   }
-                                }),
-                            TextFormField(
-                              onTap: () async {
-                                try {
-                                  List<Map> defs = [];
-                                  List definitions = await getDefinition(term: question.text.trim());
-                                  for (Map info in definitions) {
-                                    List meanings = info["meanings"];
-                                    for (Map partOfSpeech in meanings) {
-                                      Map result = {'partOfSpeech': partOfSpeech['partOfSpeech']};
-                                      List ds = partOfSpeech['definitions'];
-                                      for (Map definition in ds) {
-                                        Map add = {'definition': definition['definition']};
-                                        result.addAll(add);
-                                        //("done $result");
-                                        //("done $add");
-                                        //({'partOfSpeech': partOfSpeech['partOfSpeech'], 'definition': definition['definition']});
-                                        defs.add({
-                                          'partOfSpeech': partOfSpeech['partOfSpeech'],
-                                          'definition': definition['definition'],
-                                        });
-                                      }
-                                    }
-                                  }
-                                  print(defs);
-                                } catch (e) {
-                                  print(e);
+                                } else if (snapshot.error != null) {
+                                  return 'Error'.text.makeCentered();
+                                } else {
+                                  return const CircularProgressIndicator().centered();
                                 }
-                              },
-                              controller: answer,
-                              textCapitalization: TextCapitalization.sentences,
-                              decoration: const InputDecoration(hintText: "Type answer", border: InputBorder.none),
-                              keyboardType: TextInputType.multiline,
-                              minLines: 1,
-                              maxLines: 9,
-                            ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
-                          ],
-                        ),
+                              }),
+                          TextFormField(
+                            onTap: () async {
+                              try {
+                                List<Map> defs = [];
+                                List definitions = await getDefinition(term: question.text.trim());
+                                for (Map info in definitions) {
+                                  List meanings = info["meanings"];
+                                  for (Map partOfSpeech in meanings) {
+                                    Map result = {'partOfSpeech': partOfSpeech['partOfSpeech']};
+                                    List ds = partOfSpeech['definitions'];
+                                    for (Map definition in ds) {
+                                      Map add = {'definition': definition['definition']};
+                                      result.addAll(add);
+                                      //("done $result");
+                                      //("done $add");
+                                      //({'partOfSpeech': partOfSpeech['partOfSpeech'], 'definition': definition['definition']});
+                                      defs.add({
+                                        'partOfSpeech': partOfSpeech['partOfSpeech'],
+                                        'definition': definition['definition'],
+                                      });
+                                    }
+                                  }
+                                }
+                                print(defs);
+                              } catch (e) {
+                                print(e);
+                              }
+                            },
+                            controller: answer,
+                            textCapitalization: TextCapitalization.sentences,
+                            decoration: const InputDecoration(hintText: "Type answer", border: InputBorder.none),
+                            keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            maxLines: 9,
+                          ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                        ],
                       ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      "Select difficulty".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
-                      const Divider().px20().px2(),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      DifficultySelector(
-                        type: BoxType.card,
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    "Select difficulty".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
+                    const Divider().px20().px2(),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    DifficultySelector(
+                      type: BoxType.card,
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(

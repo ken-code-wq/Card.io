@@ -23,38 +23,27 @@ class _AddSubjectState extends State<AddSubject> {
   @override
   Widget build(BuildContext context) {
     var subjects = Hive.box<Subject>('subjects');
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          if (name.text.trim().isNotEmpty) {
-            await SubjectServices().create(id: subjects.length + 1, name: name.text, color: col, font: 0, difficulty: difficulty_subject);
-            Navigator.pop(context);
-          }
-        },
-        child: const Icon(Icons.done),
-      ),
-      body: Dismissible(
-        key: const Key('AddSubject'),
-        direction: DismissDirection.down,
-        background: const ColoredBox(color: Colors.transparent),
-        onDismissed: (d) {
-          Navigator.pop(context);
-        },
-        child: Container(
-          margin: EdgeInsets.only(top: context.screenHeight * 0.4),
+    return SizedBox(
+      height: context.screenHeight * 0.9,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            if (name.text.trim().isNotEmpty) {
+              await SubjectServices().create(id: subjects.length + 1, name: name.text, color: col, font: 0, difficulty: difficulty_subject);
+              // ignore: use_build_context_synchronously
+              Navigator.pop(context);
+            }
+          },
+          child: const Icon(Icons.done),
+        ),
+        body: Container(
+          margin: EdgeInsets.only(top: context.screenHeight * 0.1),
           height: context.screenHeight * 0.9,
           width: context.screenWidth,
           decoration: BoxDecoration(
             color: MyTheme().isDark ? const Color.fromARGB(255, 56, 56, 56) : Colors.white,
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromARGB(163, 0, 0, 0),
-                blurRadius: 205,
-                spreadRadius: 2500,
-              )
-            ],
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topRight: Radius.circular(18),
               topLeft: Radius.circular(18),
             ),
@@ -117,10 +106,6 @@ class _AddSubjectState extends State<AddSubject> {
                         height: 15,
                       ),
                       PopupMenuButton(
-                        child: ListTile(
-                          title: const Text("Select your color"),
-                          trailing: CircleAvatar(backgroundColor: Color(boxColor[col])),
-                        ),
                         onSelected: (value) {
                           setState(() {
                             col = value;
@@ -136,12 +121,40 @@ class _AddSubjectState extends State<AddSubject> {
                             ),
                           );
                         },
+                        child: ListTile(
+                          title: const Text("Select your color"),
+                          trailing: CircleAvatar(backgroundColor: Color(boxColor[col])),
+                        ),
                       ),
                       const SizedBox(
-                        height: 15,
+                        height: 40,
                       ),
+                      "Select image".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
+                      SizedBox(
+                        height: context.screenHeight * 0.2,
+                        width: context.screenWidth,
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            const List images = [
+                              'assets/ai.png',
+                              'assets/books_library_1.png',
+                              'assets/compass.png',
+                              'assets/english.png',
+                              'assets/home.png',
+                              'assets/math.png',
+                              'assets/more.png',
+                              'assets/search.png',
+                              'assets/worldwide.png',
+                            ];
+                            return Image.asset(images[index], height: context.screenHeight * 0.15, width: context.screenHeight * 0.15);
+                          },
+                          itemCount: 9,
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      ),
+                      const Divider().px20().px2(),
                       const SizedBox(
-                        height: 70,
+                        height: 100,
                       ),
                     ],
                   ),

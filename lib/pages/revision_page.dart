@@ -50,13 +50,18 @@ class _RevisionState extends State<Revision> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+
     hard.clear();
     understood.clear();
     tough.clear();
     good.clear();
     notYet.addAll(widget.cards);
-    print(widget.card_ids);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -68,19 +73,19 @@ class _RevisionState extends State<Revision> {
                 widget.cards.length,
                 (index) => Expanded(
                   child: AnimatedContainer(
-                    margin: EdgeInsets.symmetric(horizontal: 2.5),
+                    margin: const EdgeInsets.symmetric(horizontal: 2.5),
                     height: 10,
                     decoration: BoxDecoration(
                       color: getC(index),
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    duration: Durations.extralong4,
+                    duration: Durations.short3,
                   ),
                 ),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 150,
           ),
           SizedBox(
@@ -126,12 +131,9 @@ class _RevisionState extends State<Revision> {
     int? currentIndex,
     CardSwiperDirection direction,
   ) async {
-    debugPrint(
-      'The card $previousIndex was swiped to the ${direction.name}. Now the card $currentIndex is on top',
-    );
     if (direction == CardSwiperDirection.right && widget.cards.isNotEmpty) {
       setState(() {
-        good.add(currentIndex);
+        good.add(previousIndex);
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -148,11 +150,18 @@ class _RevisionState extends State<Revision> {
           ),
         ),
       );
+      print(good);
+      print(hard);
+      debugPrint(
+        "The color is ${getC(previousIndex)}",
+      );
       return true;
     } else if (direction == CardSwiperDirection.left && widget.cards.isNotEmpty) {
       setState(() {
-        hard.add(currentIndex);
+        hard.add(previousIndex);
       });
+      print(good);
+      print(hard);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1),
@@ -168,30 +177,11 @@ class _RevisionState extends State<Revision> {
           ),
         ),
       );
+      debugPrint(
+        "The color is ${getC(previousIndex)}",
+      );
       return true;
-    }
-    // } else if (direction == CardSwiperDirection.top &&widget.cards.isNotEmpty) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       duration: const Duration(seconds: 1),
-    //       elevation: 6,
-    //       backgroundColor: Colors.red[900],
-    //       shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(10),
-    //       ),
-    //       behavior: SnackBarBehavior.floating,
-    //       content: const Text(
-    //         "Deleted",
-    //         style: TextStyle(color: Colors.white),
-    //       ),
-    //     ),
-    //   );
-    //   Future.delayed(Duration(milliseconds: 210), () async {
-    //     await CardServices().removeCard(id: currentIndex ?? 0);
-    //   });
-    //   return true;
-    // }
-    else {
+    } else {
       return false;
     }
   }

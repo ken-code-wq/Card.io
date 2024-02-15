@@ -28,7 +28,7 @@ class AnswerFace extends StatelessWidget {
         ),
         Card(
           elevation: 20,
-          color: Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].color]).withOpacity(.2),
+          // color: Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].color]).withOpacity(.5),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             height: 550,
