@@ -105,7 +105,7 @@ class SubjectAdapter extends TypeAdapter<Subject> {
       color: fields[7] as int,
       font: fields[8] as int,
       deck_id: fields[9] as int?,
-      subtitle: fields[10] as String?,
+      more: fields[10] as Map?,
     );
   }
 
@@ -134,7 +134,7 @@ class SubjectAdapter extends TypeAdapter<Subject> {
       ..writeByte(9)
       ..write(obj.deck_id)
       ..writeByte(10)
-      ..write(obj.subtitle);
+      ..write(obj.more);
   }
 
   @override
@@ -163,7 +163,7 @@ class TopicAdapter extends TypeAdapter<Topic> {
       deck_id: fields[5] as int?,
       difficulty: fields[6] as int,
       rate_of_appearance: fields[7] as int?,
-      subtitle: fields[8] as String?,
+      more: fields[8] as Map?,
       subject_id: fields[9] as int?,
       directions: fields[10] as Map<String, List>?,
     );
@@ -190,7 +190,7 @@ class TopicAdapter extends TypeAdapter<Topic> {
       ..writeByte(7)
       ..write(obj.rate_of_appearance)
       ..writeByte(8)
-      ..write(obj.subtitle)
+      ..write(obj.more)
       ..writeByte(9)
       ..write(obj.subject_id)
       ..writeByte(10)
@@ -222,7 +222,7 @@ class DeckAdapter extends TypeAdapter<Deck> {
       topic_ids: (fields[4] as List?)?.cast<int>(),
       color: fields[5] as int,
       font: fields[6] as int,
-      subtitle: fields[7] as String?,
+      more: fields[7] as Map?,
       data: (fields[8] as Map?)?.cast<dynamic, dynamic>(),
     );
   }
@@ -246,7 +246,7 @@ class DeckAdapter extends TypeAdapter<Deck> {
       ..writeByte(6)
       ..write(obj.font)
       ..writeByte(7)
-      ..write(obj.subtitle)
+      ..write(obj.more)
       ..writeByte(8)
       ..write(obj.data);
   }

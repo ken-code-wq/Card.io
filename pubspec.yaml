@@ -51,6 +51,7 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   velocity_x: ^4.1.2
   vibration: ^1.8.4
+  zoom_tap_animation: ^1.1.0
 
 dev_dependencies:
   build_runner: ^2.4.7
