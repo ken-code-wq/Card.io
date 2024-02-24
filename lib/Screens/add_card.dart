@@ -30,6 +30,7 @@ class _AddCartState extends State<AddCart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
       body: Container(
         margin: EdgeInsets.only(top: context.screenHeight * 0.1),

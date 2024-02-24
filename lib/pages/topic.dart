@@ -34,7 +34,7 @@ class _TopicPageState extends State<TopicPage> {
       body: CustomScrollView(
         slivers: [
           //AppBar
-          SliverAppBar.medium(
+          SliverAppBar.large(
             pinned: true,
             iconTheme: const IconThemeData(color: Colors.white),
             actions: [const Icon(Icons.more_vert)],
@@ -50,7 +50,7 @@ class _TopicPageState extends State<TopicPage> {
                 ),
               ),
               background: Hero(
-                tag: widget.index,
+                tag: "Topic ${widget.index}",
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.25,
                   width: MediaQuery.of(context).size.width,
@@ -137,7 +137,7 @@ class _TopicPageState extends State<TopicPage> {
           //FlashCards
           SliverToBoxAdapter(
             child: SizedBox(
-              height: context.screenHeight * 0.3,
+              height: context.screenHeight * 0.32,
               width: context.screenWidth,
               child: Column(
                 children: [
@@ -171,8 +171,8 @@ class _TopicPageState extends State<TopicPage> {
                           width: context.screenWidth * 0.42,
                           decoration: BoxDecoration(
                             color: Color(
-                              boxLightColor[widget.color],
-                            ).withOpacity(.65),
+                              boxColor[widget.color],
+                            ).withOpacity(.45),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Column(
@@ -210,7 +210,7 @@ class _TopicPageState extends State<TopicPage> {
           //Bottom Space
           SliverToBoxAdapter(
             child: SizedBox(
-              height: context.screenHeight * 0.17,
+              height: context.screenHeight * 0.18,
             ),
           )
         ],
