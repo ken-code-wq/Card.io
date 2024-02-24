@@ -105,7 +105,7 @@ class SubjectServices {
     required int difficulty,
     required int color,
     required int font,
-    String? subtitle,
+    Map? more,
   }) async {
     await Hive.box<Subject>('subjects').put(
       id,
@@ -119,6 +119,7 @@ class SubjectServices {
         times_correct: 0,
         color: color,
         font: font,
+        more: more,
       ),
     );
   }
@@ -135,28 +136,29 @@ class SubjectServices {
     int? color,
     int? font,
     int? deck_id,
-    String? subtitle,
+    Map? more,
     int? times_appeared,
     int? times_correct,
     int? difficulty,
     int? usefullness,
     int? fonts,
   }) async {
-    final card = Hive.box<Subject>('subjects').get(id);
-    await Hive.box<Subject>('subjects').put(
-      cardLength,
+    Subject card = Hive.box<Subject>('subjects').values.toList()[id];
+    await Hive.box<Subject>('subjects').putAt(
+      id,
       Subject(
-          id: id,
-          name: name ?? card!.name,
-          difficulty: difficulty ?? card!.difficulty,
-          times_appeared: times_appeared ?? card!.times_appeared,
-          times_correct: times_correct ?? card!.times_correct,
-          deck_id: deck_id ?? card!.deck_id,
-          card_ids: card_ids ?? card!.card_ids,
-          topic_ids: topic_ids ?? card!.topic_ids,
-          color: color ?? card!.color,
-          font: fonts ?? card!.font,
-          subtitle: subtitle ?? card!.subtitle),
+        id: id,
+        name: name ?? card.name,
+        difficulty: difficulty ?? card.difficulty,
+        times_appeared: times_appeared ?? card.times_appeared,
+        times_correct: times_correct ?? card.times_correct,
+        deck_id: deck_id ?? card.deck_id,
+        card_ids: card_ids ?? card.card_ids,
+        topic_ids: topic_ids ?? card.topic_ids,
+        color: color ?? card.color,
+        font: fonts ?? card.font,
+        more: more ?? card.more,
+      ),
     );
   }
 
@@ -195,7 +197,7 @@ class SubjectServices {
         color: subject.color,
         font: subject.font,
         deck_id: subject.deck_id,
-        subtitle: subject.subtitle,
+        more: subject.more,
       ),
     );
   }
@@ -210,7 +212,35 @@ class TopicServices {
     required int color,
     required int font,
     required int difficulty,
+    int? subject_id,
   }) async {
+    if (subject_id != null) {
+      await SubjectServices().addCardNTopic(id: subject_id, topic_id: id);
+      await topics.add(
+        Topic(
+          id: id,
+          name: name,
+          card_ids: [],
+          color: color,
+          font: font,
+          difficulty: difficulty,
+          subject_id: subject_id,
+        ),
+      );
+    } else {
+      await topics.add(
+        Topic(
+          id: id,
+          name: name,
+          card_ids: [],
+          color: color,
+          font: font,
+          difficulty: difficulty,
+          subject_id: null,
+        ),
+      );
+    }
+
     await topics.add(
       Topic(
         id: id,
@@ -219,6 +249,7 @@ class TopicServices {
         color: color,
         font: font,
         difficulty: difficulty,
+        subject_id: subject_id ?? null,
       ),
     );
   }
@@ -254,18 +285,21 @@ class TopicServices {
     int? deck_id,
     int? difficulty,
     int? rate_of_appearance,
-    String? subtitle,
+    Map? more,
+    int? subject_id,
   }) async {
-    final topic = topics.getAt(id);
+    print(Hive.box<Topic>('topics').values.toList());
+    Topic topic = Hive.box<Topic>('topics').values.toList()[id];
     await Hive.box<Topic>('topics').putAt(
       id,
       Topic(
         id: id,
-        name: name ?? topic!.name,
-        card_ids: topic!.card_ids,
+        name: name ?? topic.name,
+        card_ids: topic.card_ids,
         color: color ?? topic.color,
         font: font ?? topic.font,
         difficulty: difficulty ?? topic.difficulty,
+        subject_id: subject_id ?? topic.subject_id,
       ),
     );
   }
@@ -281,10 +315,10 @@ class DeckServices {
     required int id,
     required String name,
     required int color,
-    required int font,
-    String? subtitle,
+    int? font,
+    Map? more,
   }) async {
-    decks.add(Deck(id: id, name: name, color: color, font: font, subtitle: subtitle));
+    decks.add(Deck(id: id, name: name, color: color, font: font ?? 0, more: more));
   }
 
   Future addCardNTopicNSubject({
@@ -329,7 +363,7 @@ class DeckServices {
         data: deck.data,
         color: deck.color,
         font: deck.font,
-        subtitle: deck.subtitle,
+        more: deck.more,
       ),
     );
   }
@@ -339,7 +373,7 @@ class DeckServices {
     String? name,
     int? color,
     int? font,
-    String? subtitle,
+    Map? more,
     Map? data,
   }) async {
     final deck = decks.getAt(id);
@@ -350,7 +384,7 @@ class DeckServices {
         name: name ?? deck!.name,
         color: color ?? deck!.color,
         font: font ?? deck!.font,
-        subtitle: subtitle ?? deck!.subtitle,
+        more: more ?? deck!.more,
         data: data ?? deck!.data,
       ),
     );

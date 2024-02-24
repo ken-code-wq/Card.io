@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import '../Screens/add_deck.dart';
 import '../Screens/add_subject.dart';
 import '../Screens/add_topic.dart';
 import 'package:cards/config/config.dart';
@@ -36,9 +37,11 @@ class _AddNewState extends State<AddNew> {
                   if (index == 1) {
                     VxBottomSheet.bottomSheetView(context, child: const AddCart(), maxHeight: 1, minHeight: .9, backgroundColor: Colors.transparent);
                   } else if (index == 2) {
-                    VxBottomSheet.bottomSheetView(context, child: const AddTopic(), maxHeight: 1, minHeight: .9, backgroundColor: Colors.transparent);
+                    VxBottomSheet.bottomSheetView(context, child: const AddTopic(), maxHeight: 1, minHeight: .7, backgroundColor: Colors.transparent);
                   } else if (index == 3) {
-                    VxBottomSheet.bottomSheetView(context, child: const AddSubject(), maxHeight: 1, minHeight: .9, backgroundColor: Colors.transparent);
+                    VxBottomSheet.bottomSheetView(context, child: const AddSubject(), maxHeight: 1, minHeight: .7, backgroundColor: Colors.transparent);
+                  } else if (index == 4) {
+                    VxBottomSheet.bottomSheetView(context, roundedFromTop: true, child: const AddDeck(), maxHeight: 1, minHeight: .6, backgroundColor: Colors.transparent);
                   }
                 },
                 child: ListTile(
