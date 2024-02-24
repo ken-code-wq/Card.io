@@ -1,14 +1,17 @@
+import 'package:cards/Screens/add_deck.dart';
 import 'package:cards/Screens/add_subject.dart';
 import 'package:cards/Screens/add_topic.dart';
 import 'package:cards/config/config.dart';
 import 'package:cards/constants/constants.dart';
+import 'package:cards/pages/subject.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:cards/classes/hive_adapter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import '../gamification/vibration_tap.dart';
 import '../pages/topic.dart';
 
 class Library extends StatefulWidget {
@@ -17,6 +20,8 @@ class Library extends StatefulWidget {
   @override
   State<Library> createState() => _LibraryState();
 }
+
+bool upToDown = false;
 
 class _LibraryState extends State<Library> {
   @override
@@ -29,6 +34,23 @@ class _LibraryState extends State<Library> {
           child: Scaffold(
             appBar: AppBar(
               title: "Library".text.semiBold.scale(2).make(),
+              actions: [
+                ZoomTapAnimation(
+                  onTap: () {
+                    setState(() {
+                      upToDown = !upToDown;
+                    });
+                  },
+                  child: Icon(
+                    Icons.swap_vert_rounded,
+                    color: upToDown
+                        ? MyTheme().isDark
+                            ? Colors.white
+                            : Colors.deepPurple
+                        : Colors.grey.shade700,
+                  ).px16(),
+                )
+              ],
               backgroundColor: Colors.transparent,
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(context.screenHeight * 0.1),
@@ -44,6 +66,7 @@ class _LibraryState extends State<Library> {
                       ),
                       tabs: [
                         AnimatedContainer(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
                           duration: const Duration(milliseconds: 100),
                           height: 50,
                           alignment: Alignment.center,
@@ -62,39 +85,20 @@ class _LibraryState extends State<Library> {
                           alignment: Alignment.center,
                           child: const Text('Decks'),
                         ),
-                        // AnimatedContainer(
-                        //   duration: const Duration(milliseconds: 100),
-                        //   height: 50,
-                        //   alignment: Alignment.center,
-                        //   child: const Text('Cards'),
-                        // ),
-                        // Tab(
-                        //   text: 'Topics',
-                        //   // icon: Icon(Icons.topic),
-                        // ),
-                        // Tab(
-                        //   text: 'Subjects',
-                        //   // icon: FaIcon(FontAwesomeIcons.book),
-                        // ),
-                        // Tab(
-                        //   text: 'Decks',
-                        //   // icon: Icon(Icons.library_books_rounded),
-                        // ),
-                        // Tab(
-                        //   text: 'Cards',
-                        //   // icon: Icon(Icons.style_rounded),
-                        // ),
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-            body: TabBarView(physics: const NeverScrollableScrollPhysics(), children: [
-              topics(),
-              subjects(),
-              decks(),
-            ]),
+            body: TabBarView(
+              // physics: const NeverScrollableScrollPhysics(),
+              children: [
+                topics(),
+                subjects(),
+                decks(),
+              ],
+            ),
           ),
         ),
       ),
@@ -105,6 +109,7 @@ class _LibraryState extends State<Library> {
     return ValueListenableBuilder(
         valueListenable: Hive.box<Topic>('topics').listenable(),
         builder: (context, topics, child) {
+          var subjects = Hive.box<Subject>('subjects');
           if (topics.isEmpty) {
             return Center(
               child: ElevatedButton.icon(
@@ -142,8 +147,15 @@ class _LibraryState extends State<Library> {
               child: Column(
                 children: List.generate(
                   topics.length,
-                  (index) {
-                    return InkWell(
+                  (number) {
+                    int index = 0;
+                    if (upToDown) {
+                      index = topics.values.length - number - 1;
+                    } else {
+                      index = number;
+                    }
+                    int sId = topics.values.toList()[index].subject_id ?? 1000000000;
+                    return ZoomTapAnimation(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -164,7 +176,7 @@ class _LibraryState extends State<Library> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Hero(
-                                tag: index,
+                                tag: "Topic $index",
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Container(
@@ -204,7 +216,7 @@ class _LibraryState extends State<Library> {
                                                   style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.w600, color: Color(levelsBoxes[topics.values.toList()[index].difficulty]['color'])),
                                                 ),
                                                 Text(
-                                                  "${topics.values.toList()[index].subject_id ?? '<Unknown Subject>'}",
+                                                  sId != 1000000000 ? subjects.values.toList()[sId].name : '<Unknown Subject>',
                                                   style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                                                 ),
                                               ],
@@ -261,77 +273,89 @@ class _LibraryState extends State<Library> {
               child: Column(
                 children: List.generate(
                   subjects.length,
-                  (index) {
-                    return Container(
-                      height: context.screenHeight * 0.25,
-                      width: context.screenWidth,
-                      margin: const EdgeInsets.only(bottom: 20),
-                      decoration: BoxDecoration(
-                          color: !MyTheme().isDark ? Color(boxLightColor[subjects.values.toList()[index].color]) : Color(boxColor[subjects.values.toList()[index].color]).withOpacity(.4),
-                          borderRadius: BorderRadius.circular(10),
-                          border: BorderDirectional(
-                            bottom: BorderSide(
-                              color: Color(boxColor[subjects.values.toList()[index].color]),
-                              width: 6,
-                              style: BorderStyle.solid,
-                            ),
-                            // start: BorderSide(
-                            //   color: Color(boxColor[subjects.values.toList()[index].color]),
-                            //   width: 6,
-                            //   style: BorderStyle.solid,
-                            // ),
-                            // end: BorderSide(
-                            //   color: Color(boxColor[subjects.values.toList()[index].color]),
-                            //   width: 6,
-                            //   style: BorderStyle.solid,
-                            // ),
-                          )),
-                      child: Column(
-                        children: [
-                          // Container(
-                          //   height: 6,
-                          //   width: context.screenWidth,
-                          //   margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          //   decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: Color(boxColor[subjects.values.toList()[index].color])),
-                          // ),
-                          Expanded(
-                            child: Container(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 3,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          subjects.values.toList()[index].name,
-                                          style: GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          "${levelsBoxes[subjects.values.toList()[index].difficulty]['name']}",
-                                          style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.w600, color: Color(levelsBoxes[subjects.values.toList()[index].difficulty]['color'])),
-                                        ),
-                                      ],
-                                    ).px16(),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                                    child: Expanded(
-                                      flex: 1,
-                                      child: Image.asset(
-                                        'assets/math.png',
-                                        height: context.screenHeight * 0.2,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                  (number) {
+                    int index = 0;
+                    if (upToDown) {
+                      index = subjects.values.length - number - 1;
+                    } else {
+                      index = number;
+                    }
+                    return ZoomTapAnimation(
+                      onLongTap: () {
+                        vibrate(amplitude: 20, duration: 30);
+                        VxBottomSheet.bottomSheetView(
+                          context,
+                          child: Container(),
+                          minHeight: .3,
+                          maxHeight: .7,
+                        );
+                      },
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: ((context) => SubjectPage(
+                                  id: index,
+                                )),
+                          ),
+                        );
+                      },
+                      child: Hero(
+                        tag: "Subject ${index}",
+                        child: Container(
+                          height: context.screenHeight * 0.25,
+                          width: context.screenWidth,
+                          margin: const EdgeInsets.only(bottom: 20),
+                          decoration: BoxDecoration(
+                            color: !MyTheme().isDark ? Color(boxLightColor[subjects.values.toList()[index].color]) : Color(boxColor[subjects.values.toList()[index].color]).withOpacity(.4),
+                            borderRadius: BorderRadius.circular(10),
+                            border: BorderDirectional(
+                              bottom: BorderSide(
+                                color: Color(boxColor[subjects.values.toList()[index].color]),
+                                width: 6,
+                                style: BorderStyle.solid,
                               ),
                             ),
                           ),
-                        ],
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Material(
+                                      color: Colors.transparent,
+                                      child: Text(
+                                        subjects.values.toList()[index].name,
+                                        style: GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    Material(
+                                      color: Colors.transparent,
+                                      child: Text(
+                                        "${levelsBoxes[subjects.values.toList()[index].difficulty]['name']}",
+                                        style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.w600, color: Color(levelsBoxes[subjects.values.toList()[index].difficulty]['color'])),
+                                      ),
+                                    ),
+                                  ],
+                                ).px16(),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 10.0),
+                                  child: Image.asset(
+                                    images[subjects.values.toList()[index].more?['asset'] ?? 0],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ).py4().px8(),
                       ),
-                    ).py4().px8();
+                    );
                   },
                 ),
               ),
@@ -348,25 +372,7 @@ class _LibraryState extends State<Library> {
             return Center(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  VxBottomSheet.bottomSheetView(context, child: const AddTopic(), maxHeight: 1, minHeight: .9, backgroundColor: Colors.transparent);
-
-                  // Navigator.push(
-                  //   context,
-                  //   PageRouteBuilder(
-                  //     opaque: false,
-                  //     pageBuilder: (_, __, ___) => const AddTopic(),
-                  //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                  //       const begin = Offset(1.0, 0.0);
-                  //       const end = Offset.zero;
-                  //       const curve = Curves.easeInOutCubic;
-
-                  //       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                  //       var offsetAnimation = animation.drive(tween);
-
-                  //       return SlideTransition(position: offsetAnimation, child: child);
-                  //     },
-                  //   ),
-                  // );
+                  VxBottomSheet.bottomSheetView(context, roundedFromTop: true, child: const AddDeck(), maxHeight: 1, minHeight: .6, backgroundColor: Colors.transparent);
                 },
                 label: "Add Deck".text.make().px64(),
                 icon: const Icon(
@@ -380,7 +386,13 @@ class _LibraryState extends State<Library> {
               child: Column(
                 children: List.generate(
                   decks.length,
-                  (index) {
+                  (number) {
+                    int index = 0;
+                    if (upToDown) {
+                      index = decks.values.length - number - 1;
+                    } else {
+                      index = number;
+                    }
                     return Container(
                       height: context.screenHeight * 0.25,
                       width: context.screenWidth,
@@ -402,7 +414,6 @@ class _LibraryState extends State<Library> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    flex: 3,
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -414,16 +425,16 @@ class _LibraryState extends State<Library> {
                                       ],
                                     ).px16(),
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        "${decks.values.toList()[index].card_ids?.length ?? 0}".text.scale(3).textStyle(GoogleFonts.aBeeZee()).make(),
-                                        const Text("Cards"),
-                                      ],
-                                    ),
-                                  ),
+                                  // Expanded(
+                                  //   flex: 1,
+                                  //   child: Row(
+                                  //     crossAxisAlignment: CrossAxisAlignment.end,
+                                  //     children: [
+                                  //       "${decks.values.toList()[index].card_ids?.length ?? 0}".text.scale(3).textStyle(GoogleFonts.aBeeZee()).make(),
+                                  //       const Text("Cards"),
+                                  //     ],
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
