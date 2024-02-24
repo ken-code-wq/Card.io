@@ -115,6 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: const Icon(Icons.add),
           ),
           bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+            backgroundColor: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
             height: context.screenHeight * 0.1,
             leftCornerRadius: 0,
             rightCornerRadius: 0,

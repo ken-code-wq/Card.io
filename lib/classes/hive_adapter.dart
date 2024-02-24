@@ -117,7 +117,7 @@ class Subject {
   int? deck_id;
 
   @HiveField(10)
-  String? subtitle;
+  Map? more;
 
   Subject({
     required this.id,
@@ -130,7 +130,7 @@ class Subject {
     required this.color,
     required this.font,
     this.deck_id,
-    this.subtitle,
+    this.more,
   });
 }
 
@@ -161,7 +161,7 @@ class Topic {
   int? rate_of_appearance;
 
   @HiveField(8)
-  String? subtitle;
+  Map? more;
 
   @HiveField(9)
   int? subject_id;
@@ -179,7 +179,7 @@ class Topic {
     this.deck_id,
     required this.difficulty,
     this.rate_of_appearance,
-    this.subtitle,
+    this.more,
     this.subject_id,
     this.directions,
   });
@@ -209,7 +209,7 @@ class Deck {
   int font;
 
   @HiveField(7)
-  String? subtitle;
+  Map? more;
 
   @HiveField(8)
   Map? data;
@@ -221,7 +221,7 @@ class Deck {
     this.topic_ids,
     required this.color,
     required this.font,
-    this.subtitle,
+    this.more,
     this.data,
   });
 }

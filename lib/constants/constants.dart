@@ -8,6 +8,18 @@ List<Map> levelsBoxes = [
   {'name': 'Hard', 'color': Colors.orange.shade500.value},
   {'name': 'Tough', 'color': Colors.red.shade500.value},
 ];
+
+const List images = [
+  'assets/ai.png',
+  'assets/books_library_1.png',
+  'assets/compass.png',
+  'assets/english.png',
+  'assets/home.png',
+  'assets/math.png',
+  'assets/more.png',
+  'assets/search.png',
+  'assets/worldwide.png',
+];
 List<int> boxColor = [
   Colors.deepPurple.value,
   Colors.red.value,
