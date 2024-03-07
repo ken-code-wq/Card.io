@@ -13,6 +13,7 @@ class AnswerFace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     final cards = Hive.box<Flashcard>('flashcards');
     String none = "none";
     return Stack(

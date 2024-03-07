@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,7 +39,7 @@ class _TopicPageState extends State<TopicPage> {
           SliverAppBar.large(
             pinned: true,
             iconTheme: const IconThemeData(color: Colors.white),
-            actions: [const Icon(Icons.more_vert)],
+            actions: const [Icon(Icons.more_vert)],
             backgroundColor: Color(
               boxColor[widget.color],
             ),

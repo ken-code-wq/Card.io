@@ -1,9 +1,7 @@
 import 'package:cards/Screens/add_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cards/config/config.dart';
-import 'package:hive/hive.dart';
 
 class Empty extends StatelessWidget {
   const Empty({super.key});

@@ -1,8 +1,8 @@
+// ignore_for_file: avoid_print
+
 import 'package:cards/constants/constants.dart';
 import 'package:cards/services/tester.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -105,6 +105,7 @@ class _AddCartState extends State<AddCart> {
                           FutureBuilder(
                               future: definitions(query: question.text.trim()),
                               builder: (context, snapshot) {
+                                // ignore: unnecessary_null_comparison
                                 if (question.text == '' || question.text == null) {
                                   return const Row();
                                 } else if (snapshot.hasData) {

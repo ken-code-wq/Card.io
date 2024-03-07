@@ -35,7 +35,14 @@ class _AddTopicState extends State<AddTopic> {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               if (name.text.trim().isNotEmpty) {
-                await TopicServices().create(id: topics.length + 1, name: name.text, color: col, font: 0, difficulty: difficulty_topic, subject_id: subject != 0 ? subject - 1 : null);
+                await TopicServices().create(
+                  id: topics.length + 1,
+                  name: name.text,
+                  color: col,
+                  font: 0,
+                  difficulty: difficulty_topic,
+                  subject_id: subject != 0 ? subject - 1 : null,
+                );
 
                 name.clear();
                 Navigator.pop(context);

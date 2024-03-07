@@ -240,18 +240,6 @@ class TopicServices {
         ),
       );
     }
-
-    await topics.add(
-      Topic(
-        id: id,
-        name: name,
-        card_ids: [],
-        color: color,
-        font: font,
-        difficulty: difficulty,
-        subject_id: subject_id ?? null,
-      ),
-    );
   }
 
   Future addCard({

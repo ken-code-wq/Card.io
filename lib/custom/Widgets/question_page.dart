@@ -1,6 +1,5 @@
 import 'package:cards/constants/constants.dart';
 import 'package:cards/config/config.dart';
-import 'package:cards/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
@@ -14,6 +13,7 @@ class QuestionFace extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final cards = Hive.box<Flashcard>('flashcards');
+    // ignore: unused_local_variable
     Map swipeC = {
       SwipeD.neutral: Colors.black,
       SwipeD.left: Colors.red,
@@ -49,7 +49,7 @@ class QuestionFace extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top: 8, left: 10, right: 10),
+                        margin: const EdgeInsets.only(top: 8, left: 10, right: 10),
                         height: 10,
                         width: 280,
                         decoration: BoxDecoration(
@@ -75,7 +75,7 @@ class QuestionFace extends StatelessWidget {
                     width: 280,
                     child: Center(
                       child: Text(
-                        "${Hive.box<Flashcard>('flashcards').get(number)?.question ?? none}",
+                        Hive.box<Flashcard>('flashcards').get(number)?.question ?? none,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.aBeeZee(
                           fontSize: 40,

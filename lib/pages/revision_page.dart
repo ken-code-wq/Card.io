@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, non_constant_identifier_names, avoid_print
+
 import 'package:cards/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
@@ -76,7 +78,7 @@ class _RevisionState extends State<Revision> {
           const SizedBox(
             height: 60,
           ),
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: List.generate(
@@ -134,7 +136,7 @@ class _RevisionState extends State<Revision> {
           Container(
             height: context.screenHeight * 0.1,
             width: context.screenWidth,
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
               color: !MyTheme().isDark ? Colors.grey.shade300 : Colors.black,
               borderRadius: BorderRadius.circular(15),
