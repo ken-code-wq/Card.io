@@ -20,80 +20,67 @@ class QuestionFace extends StatelessWidget {
       SwipeD.right: Colors.green,
     };
     String none = "none";
-    return Stack(
-      children: [
-        Card(
-          elevation: 20,
-          color: MyTheme().isDark ? Colors.grey.shade800 : Colors.white,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            height: 550,
-            width: 280,
-          ),
-        ),
-        Card(
-          elevation: 20,
-          borderOnForeground: true,
-          // color: Colors.grey.shade900,
-          child: SizedBox(
-            height: 550,
+    return Container(
+      height: 550,
+      width: 280,
+      decoration: BoxDecoration(
+        color: MyTheme().isDark ? Colors.grey.shade900 : Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(550 / 28),
+        boxShadow: [BoxShadow(color: Colors.grey, spreadRadius: 1.0)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          SizedBox(
+            height: 60,
             width: 280,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 60,
+                Container(
+                  margin: const EdgeInsets.only(top: 8, left: 10, right: 10),
+                  height: 10,
                   width: 280,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 8, left: 10, right: 10),
-                        height: 10,
-                        width: 280,
-                        decoration: BoxDecoration(
-                          color: Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].color]),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 2.0),
-                        child: Text(
-                          Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].name,
-                          style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
+                  decoration: BoxDecoration(
+                    color: Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].color ?? 0]),
+                    borderRadius: BorderRadius.circular(25),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 413,
-                    width: 280,
-                    child: Center(
-                      child: Text(
-                        Hive.box<Flashcard>('flashcards').get(number)?.question ?? none,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.aBeeZee(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(color: Colors.grey.shade700, blurRadius: 15),
-                          ],
-                        ),
-                        maxLines: 7,
-                      ),
-                    ),
+                  padding: const EdgeInsets.only(right: 2.0),
+                  child: Text(
+                    Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].name,
+                    style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
             ),
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 413,
+              width: 280,
+              child: Center(
+                child: Text(
+                  Hive.box<Flashcard>('flashcards').get(number)?.question ?? none,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.aBeeZee(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(color: MyTheme().isDark ? Colors.grey.shade700 : Colors.grey.shade200, blurRadius: 15),
+                    ],
+                  ),
+                  maxLines: 7,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -125,7 +125,7 @@ class SubjectServices {
   }
 
   Future remove(int id) async {
-    Hive.box<Subject>('subjects').delete(id);
+    await Hive.box<Subject>('subjects').deleteAt(id);
   }
 
   Future editSubject({
@@ -287,7 +287,7 @@ class TopicServices {
         color: color ?? topic.color,
         font: font ?? topic.font,
         difficulty: difficulty ?? topic.difficulty,
-        subject_id: subject_id ?? topic.subject_id,
+        subject_id: subject_id,
       ),
     );
   }

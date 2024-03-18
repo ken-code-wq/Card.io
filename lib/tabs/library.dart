@@ -4,6 +4,7 @@ import 'package:cards/Screens/add_topic.dart';
 import 'package:cards/config/config.dart';
 import 'package:cards/constants/constants.dart';
 import 'package:cards/pages/subject.dart';
+import 'package:cards/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:cards/classes/hive_adapter.dart';
@@ -156,6 +157,116 @@ class _LibraryState extends State<Library> {
                     }
                     int sId = topics.values.toList()[index].subject_id ?? 1000000000;
                     return ZoomTapAnimation(
+                      onLongTap: () {
+                        print(index);
+                        vibrate(amplitude: 20, duration: 30);
+                        VxBottomSheet.bottomSheetView(
+                          context,
+                          backgroundColor: Color(boxLightColor[topics.values.toList()[index].color]),
+                          child: SizedBox(
+                            height: context.screenHeight * 0.45,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ZoomTapAnimation(
+                                  child: ListTile(
+                                    leading: "🖋".text.headline2(context).make(),
+                                    title: "Edit".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
+                                    subtitle: const Text("Change name, color and Subject"),
+                                  ),
+                                ),
+                                ZoomTapAnimation(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            insetPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20.0),
+                                            ),
+                                            title: Text(
+                                              "Are you sure you want to delete this topic ?",
+                                              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                                            ),
+                                            content: const Text("Deleting this topic does not delete the cards associated to this topic, unless you say so. \nWhat would you want to delete ?"),
+                                            actions: [
+                                              SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor: Colors.grey[700],
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        "Cancel",
+                                                        style: TextStyle(color: Colors.white),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 10.0),
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor: Colors.red.shade300,
+                                                      ),
+                                                      onPressed: () async {
+                                                        await TopicServices().remove(id: index);
+                                                        // ignore: use_build_context_synchronously
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        "Topic only",
+                                                        style: TextStyle(color: Colors.white),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 15.0),
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor: Colors.red.shade900,
+                                                      ),
+                                                      onPressed: () async {
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        //TODO
+                                                      },
+                                                      child: const Text(
+                                                        "Everything",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: ListTile(
+                                    leading: "❌".text.headline2(context).make(),
+                                    title: "Delete".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
+                                    subtitle: const Text("Delete topic but not all cards this topic"),
+                                  ),
+                                ),
+                                ZoomTapAnimation(
+                                  child: ListTile(
+                                    leading: "👓".text.headline2(context).make(),
+                                    title: "More".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          minHeight: .45,
+                          maxHeight: .7,
+                        );
+                      },
                       onTap: () {
                         Navigator.push(
                           context,
@@ -224,13 +335,17 @@ class _LibraryState extends State<Library> {
                                           ),
                                           Expanded(
                                             flex: 1,
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 "${topics.values.toList()[index].card_ids.length}".text.scale(3).textStyle(GoogleFonts.aBeeZee()).make(),
-                                                const Text("Cards"),
+                                                "Cards".text.scale(1.5).fontWeight(FontWeight.w400).make(),
                                               ],
                                             ),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
                                           ),
                                         ],
                                       ),
@@ -282,11 +397,115 @@ class _LibraryState extends State<Library> {
                     }
                     return ZoomTapAnimation(
                       onLongTap: () {
+                        print(index);
                         vibrate(amplitude: 20, duration: 30);
                         VxBottomSheet.bottomSheetView(
                           context,
-                          child: Container(),
-                          minHeight: .3,
+                          backgroundColor: Color(boxLightColor[subjects.values.toList()[index].color]),
+                          child: SizedBox(
+                            height: context.screenHeight * 0.45,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ZoomTapAnimation(
+                                  child: ListTile(
+                                    leading: "🖋".text.headline2(context).make(),
+                                    title: "Edit".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
+                                    subtitle: const Text("Change name, color and Icon"),
+                                  ),
+                                ),
+                                ZoomTapAnimation(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            insetPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20.0),
+                                            ),
+                                            title: Text(
+                                              "Are you sure you want to delete this subject",
+                                              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                                            ),
+                                            content: const Text("Deleting this subject does not delete the topics and cards associated to this subject, unless you say so. \nWhat would you want to delete ?"),
+                                            actions: [
+                                              SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor: Colors.grey[700],
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        "Cancel",
+                                                        style: TextStyle(color: Colors.white),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 10.0),
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor: Colors.red.shade300,
+                                                      ),
+                                                      onPressed: () async {
+                                                        for (int id = 0; id < subjects.values.toList()[index].topic_ids.length; id++) {
+                                                          await TopicServices().editTopic(id: id, subject_id: null);
+                                                        }
+                                                        await SubjectServices().remove(index);
+                                                        // ignore: use_build_context_synchronously
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        "Subject only",
+                                                        style: TextStyle(color: Colors.white),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 15.0),
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor: Colors.red.shade900,
+                                                      ),
+                                                      onPressed: () async {
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        //TODO
+                                                      },
+                                                      child: const Text(
+                                                        "Everything",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: ListTile(
+                                    leading: "❌".text.headline2(context).make(),
+                                    title: "Delete".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
+                                    subtitle: const Text("Delete topic but not all cards and topics in the subject"),
+                                  ),
+                                ),
+                                ZoomTapAnimation(
+                                  child: ListTile(
+                                    leading: "👓".text.headline2(context).make(),
+                                    title: "More".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          minHeight: .45,
                           maxHeight: .7,
                         );
                       },
@@ -398,7 +617,7 @@ class _LibraryState extends State<Library> {
                       width: context.screenWidth,
                       margin: const EdgeInsets.only(bottom: 20),
                       decoration: BoxDecoration(
-                        color: MyTheme().isDark ? Colors.black : Colors.grey.shade300,
+                        color: MyTheme().isDark ? Colors.black : Color(boxLightColor[decks.values.toList()[index].color]),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(

@@ -28,6 +28,15 @@ class _ImageSelectorState extends State<ImageSelector> {
             'assets/more.png',
             'assets/search.png',
             'assets/worldwide.png',
+            'assets/car_engine.png',
+            'assets/chemistry.png',
+            'assets/dollar.png',
+            'assets/drugs.png',
+            'assets/keyboard.png',
+            'assets/law.png',
+            'assets/palette.png',
+            'assets/science.png',
+            'assets/sports.png',
           ];
           return InkWell(
             onTap: () {

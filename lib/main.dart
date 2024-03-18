@@ -1,7 +1,7 @@
 import 'package:cards/classes/hive_adapter.dart';
 import 'package:cards/tabs/add_new.dart';
 import 'package:cards/tabs/home.dart';
-import 'package:cards/tabs/learn.dart';
+import 'package:cards/tabs/discover.dart';
 import 'package:cards/tabs/library.dart';
 import 'package:cards/tabs/more.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';

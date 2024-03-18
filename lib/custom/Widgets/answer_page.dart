@@ -16,38 +16,31 @@ class AnswerFace extends StatelessWidget {
     // ignore: unused_local_variable
     final cards = Hive.box<Flashcard>('flashcards');
     String none = "none";
-    return Stack(
-      children: [
-        Card(
-          elevation: 20,
-          color: MyTheme().isDark ? Colors.grey.shade900 : Colors.grey.shade300,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            height: 550,
-            width: 280,
+    int col = 0;
+    if (Hive.box<Flashcard>('flashcards').get(number)!.topic_id >= Hive.box<Topic>('topics').values.toList().length) {
+    } else {
+      col = Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].color;
+    }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      height: 550,
+      width: 280,
+      decoration: BoxDecoration(
+        color: Color(boxLightColor[col]),
+        borderRadius: BorderRadius.circular(550 / 28),
+        boxShadow: [BoxShadow(color: Color(boxColor[col]), spreadRadius: 1.0)],
+      ),
+      child: Center(
+        child: AutoSizeText(
+          Hive.box<Flashcard>('flashcards').get(number)!.answer ?? none,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.aBeeZee(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Color(boxColor[col]),
           ),
         ),
-        Card(
-          elevation: 20,
-          // color: Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].color]).withOpacity(.5),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            height: 550,
-            width: 280,
-            child: Center(
-              child: AutoSizeText(
-                Hive.box<Flashcard>('flashcards').get(number)!.answer ?? none,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.aBeeZee(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].color]),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
