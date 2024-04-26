@@ -41,7 +41,7 @@ class _AddTopicState extends State<AddTopic> {
                   color: col,
                   font: 0,
                   difficulty: difficulty_topic,
-                  subject_id: subject != 0 ? subject - 1 : null,
+                  subject_id: subject != 0 ? subject - 1 : 1000000000,
                 );
 
                 name.clear();

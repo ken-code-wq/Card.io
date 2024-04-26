@@ -164,7 +164,7 @@ class Topic {
   Map? more;
 
   @HiveField(9)
-  int? subject_id;
+  int subject_id;
 
   @HiveField(10)
   Map<String, List>? directions;
@@ -180,7 +180,7 @@ class Topic {
     required this.difficulty,
     this.rate_of_appearance,
     this.more,
-    this.subject_id,
+    this.subject_id = 1000000000,
     this.directions,
   });
 }

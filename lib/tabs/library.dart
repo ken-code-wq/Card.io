@@ -155,26 +155,28 @@ class _LibraryState extends State<Library> {
                     } else {
                       index = number;
                     }
-                    int sId = topics.values.toList()[index].subject_id ?? 1000000000;
+                    int sId = topics.values.toList()[index].subject_id;
                     return ZoomTapAnimation(
                       onLongTap: () {
-                        print(index);
                         vibrate(amplitude: 20, duration: 30);
                         VxBottomSheet.bottomSheetView(
                           context,
-                          backgroundColor: Color(boxLightColor[topics.values.toList()[index].color]),
+                          backgroundColor: !MyTheme().isDark ? Color(boxLightColor[topics.values.toList()[index].color]) : Colors.grey.shade900,
                           child: SizedBox(
-                            height: context.screenHeight * 0.45,
+                            height: context.screenHeight * 0.35,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ZoomTapAnimation(
                                   child: ListTile(
+                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+                                    tileColor: Color(boxColor[topics.values.toList()[index].color]).withOpacity(.3),
                                     leading: "🖋".text.headline2(context).make(),
                                     title: "Edit".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
                                     subtitle: const Text("Change name, color and Subject"),
                                   ),
                                 ),
+                                const SizedBox(height: 2),
                                 ZoomTapAnimation(
                                   onTap: () {
                                     showDialog(
@@ -249,21 +251,25 @@ class _LibraryState extends State<Library> {
                                         });
                                   },
                                   child: ListTile(
+                                    tileColor: Color(boxColor[topics.values.toList()[index].color]).withOpacity(.3),
                                     leading: "❌".text.headline2(context).make(),
                                     title: "Delete".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
                                     subtitle: const Text("Delete topic but not all cards this topic"),
                                   ),
                                 ),
+                                const SizedBox(height: 2),
                                 ZoomTapAnimation(
                                   child: ListTile(
+                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16))),
+                                    tileColor: Color(boxColor[topics.values.toList()[index].color]).withOpacity(.3),
                                     leading: "👓".text.headline2(context).make(),
                                     title: "More".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
                                   ),
                                 ),
                               ],
-                            ),
+                            ).px8(),
                           ),
-                          minHeight: .45,
+                          minHeight: .35,
                           maxHeight: .7,
                         );
                       },
@@ -344,7 +350,7 @@ class _LibraryState extends State<Library> {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 5,
                                           ),
                                         ],
@@ -397,23 +403,25 @@ class _LibraryState extends State<Library> {
                     }
                     return ZoomTapAnimation(
                       onLongTap: () {
-                        print(index);
                         vibrate(amplitude: 20, duration: 30);
                         VxBottomSheet.bottomSheetView(
                           context,
-                          backgroundColor: Color(boxLightColor[subjects.values.toList()[index].color]),
+                          backgroundColor: !MyTheme().isDark ? Color(boxLightColor[subjects.values.toList()[index].color]) : Colors.grey.shade900,
                           child: SizedBox(
-                            height: context.screenHeight * 0.45,
+                            height: context.screenHeight * 0.35,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ZoomTapAnimation(
                                   child: ListTile(
+                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+                                    tileColor: Color(boxColor[subjects.values.toList()[index].color]).withOpacity(.3),
                                     leading: "🖋".text.headline2(context).make(),
                                     title: "Edit".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
                                     subtitle: const Text("Change name, color and Icon"),
                                   ),
                                 ),
+                                SizedBox(height: 2),
                                 ZoomTapAnimation(
                                   onTap: () {
                                     showDialog(
@@ -454,7 +462,7 @@ class _LibraryState extends State<Library> {
                                                       ),
                                                       onPressed: () async {
                                                         for (int id = 0; id < subjects.values.toList()[index].topic_ids.length; id++) {
-                                                          await TopicServices().editTopic(id: id, subject_id: null);
+                                                          await TopicServices().editTopic(id: id, subject_id: 1000000000);
                                                         }
                                                         await SubjectServices().remove(index);
                                                         // ignore: use_build_context_synchronously
@@ -491,21 +499,25 @@ class _LibraryState extends State<Library> {
                                         });
                                   },
                                   child: ListTile(
+                                    tileColor: Color(boxColor[subjects.values.toList()[index].color]).withOpacity(.3),
                                     leading: "❌".text.headline2(context).make(),
                                     title: "Delete".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
                                     subtitle: const Text("Delete topic but not all cards and topics in the subject"),
                                   ),
                                 ),
+                                SizedBox(height: 2),
                                 ZoomTapAnimation(
                                   child: ListTile(
+                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16))),
+                                    tileColor: Color(boxColor[subjects.values.toList()[index].color]).withOpacity(.3),
                                     leading: "👓".text.headline2(context).make(),
                                     title: "More".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
                                   ),
                                 ),
                               ],
-                            ),
+                            ).px8(),
                           ),
-                          minHeight: .45,
+                          minHeight: .35,
                           maxHeight: .7,
                         );
                       },

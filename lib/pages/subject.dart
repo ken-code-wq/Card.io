@@ -263,11 +263,10 @@ class _SubjectPageState extends State<SubjectPage> {
                                               );
                                               if (subject_topics.isNotEmpty) {
                                                 for (int i = 0; i < subject_topics.length; i++) {
-                                                  // print(subject_topics);
-                                                  // print(Hive.box<Topic>('topics').values.toList()[i].id);
                                                   await TopicServices().editTopic(id: subject_topics[i] - 1, subject_id: widget.id);
                                                 }
                                               }
+                                              // ignore: use_build_context_synchronously
                                               Navigator.pop(context);
                                             },
                                             label: const Text("Add"),

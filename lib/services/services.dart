@@ -5,15 +5,15 @@ import 'package:hive/hive.dart';
 
 import '../classes/hive_adapter.dart';
 
-final cardss = Hive.box<Flashcard>('flashcards');
-final subjectss = Hive.box<Subject>('subjects');
-final topicss = Hive.box<Topic>('topics');
-final deckss = Hive.box<Deck>('decks');
+// var cardss = Hive.box<Flashcard>('flashcards');
+// var subjectss = Hive.box<Subject>('subjects');
+// var topicss = Hive.box<Topic>('topics');
+// var deckss = Hive.box<Deck>('decks');
 
-final int cardLength = cardss.length;
-final int subjectsLength = Hive.box<Subject>('subjects').length;
-final int topicsLength = Hive.box<Subject>('subjects').length;
-final int decksLength = Hive.box<Subject>('subjects').length;
+// var int cardLength = cardss.length;
+// var int subjectsLength = Hive.box<Subject>('subjects').length;
+// var int topicsLength = Hive.box<Subject>('subjects').length;
+// var int decksLength = Hive.box<Subject>('subjects').length;
 
 class CardServices {
   Future createCard({
@@ -28,7 +28,7 @@ class CardServices {
     required bool isImage,
     List? imageURLs,
   }) async {
-    await cardss.put(
+    await Hive.box<Flashcard>('flashcards').put(
       id,
       Flashcard(
           id: id,
@@ -72,9 +72,9 @@ class CardServices {
     int? usefullness,
     List<int>? fonts,
   }) async {
-    final card = cardss.get(id);
-    await cardss.put(
-      cardLength,
+    var card = Hive.box<Flashcard>('flashcards').get(id);
+    await Hive.box<Flashcard>('flashcards').put(
+      Hive.box<Flashcard>('flashcards').values.length,
       Flashcard(
         id: id,
         topic_id: topic_id ?? card!.topic_id,
@@ -98,7 +98,6 @@ class CardServices {
 }
 
 class SubjectServices {
-  final subjects = Hive.box<Subject>('subjects');
   Future create({
     required int id,
     required String name,
@@ -167,7 +166,7 @@ class SubjectServices {
     int? card_id,
     int? topic_id,
   }) async {
-    final subject = subjects.getAt(id);
+    var subject = Hive.box<Subject>('subjects').getAt(id);
     List<int> cards = [];
     List<int> topics = [];
     //Add from Hive
@@ -204,49 +203,33 @@ class SubjectServices {
 }
 
 class TopicServices {
-  final topics = Hive.box<Topic>('topics');
-
   Future create({
     required int id,
     required String name,
     required int color,
     required int font,
     required int difficulty,
-    int? subject_id,
+    required int subject_id,
   }) async {
-    if (subject_id != null) {
-      await SubjectServices().addCardNTopic(id: subject_id, topic_id: id);
-      await topics.add(
-        Topic(
-          id: id,
-          name: name,
-          card_ids: [],
-          color: color,
-          font: font,
-          difficulty: difficulty,
-          subject_id: subject_id,
-        ),
-      );
-    } else {
-      await topics.add(
-        Topic(
-          id: id,
-          name: name,
-          card_ids: [],
-          color: color,
-          font: font,
-          difficulty: difficulty,
-          subject_id: null,
-        ),
-      );
-    }
+    await SubjectServices().addCardNTopic(id: subject_id, topic_id: id);
+    await Hive.box<Topic>('topics').add(
+      Topic(
+        id: id,
+        name: name,
+        card_ids: [],
+        color: color,
+        font: font,
+        difficulty: difficulty,
+        subject_id: subject_id,
+      ),
+    );
   }
 
   Future addCard({
     required int id,
     required int card_id,
   }) async {
-    final topic = topics.getAt(id);
+    var topic = Hive.box<Topic>('topics').getAt(id);
     List<int> card = [];
     if (topic!.card_ids.isNotEmpty) {
       card.addAll(topic.card_ids);
@@ -261,6 +244,7 @@ class TopicServices {
         color: topic.color,
         font: topic.font,
         difficulty: topic.difficulty,
+        subject_id: topic.subject_id,
       ),
     );
   }
@@ -274,9 +258,8 @@ class TopicServices {
     int? difficulty,
     int? rate_of_appearance,
     Map? more,
-    int? subject_id,
+    required int subject_id,
   }) async {
-    print(Hive.box<Topic>('topics').values.toList());
     Topic topic = Hive.box<Topic>('topics').values.toList()[id];
     await Hive.box<Topic>('topics').putAt(
       id,
@@ -298,7 +281,7 @@ class TopicServices {
 }
 
 class DeckServices {
-  final decks = Hive.box<Deck>('decks');
+  var decks = Hive.box<Deck>('decks');
   Future create({
     required int id,
     required String name,
@@ -315,7 +298,7 @@ class DeckServices {
     int? topic_id,
     int? subject_id,
   }) async {
-    final deck = decks.getAt(id);
+    var deck = decks.getAt(id);
     List<int> cards = [];
     List<int> topics = [];
     List<int> subjects = [];
@@ -364,7 +347,7 @@ class DeckServices {
     Map? more,
     Map? data,
   }) async {
-    final deck = decks.getAt(id);
+    var deck = decks.getAt(id);
     await Hive.box<Deck>('decks').putAt(
       id,
       Deck(

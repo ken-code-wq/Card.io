@@ -21,6 +21,27 @@ int currentlySelectedPic = 0;
 
 TextEditingController name = TextEditingController();
 
+const List imagez = [
+  'assets/ai.png',
+  'assets/books_library_1.png',
+  'assets/compass.png',
+  'assets/english.png',
+  'assets/home.png',
+  'assets/math.png',
+  'assets/more.png',
+  'assets/search.png',
+  'assets/worldwide.png',
+  'assets/car-engine.png',
+  'assets/chemistry.png',
+  'assets/dollar.png',
+  'assets/drugs.png',
+  'assets/keyboard.png',
+  'assets/law.png',
+  'assets/palette.png',
+  'assets/science.png',
+  'assets/sports.png',
+];
+
 class _AddSubjectState extends State<AddSubject> {
   @override
   Widget build(BuildContext context) {
@@ -148,9 +169,10 @@ class _AddSubjectState extends State<AddSubject> {
                         "Select image".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
                         // const Divider().px20().px2(),
                         SizedBox(
-                          height: context.screenHeight * 0.09,
+                          height: context.screenHeight * 0.35,
                           width: context.screenWidth,
-                          child: ListView.builder(
+                          child: GridView.builder(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
@@ -159,36 +181,44 @@ class _AddSubjectState extends State<AddSubject> {
                                   });
                                 },
                                 child: Container(
-                                  height: context.screenHeight * 0.09,
-                                  width: context.screenHeight * 0.1,
+                                  // width: context.screenHeight * 0.15,
                                   margin: const EdgeInsets.only(left: 15),
+                                  // padding: const EdgeInsets.symmetric(horizontal: 5),
                                   child: Stack(
                                     alignment: Alignment.center,
                                     children: [
-                                      Image.asset(images[index], height: context.screenHeight * 0.08, width: context.screenHeight * 0.08),
+                                      Image.asset(imagez[index], height: context.screenHeight * 0.08, width: context.screenHeight * 0.08),
                                       AnimatedContainer(
+                                        width: context.screenHeight * 0.15,
+                                        padding: const EdgeInsets.symmetric(horizontal: 5),
                                         decoration: BoxDecoration(
-                                          color: currentlySelectedPic == index ? Colors.black45 : Colors.transparent,
-                                          // image: DecorationImage(image: AssetImage(images[index])),
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        duration: Duration(milliseconds: 200),
-                                        child: Center(
-                                          child: currentlySelectedPic == index
-                                              ? const Icon(
-                                                  Icons.check_rounded,
-                                                  color: Colors.white,
-                                                  size: 50,
-                                                )
-                                              : const Row(),
-                                        ),
+                                            color: currentlySelectedPic == index ? Colors.black45 : Colors.transparent,
+                                            // image: DecorationImage(image: AssetImage(images[index])),
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(
+                                                color: currentlySelectedPic == index
+                                                    ? !MyTheme().isDark
+                                                        ? Colors.black
+                                                        : Colors.white
+                                                    : Colors.transparent,
+                                                width: 3)),
+                                        duration: const Duration(milliseconds: 200),
+                                        // child: Center(
+                                        //   child: currentlySelectedPic == index
+                                        //       ? const Icon(
+                                        //           Icons.check_rounded,
+                                        //           color: Colors.white,
+                                        //           size: 50,
+                                        //         )
+                                        //       : const Row(),
+                                        // ),
                                       ),
                                     ],
                                   ),
                                 ),
                               );
                             },
-                            itemCount: 9,
+                            itemCount: images.length,
                             scrollDirection: Axis.horizontal,
                           ),
                         ),

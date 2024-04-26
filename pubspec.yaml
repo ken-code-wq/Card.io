@@ -37,6 +37,7 @@ dependencies:
   firebase_auth: ^4.17.0
   firebase_core: ^2.25.0
   firebase_storage: ^11.6.1
+  fl_chart: ^0.66.2
   flashy_tab_bar2: ^0.0.6
   flip_card: ^0.7.0
   flutter:
@@ -50,6 +51,8 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^1.1.0
+  path_provider: ^2.1.2
+  permission_handler: ^11.3.0
   provider: ^6.1.1
   sliding_up_panel: ^2.0.0+1
   velocity_x: ^4.1.2

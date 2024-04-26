@@ -1,4 +1,6 @@
 import 'package:cards/classes/hive_adapter.dart';
+import 'package:cards/dummy/dummy.dart';
+import 'package:cards/dummy/home.dart';
 import 'package:cards/tabs/add_new.dart';
 import 'package:cards/tabs/home.dart';
 import 'package:cards/tabs/discover.dart';
@@ -9,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:cards/config/config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -22,6 +26,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // if (await Permission.storage.request().isGranted) {
+  // }
+  String storage = '/storage/emulated/0/Documents/com.cards.io';
+  await getExternalStorageDirectory().then((value) => storage = value!.path);
   Hive.registerAdapter(FlashcardAdapter());
   Hive.registerAdapter(SubjectAdapter());
   Hive.registerAdapter(TopicAdapter());
@@ -53,6 +61,7 @@ class MyApp extends StatelessWidget {
                 useMaterial3: true,
               ),
         debugShowCheckedModeBanner: false,
+        // home: HomePhys(),
         home: const MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
@@ -92,6 +101,8 @@ List images = [
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(systemNavigationBarColor: MyTheme().isDark ? Colors.black : Colors.white),
       child: ValueListenableBuilder(

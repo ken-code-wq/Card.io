@@ -19,6 +19,15 @@ const List images = [
   'assets/more.png',
   'assets/search.png',
   'assets/worldwide.png',
+  'assets/car-engine.png',
+  'assets/chemistry.png',
+  'assets/dollar.png',
+  'assets/drugs.png',
+  'assets/keyboard.png',
+  'assets/law.png',
+  'assets/palette.png',
+  'assets/science.png',
+  'assets/sports.png',
 ];
 List<int> boxColor = [
   Colors.deepPurple.value,

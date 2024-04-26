@@ -81,7 +81,11 @@ class FlashcardAdapter extends TypeAdapter<Flashcard> {
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is FlashcardAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FlashcardAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 class SubjectAdapter extends TypeAdapter<Subject> {
@@ -105,7 +109,7 @@ class SubjectAdapter extends TypeAdapter<Subject> {
       color: fields[7] as int,
       font: fields[8] as int,
       deck_id: fields[9] as int?,
-      more: fields[10] as Map?,
+      more: (fields[10] as Map?)?.cast<dynamic, dynamic>(),
     );
   }
 
@@ -141,7 +145,11 @@ class SubjectAdapter extends TypeAdapter<Subject> {
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is SubjectAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SubjectAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 class TopicAdapter extends TypeAdapter<Topic> {
@@ -163,16 +171,17 @@ class TopicAdapter extends TypeAdapter<Topic> {
       deck_id: fields[5] as int?,
       difficulty: fields[6] as int,
       rate_of_appearance: fields[7] as int?,
-      more: fields[8] as Map?,
-      subject_id: fields[9] as int?,
-      directions: fields[10] as Map<String, List>?,
+      more: (fields[8] as Map?)?.cast<dynamic, dynamic>(),
+      subject_id: fields[9] as int,
+      directions: (fields[10] as Map?)?.map((dynamic k, dynamic v) =>
+          MapEntry(k as String, (v as List).cast<dynamic>())),
     );
   }
 
   @override
   void write(BinaryWriter writer, Topic obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -201,7 +210,11 @@ class TopicAdapter extends TypeAdapter<Topic> {
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is TopicAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TopicAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 class DeckAdapter extends TypeAdapter<Deck> {
@@ -222,7 +235,7 @@ class DeckAdapter extends TypeAdapter<Deck> {
       topic_ids: (fields[4] as List?)?.cast<int>(),
       color: fields[5] as int,
       font: fields[6] as int,
-      more: fields[7] as Map?,
+      more: (fields[7] as Map?)?.cast<dynamic, dynamic>(),
       data: (fields[8] as Map?)?.cast<dynamic, dynamic>(),
     );
   }
@@ -255,5 +268,9 @@ class DeckAdapter extends TypeAdapter<Deck> {
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DeckAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DeckAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

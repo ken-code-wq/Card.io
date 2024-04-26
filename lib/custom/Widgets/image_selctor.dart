@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import '../../constants/constants.dart';
+
 class ImageSelector extends StatefulWidget {
   const ImageSelector({super.key});
 
@@ -18,28 +20,9 @@ class _ImageSelectorState extends State<ImageSelector> {
       width: context.screenWidth,
       child: ListView.builder(
         itemBuilder: (context, index) {
-          const List images = [
-            'assets/ai.png',
-            'assets/books_library_1.png',
-            'assets/compass.png',
-            'assets/english.png',
-            'assets/home.png',
-            'assets/math.png',
-            'assets/more.png',
-            'assets/search.png',
-            'assets/worldwide.png',
-            'assets/car_engine.png',
-            'assets/chemistry.png',
-            'assets/dollar.png',
-            'assets/drugs.png',
-            'assets/keyboard.png',
-            'assets/law.png',
-            'assets/palette.png',
-            'assets/science.png',
-            'assets/sports.png',
-          ];
           return InkWell(
             onTap: () {
+              print(images);
               setState(() {
                 currentlySelectedPic = index;
               });
@@ -73,7 +56,7 @@ class _ImageSelectorState extends State<ImageSelector> {
             ),
           );
         },
-        itemCount: 9,
+        itemCount: images.length,
         scrollDirection: Axis.horizontal,
       ),
     );
