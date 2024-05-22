@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 
 import '../../classes/hive_adapter.dart';
-import 'package:cards/config/config.dart';
+import 'package:cards/constants/config/config.dart';
 
 class AnswerFace extends StatelessWidget {
   final int number;

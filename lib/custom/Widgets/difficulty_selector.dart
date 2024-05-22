@@ -1,6 +1,7 @@
-import 'package:cards/config/config.dart';
+import 'package:cards/constants/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../constants/constants.dart';
 
@@ -34,8 +35,7 @@ class _DifficultySelectorState extends State<DifficultySelector> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(
         levelsBoxes.length,
-        (index) => InkWell(
-          borderRadius: BorderRadius.circular(10),
+        (index) => ZoomTapAnimation(
           onTap: () {
             switch (widget.type) {
               case BoxType.card:

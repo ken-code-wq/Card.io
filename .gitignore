@@ -44,3 +44,4 @@ app.*.map.json
 /android/app/release
 lib/services/gemini_tut.dart
 lib/firebase_options.dart
+lib/AI/ai.dart

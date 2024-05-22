@@ -1,5 +1,5 @@
 import 'package:cards/constants/constants.dart';
-import 'package:cards/config/config.dart';
+import 'package:cards/constants/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';

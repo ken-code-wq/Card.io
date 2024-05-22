@@ -1,12 +1,13 @@
+import 'dart:io';
+
 import 'package:cards/classes/hive_adapter.dart';
-import 'package:cards/dummy/dummy.dart';
-import 'package:cards/dummy/home.dart';
 import 'package:cards/tabs/add_new.dart';
 import 'package:cards/tabs/home.dart';
 import 'package:cards/tabs/discover.dart';
 import 'package:cards/tabs/library.dart';
 import 'package:cards/tabs/more.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,31 +15,66 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:cards/config/config.dart';
+import 'package:cards/constants/config/config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'gamification/vibration_tap.dart';
 
 // ...
 
+const String newPath = '/storage/emulated/0/Kylae';
 void main() async {
   await Hive.initFlutter();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // if (await Permission.storage.request().isGranted) {
-  // }
-  String storage = '/storage/emulated/0/Documents/com.cards.io';
-  await getExternalStorageDirectory().then((value) => storage = value!.path);
   Hive.registerAdapter(FlashcardAdapter());
   Hive.registerAdapter(SubjectAdapter());
   Hive.registerAdapter(TopicAdapter());
   Hive.registerAdapter(DeckAdapter());
-  await Hive.openBox<Flashcard>('flashcards');
-  await Hive.openBox<Topic>('topics');
-  await Hive.openBox<Subject>('subjects');
-  await Hive.openBox<Deck>('decks');
   await Hive.openBox('prefs');
+
+  await Permission.storage.request();
+  await Permission.manageExternalStorage.request();
+  Directory? directory;
+  directory = await getDownloadsDirectory();
+  // getting main path
+  directory = Directory(newPath);
+  // checking if directory exist or not
+  if (!await directory.exists()) {
+    // if directory not exists then asking for permission to create folder
+    await requestPermission(Permission.manageExternalStorage);
+    //creating folder
+    try {
+      await directory.create(recursive: true);
+    } catch (e) {
+      print(e);
+    }
+  }
+  if (await directory.exists()) {
+    try {
+      await requestPermission(Permission.manageExternalStorage);
+
+      // if directory exists then returning the complete path
+      print(newPath);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  if (await Permission.storage.request().isGranted || await Permission.manageExternalStorage.request().isGranted) {
+    MyTheme().switchGStatus(isGranted: true);
+  } else {
+    await Permission.storage.request();
+  }
+  await Permission.storage.request();
+  await Permission.manageExternalStorage.request();
+  if (await Permission.storage.request().isGranted) {
+    await Hive.openBox<Flashcard>('flashcards', path: newPath);
+    await Hive.openBox<Topic>('topics', path: newPath);
+    await Hive.openBox<Subject>('subjects', path: newPath);
+    await Hive.openBox<Deck>('decks', path: newPath);
+  }
   runApp(const MyApp());
 }
 
@@ -50,28 +86,48 @@ class MyApp extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: Hive.box('prefs').listenable(),
       builder: (context, dark, child) => MaterialApp(
+        color: Colors.blue,
         title: 'Flutter Demo',
         theme: MyTheme().isDark
-            ? ThemeData.dark(
+            ? ThemeData(
+                colorScheme: ColorScheme.dark(primary: Colors.blue, secondary: Colors.blue.shade300),
+                primaryColorDark: Colors.blue,
+                primarySwatch: Colors.blue,
+                brightness: Brightness.dark,
                 // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                 useMaterial3: true,
               )
-            : ThemeData.light(
+            : ThemeData(
+                colorScheme: ColorScheme.light(primary: Colors.blue, secondary: Colors.blue.shade300),
+                primaryColorDark: Colors.blue,
+                primarySwatch: Colors.blue,
+                brightness: Brightness.light,
                 // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                 useMaterial3: true,
               ),
         debugShowCheckedModeBanner: false,
         // home: HomePhys(),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home: const MyHomePage(),
       ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+Future<bool> requestPermission(Permission permission) async {
+  if (await permission.isGranted) {
+    return true;
+  } else {
+    final result = await permission.request();
+    if (result == PermissionStatus.granted) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
 
-  final String title;
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -101,66 +157,96 @@ List images = [
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(systemNavigationBarColor: MyTheme().isDark ? Colors.black : Colors.white),
       child: ValueListenableBuilder(
-        valueListenable: Hive.box('prefs').listenable(),
-        builder: (context, isDark, child) => Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: pages[currentIndex],
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FloatingActionButton(
-            // backgroundColor: MyTheme().isDark ? Colors.black : Colors.purple,
-            shape: const CircleBorder(),
-            onPressed: () {
-              vibrate(amplitude: 20, duration: 30);
-              showModalBottomSheet(
-                  context: context,
-                  constraints: BoxConstraints(maxHeight: context.screenHeight * 0.45),
-                  builder: (context) {
-                    return const AddNew();
+          valueListenable: Hive.box('prefs').listenable(),
+          builder: (context, isDark, child) {
+            SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+            SystemChrome.setSystemUIOverlayStyle(
+              SystemUiOverlayStyle(
+                systemNavigationBarIconBrightness: MyTheme().isDark ? Brightness.dark : Brightness.light,
+                systemNavigationBarColor: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
+              ),
+            );
+
+            return Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: pages[currentIndex],
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: FloatingActionButton(
+                // backgroundColor: MyTheme().isDark ? Colors.black : Colors.purple,
+                shape: const CircleBorder(),
+                onPressed: () {
+                  vibrate(amplitude: 20, duration: 30);
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return SizedBox(
+                          height: context.screenHeight * 0.45,
+                          child: const AlertDialog(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                            title: Text('Add a new...'),
+                            content: AddNew(),
+                          ),
+                        );
+                      });
+                  // showModalBottomSheet(
+                  //     context: context,
+                  //     constraints: BoxConstraints(maxHeight: context.screenHeight * 0.45),
+                  //     builder: (context) {
+                  //       return const AddNew();
+                  //     });
+                },
+                child: const Icon(Icons.add),
+              ),
+              bottomNavigationBar: NavigationBar(
+                surfaceTintColor: Colors.white,
+                backgroundColor: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
+                elevation: 8,
+                destinations: [
+                  const NavigationDestination(icon: Icon(Icons.home), label: 'Home').px(2.5),
+                  const NavigationDestination(icon: Icon(Icons.list), label: 'Library').px(2.5),
+                  const NavigationDestination(icon: Icon(Icons.search), label: 'Search').px(2.5),
+                  const NavigationDestination(icon: Icon(Icons.settings), label: 'Settings').px(2.5),
+                ],
+                // indicatorColor: Colors.deepPurple.shade400,
+                selectedIndex: currentIndex,
+                onDestinationSelected: (value) {
+                  // Provider.of<ThemeModal>(context, listen: false).setCoin(generalBox.getAt(1));
+                  setState(() {
+                    currentIndex = value;
                   });
-            },
-            child: const Icon(Icons.add),
-          ),
-          bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-            backgroundColor: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
-            height: context.screenHeight * 0.1,
-            leftCornerRadius: 0,
-            rightCornerRadius: 0,
-            elevation: 5,
-            notchMargin: -50,
-            itemCount: 4,
-            tabBuilder: ((index, isActive) {
-              return Tab(
-                icon: Image(
-                  image: AssetImage(
-                    images[index],
-                  ),
-                  height: isActive ? context.screenHeight * 0.07 : context.screenHeight * 0.03,
-                ),
-                // child: "${tabNames[index]}"
-                //     .text
-                //     .color(isActive
-                //         ? Colors.white
-                //         : MyTheme().isDark
-                //             ? Colors.grey.shade600
-                //             : Colors.black)
-                //     .make(),
-              );
-            }),
-            activeIndex: currentIndex,
-            gapLocation: GapLocation.center,
-            notchSmoothness: NotchSmoothness.verySmoothEdge,
-            onTap: (index) {
-              vibrate(amplitude: 10, duration: 30);
-              setState(() => currentIndex = index);
-            },
-          ),
-        ),
-      ),
+                },
+              ),
+              // bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+              //   backgroundColor: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
+              //   height: context.screenHeight * 0.1,
+              //   leftCornerRadius: 0,
+              //   rightCornerRadius: 0,
+              //   elevation: 5,
+              //   notchMargin: -50,
+              //   itemCount: 4,
+              //   tabBuilder: ((index, isActive) {
+              //     return Tab(
+              //       icon: Image(
+              //         image: AssetImage(
+              //           images[index],
+              //         ),
+              //         height: isActive ? context.screenHeight * 0.07 : context.screenHeight * 0.03,
+              //       ),
+              //     );
+              //   }),
+              //   activeIndex: currentIndex,
+              //   gapLocation: GapLocation.center,
+              //   notchSmoothness: NotchSmoothness.verySmoothEdge,
+              //   onTap: (index) {
+              //     vibrate(amplitude: 10, duration: 30);
+              //     setState(() => currentIndex = index);
+              //   },
+              // ),
+            );
+          }),
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 
 class MyTheme with ChangeNotifier {
   bool _isDark = Hive.box('prefs').get('isDark', defaultValue: true) as bool;
+  bool _isGranted = Hive.box('prefs').get('isGranted', defaultValue: false) as bool;
 
   bool _useSystemTheme = Hive.box('prefs').get('useSystemTheme', defaultValue: false) as bool;
 
@@ -20,6 +21,7 @@ class MyTheme with ChangeNotifier {
   List<List<Color>> get backOpt => _backOpt;
   List<List<Color>> get cardOpt => _cardOpt;
   bool get isDark => _isDark;
+  bool get isGranted => _isGranted;
 
   final List<List<Color>> _backOpt = [
     [
@@ -112,6 +114,7 @@ class MyTheme with ChangeNotifier {
   void refresh() {
     final Box prefsBox = Hive.box('prefs');
     _isDark = prefsBox.get('isDark', defaultValue: true) as bool;
+    _isGranted = prefsBox.get('isGranted', defaultValue: false) as bool;
 
     _useSystemTheme = prefsBox.get('useSystemTheme', defaultValue: false) as bool;
 
@@ -136,6 +139,14 @@ class MyTheme with ChangeNotifier {
     }
     Hive.box('prefs').put('isDark', _isDark);
     Hive.box('prefs').put('useSystemTheme', _useSystemTheme);
+    if (notify) notifyListeners();
+  }
+
+  void switchGStatus({bool? isGranted, bool notify = true}) {
+    if (isGranted != null) {
+      _isGranted = isGranted;
+    }
+    Hive.box('prefs').put('isGranted', _isGranted);
     if (notify) notifyListeners();
   }
 
