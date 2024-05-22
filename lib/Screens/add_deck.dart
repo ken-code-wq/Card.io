@@ -5,7 +5,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../classes/hive_adapter.dart';
-import '../config/config.dart';
+import '../constants/config/config.dart';
 import '../constants/constants.dart';
 
 class AddDeck extends StatefulWidget {

@@ -8,7 +8,7 @@ import 'package:velocity_x/velocity_x.dart';
 import '../Screens/add_deck.dart';
 import '../Screens/add_subject.dart';
 import '../Screens/add_topic.dart';
-import 'package:cards/config/config.dart';
+import 'package:cards/constants/config/config.dart';
 
 class AddNew extends StatefulWidget {
   const AddNew({super.key});
@@ -27,6 +27,7 @@ class _AddNewState extends State<AddNew> {
       {'name': "Deck", 'icon': const Icon(Icons.library_books_rounded)}
     ];
     return Container(
+      height: context.screenHeight * 0.45,
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(5, (index) {
@@ -35,9 +36,9 @@ class _AddNewState extends State<AddNew> {
                 onTap: () {
                   Navigator.pop(context);
                   if (index == 1) {
-                    VxBottomSheet.bottomSheetView(context, child: const AddCart(), maxHeight: 1, minHeight: .9, backgroundColor: Colors.transparent);
+                    VxBottomSheet.bottomSheetView(context, child: const AddCart(), maxHeight: .8, minHeight: .8, roundedFromTop: true);
                   } else if (index == 2) {
-                    VxBottomSheet.bottomSheetView(context, child: const AddTopic(), maxHeight: 1, minHeight: .7, backgroundColor: Colors.transparent);
+                    VxBottomSheet.bottomSheetView(context, child: const AddTopic(), maxHeight: 1, minHeight: .9, roundedFromTop: true);
                   } else if (index == 3) {
                     VxBottomSheet.bottomSheetView(context, child: const AddSubject(), maxHeight: 1, minHeight: .7, backgroundColor: Colors.transparent);
                   } else if (index == 4) {

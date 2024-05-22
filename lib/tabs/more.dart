@@ -1,4 +1,4 @@
-import 'package:cards/config/config.dart';
+import 'package:cards/constants/config/config.dart';
 import 'package:cards/main.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

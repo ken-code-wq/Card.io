@@ -3,7 +3,7 @@ import 'package:cards/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:cards/config/config.dart';
+import 'package:cards/constants/config/config.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../constants/constants.dart';

@@ -9,7 +9,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:cards/services/services.dart';
 
-import '../config/config.dart';
+import '../constants/config/config.dart';
 
 class SubjectPage extends StatefulWidget {
   const SubjectPage({super.key, required this.id});

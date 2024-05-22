@@ -3,13 +3,15 @@
 import 'package:cards/constants/constants.dart';
 import 'package:cards/services/tester.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../classes/hive_adapter.dart';
 import '../custom/Widgets/difficulty_selector.dart';
 import '../services/services.dart';
-import 'package:cards/config/config.dart';
+import 'package:cards/constants/config/config.dart';
 import 'add_topic.dart';
 import '../services/definitions.dart';
 
@@ -26,39 +28,17 @@ int topic = 0;
 TextEditingController question = TextEditingController();
 TextEditingController answer = TextEditingController();
 
+// {
+
+// }
 class _AddCartState extends State<AddCart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.transparent,
-      body: Container(
-        margin: EdgeInsets.only(top: context.screenHeight * 0.1),
-        height: context.screenHeight * 0.9,
-        width: context.screenWidth,
-        decoration: BoxDecoration(
-          color: MyTheme().isDark ? const Color.fromARGB(255, 56, 56, 56) : Colors.white,
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(18),
-            topLeft: Radius.circular(18),
-          ),
-        ),
-        child: Column(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.transparent,
+        body: Column(
           children: [
-            SizedBox(
-              height: context.screenHeight * 0.058,
-              width: context.screenWidth,
-              child: Center(
-                child: Container(
-                  height: 7,
-                  width: context.screenWidth * 0.3,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.5),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -66,20 +46,54 @@ class _AddCartState extends State<AddCart> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
+                      height: 40,
+                    ),
+                    Text(
+                      "Add Cards",
+                      style: GoogleFonts.aBeeZee(
+                        fontSize: 30 - 5,
+                        fontWeight: FontWeight.w600,
+                        // color: !MyTheme().isDark ? Color(boxColor[topics.values.toList()[tE].color]) : Colors.white,
+                      ),
+                    ).px(20),
+                    const SizedBox(
                       height: 20,
                     ),
-                    "Select the topic".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
-                    const Divider().px20().px2(),
-                    topicSelector(),
+                    "Select the topic"
+                        .text
+                        .textStyle(
+                          GoogleFonts.aBeeZee(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                        .make()
+                        .py4()
+                        .px24(),
+                    topicPick(),
                     const SizedBox(
                       height: 15,
                     ),
-                    "Front of the card".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
-                    const Divider().px20().px2(),
+                    "Front of the card"
+                        .text
+                        .textStyle(
+                          GoogleFonts.aBeeZee(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                        .make()
+                        .py4()
+                        .px24(),
+                    // const Divider().px20().px2(),
                     const SizedBox(
                       height: 15,
                     ),
                     TextFormField(
+                      style: GoogleFonts.aBeeZee(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
                       controller: question,
                       textCapitalization: TextCapitalization.sentences,
                       maxLines: 4,
@@ -89,12 +103,22 @@ class _AddCartState extends State<AddCart> {
                       onChanged: (val) {
                         setState(() {});
                       },
-                    ).animatedBox.animDuration(const Duration(milliseconds: 500)).easeIn.color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                    ).animatedBox.animDuration(const Duration(milliseconds: 500)).easeIn.color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade200).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
                     const SizedBox(
                       height: 40,
                     ),
-                    "Definition".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
-                    const Divider().px20().px2(),
+                    "Back of the card"
+                        .text
+                        .textStyle(
+                          GoogleFonts.aBeeZee(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                        .make()
+                        .py4()
+                        .px24(),
+                    // const Divider().px20().px2(),
                     const SizedBox(
                       height: 15,
                     ),
@@ -152,6 +176,10 @@ class _AddCartState extends State<AddCart> {
                                 }
                               }),
                           TextFormField(
+                            style: GoogleFonts.aBeeZee(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                            ),
                             onTap: () async {
                               try {
                                 List<Map> defs = [];
@@ -185,76 +213,165 @@ class _AddCartState extends State<AddCart> {
                             keyboardType: TextInputType.multiline,
                             minLines: 1,
                             maxLines: 9,
-                          ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade300).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                          ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade200).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
                         ],
                       ),
                     ),
+
+                    // "Select difficulty".text.fontWeight(FontWeight.w500).make().py4().px24(),
+                    // const Divider().px20().px2(),
+                    // // const SizedBox(
+                    // //   height: 15,
+                    // // ),
+                    // // DifficultySelector(
+                    // //   type: BoxType.card,
+                    // // ),
                     const SizedBox(
-                      height: 40,
+                      height: 55,
                     ),
-                    "Select difficulty".text.scale(1.2).fontWeight(FontWeight.w500).make().py4().px24(),
-                    const Divider().px20().px2(),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    DifficultySelector(
-                      type: BoxType.card,
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
+                    // topicMiniCard(0, false),
                   ],
                 ),
               ),
             ),
+            SizedBox(
+              width: context.screenWidth,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FloatingActionButton(
+                    heroTag: 'add',
+                    elevation: 0,
+                    onPressed: () {},
+                    backgroundColor: Colors.black,
+                    child: Icon(Icons.add, color: Colors.white),
+                    shape: const StadiumBorder(),
+                  ).px(10),
+                  FloatingActionButton.extended(
+                    heroTag: 'add',
+                    elevation: 0,
+                    onPressed: () async {
+                      if (answer.text.trim().isNotEmpty && question.text.trim().isNotEmpty) {
+                        await CardServices().createCard(
+                          id: Hive.box<Flashcard>('flashcards').length + 1,
+                          topic_id: topic,
+                          question: question.text.trim(),
+                          answer: answer.text.trim(),
+                          difficulty_user: difficulty_card,
+                          usefullness: 5,
+                          fonts: [0, 0],
+                          isImage: false,
+                        );
+                        question.clear();
+                        answer.clear();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            duration: const Duration(seconds: 4, milliseconds: 500),
+                            elevation: 15,
+                            backgroundColor: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade400,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            content: const Text(
+                              "❗❗Fill in both question and answer❗❗",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    backgroundColor: Colors.blue,
+                    label: SizedBox(
+                      width: context.screenWidth - 150,
+                      child: Center(
+                        child: Text(
+                          'Create',
+                          style: GoogleFonts.aBeeZee(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    shape: const StadiumBorder(),
+                  ).px(8),
+                ],
+              ).py(15),
+            )
           ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'add',
-        onPressed: () async {
-          if (answer.text.trim().isNotEmpty && question.text.trim().isNotEmpty) {
-            await CardServices().createCard(
-              id: Hive.box<Flashcard>('flashcards').length + 1,
-              topic_id: topic,
-              question: question.text.trim(),
-              answer: answer.text.trim(),
-              difficulty_user: difficulty_card,
-              usefullness: 5,
-              fonts: [0, 0],
-              isImage: false,
-            );
-            question.clear();
-            answer.clear();
-            Navigator.pop(context);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                duration: const Duration(seconds: 4, milliseconds: 500),
-                elevation: 15,
-                backgroundColor: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade400,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                behavior: SnackBarBehavior.floating,
-                content: const Text(
-                  "❗❗Fill in both question and answer❗❗",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            );
-          }
-        },
-        backgroundColor: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade500,
-        child: Icon(
-          Icons.check,
-          color: Colors.green[500],
-        ),
-      ),
-    );
+        ));
   }
 
-  topicSelector() {
+  Widget topicPick() {
+    return ValueListenableBuilder(
+        valueListenable: Hive.box<Topic>('topics').listenable(),
+        builder: (context, data, child) {
+          List<Topic> topics = data.values.toList();
+          return ZoomTapAnimation(
+            onTap: () {
+              VxBottomSheet.bottomSheetView(context, child: topicList(topics), maxHeight: .7, minHeight: .7);
+            },
+            child: topicMiniCard(topics[topic], false, true, context),
+          );
+        });
+  }
+
+  Widget topicList(List<Topic> topics) {
+    return StatefulBuilder(builder: (context, state) {
+      return Container(
+        height: double.maxFinite,
+        width: double.maxFinite,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
+        child: Column(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Container(
+                alignment: Alignment.centerLeft,
+                width: context.screenWidth * 0.9,
+                height: 90,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    "Topics".text.align(TextAlign.left).semiBold.scale(2).make(),
+                    ZoomTapAnimation(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(
+                          Icons.check_rounded,
+                          color: Colors.white,
+                        ).px8().py(8).box.rounded.green500.make()),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 5,
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return ZoomTapAnimation(
+                      onTap: () {
+                        setState(() {});
+                        state(() {
+                          topic = index;
+                        });
+                      },
+                      child: topicMiniCard(topics[index], topic == index, false, context));
+                },
+                itemCount: topics.length,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  topicSelxector() {
     return ValueListenableBuilder(
         valueListenable: Hive.box<Topic>('topics').listenable(),
         builder: (context, data, child) {
@@ -354,4 +471,88 @@ class _AddCartState extends State<AddCart> {
           }
         });
   }
+}
+
+Widget topicMiniCard(Topic topic, bool selected, bool out, BuildContext context) {
+  // List<Topic> topics = Hive.box<Topic>('topics').values.toList();
+  Color color = Color(boxColor[topic.color]);
+  Color lightColor = Color(boxLightColor[topic.color]);
+  return AnimatedContainer(
+    duration: const Duration(milliseconds: 300),
+    height: 80,
+    width: context.screenWidth,
+    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    decoration: BoxDecoration(
+      color: out
+          ? MyTheme().isDark
+              ? color.withOpacity(.2)
+              : lightColor.withOpacity(.4)
+          : Colors.transparent,
+      borderRadius: BorderRadius.circular(60 * 4 / 9),
+      // border: selected
+      //     ? Border.all(
+      //         color: !MyTheme().isDark ? color : Colors.white,
+      //         width: 2,
+      //       )
+      //     : const Border.symmetric(),
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(
+          width: 20,
+        ),
+        CircleAvatar(
+          backgroundColor: color,
+          radius: 10,
+        ),
+        const SizedBox(
+          width: 30,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              // color: color,
+              width: context.screenWidth - 160,
+              child: Text(
+                topic.name,
+                maxLines: 1,
+                overflow: TextOverflow.fade,
+                style: GoogleFonts.aBeeZee(
+                  fontSize: 35,
+                  fontWeight: FontWeight.w600,
+                  color: !MyTheme().isDark ? color : Colors.white,
+                ),
+              ),
+            ),
+            Text(
+              "${topic.card_ids.length} Cards",
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              style: GoogleFonts.aBeeZee(
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
+                color: !MyTheme().isDark ? color : Colors.white,
+              ),
+            ),
+          ],
+        ),
+        out
+            ? Icon(
+                Icons.arrow_drop_down_rounded,
+                color: color,
+                size: 50,
+              )
+            : selected
+                ? Icon(
+                    Icons.check_rounded,
+                    color: color,
+                    size: 40,
+                  )
+                : const Text('')
+      ],
+    ),
+  );
 }

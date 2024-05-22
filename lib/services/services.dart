@@ -210,8 +210,9 @@ class TopicServices {
     required int font,
     required int difficulty,
     required int subject_id,
+    required Map<String, List<dynamic>> directions,
   }) async {
-    await SubjectServices().addCardNTopic(id: subject_id, topic_id: id);
+    subject_id != 1000000000 ? await SubjectServices().addCardNTopic(id: subject_id, topic_id: id) : null;
     await Hive.box<Topic>('topics').add(
       Topic(
         id: id,
@@ -221,6 +222,7 @@ class TopicServices {
         font: font,
         difficulty: difficulty,
         subject_id: subject_id,
+        directions: directions,
       ),
     );
   }
@@ -245,6 +247,8 @@ class TopicServices {
         font: topic.font,
         difficulty: topic.difficulty,
         subject_id: topic.subject_id,
+        deck_id: topic.deck_id ?? null,
+        directions: topic.directions,
       ),
     );
   }
@@ -252,13 +256,15 @@ class TopicServices {
   Future editTopic({
     required int id,
     String? name,
+    Map<String, List>? directions,
     int? color,
     int? font,
     int? deck_id,
     int? difficulty,
     int? rate_of_appearance,
     Map? more,
-    required int subject_id,
+    int? subject_id,
+    // required int subject_id,
   }) async {
     Topic topic = Hive.box<Topic>('topics').values.toList()[id];
     await Hive.box<Topic>('topics').putAt(
@@ -270,7 +276,8 @@ class TopicServices {
         color: color ?? topic.color,
         font: font ?? topic.font,
         difficulty: difficulty ?? topic.difficulty,
-        subject_id: subject_id,
+        subject_id: subject_id ?? topic.subject_id,
+        directions: directions ?? topic.directions,
       ),
     );
   }
@@ -294,9 +301,9 @@ class DeckServices {
 
   Future addCardNTopicNSubject({
     required int id,
-    int? card_id,
-    int? topic_id,
-    int? subject_id,
+    List<int>? card_id,
+    List<int>? topic_id,
+    List<int>? subject_id,
   }) async {
     var deck = decks.getAt(id);
     List<int> cards = [];
@@ -304,30 +311,38 @@ class DeckServices {
     List<int> subjects = [];
 
     //Add from Hive
-    if (deck!.card_ids!.isNotEmpty) {
-      cards.addAll(deck.card_ids as Iterable<int>);
-    }
-    if (deck.topic_ids!.isNotEmpty) {
-      topics.addAll(deck.topic_ids as Iterable<int>);
-    }
-    if (deck.subject_ids!.isNotEmpty) {
-      subjects.addAll(deck.subject_ids as Iterable<int>);
+    try {
+      if (deck!.card_ids!.isNotEmpty) {
+        cards.addAll(deck.card_ids as Iterable<int>);
+      }
+      if (deck.topic_ids!.isNotEmpty) {
+        topics.addAll(deck.topic_ids as Iterable<int>);
+      }
+      if (deck.subject_ids!.isNotEmpty) {
+        subjects.addAll(deck.subject_ids as Iterable<int>);
+      }
+    } catch (e) {
+      print(e);
     }
     //Add to temp list
-    if (card_id != null) {
-      cards.add(card_id);
-    }
-    if (topic_id != null) {
-      topics.add(topic_id);
-    }
-    if (subject_id != null) {
-      topics.add(subject_id);
+    try {
+      if (card_id != null) {
+        cards.addAll(card_id);
+      }
+      if (topic_id != null) {
+        topics.addAll(topic_id);
+      }
+      if (subject_id != null) {
+        subjects.addAll(subject_id);
+      }
+    } catch (e) {
+      print(e);
     }
     await Hive.box<Deck>('decks').putAt(
       id,
       Deck(
         id: id,
-        name: deck.name,
+        name: deck!.name,
         topic_ids: topics,
         card_ids: cards,
         subject_ids: subjects,
