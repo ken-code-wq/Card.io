@@ -54,7 +54,7 @@ class _AddTopicState extends State<AddTopic> {
                     const SizedBox(
                       height: 30,
                     ),
-                    "Select Topic"
+                    "Select Subject"
                         .text
                         .textStyle(
                           GoogleFonts.aBeeZee(
@@ -156,12 +156,6 @@ class _AddTopicState extends State<AddTopic> {
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    const SizedBox(
-                      height: 20,
                     ),
                   ],
                 ),

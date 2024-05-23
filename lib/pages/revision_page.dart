@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:cards/constants/constants.dart';
-import 'package:cards/main.dart';
 import 'package:cards/services/services.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
@@ -335,77 +334,6 @@ class _RevisionState extends State<Revision> {
               blastDirectionality: BlastDirectionality.explosive,
               blastDirection: .5 * pi,
               // strokeWidth: 5,
-            ),
-          ),
-          Visibility(
-            visible: false,
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(widget.card_ids[cards.last])!.topic_id].color ?? 0]),
-                      Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(widget.card_ids[cards.last])!.topic_id].color ?? 0]).withOpacity(.8),
-                      Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(widget.card_ids[cards.last])!.topic_id].color ?? 0]).withOpacity(.4),
-                    ],
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 40,
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.03, vertical: 40),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
-                      alignment: Alignment.center,
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: const TextSpan(
-                          children: [
-                            TextSpan(text: "Swipe ", style: TextStyle(color: Colors.black, fontSize: 12)),
-                            TextSpan(text: "LEFT ", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
-                            TextSpan(text: "to review again, and ", style: TextStyle(color: Colors.black, fontSize: 12)),
-                            TextSpan(text: "RIGHT ", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
-                            TextSpan(text: "if you understand", style: TextStyle(color: Colors.black, fontSize: 12)),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.73,
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: CardSwiper(
-                        allowedSwipeDirection: AllowedSwipeDirection.symmetric(vertical: false, horizontal: true),
-                        controller: revController,
-                        cardBuilder: (context, index, horizontalThresholdPercentage, verticalThresholdPercentage) => FlippingCard(number: widget.card_ids[cards.last]),
-                        cardsCount: 1,
-                        numberOfCardsDisplayed: 1,
-                        isLoop: false,
-                        onSwipe: (previousIndex, currentIndex, direction) {
-                          if (direction == CardSwiperDirection.right) {
-                            setState(() {
-                              // good.add(cards.last);
-                              revise = false;
-                            });
-                          } else {
-                            setState(() {
-                              // hard.add(cards.last);
-                              revise = false;
-                            });
-                          }
-                          return true;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
           ),
         ],

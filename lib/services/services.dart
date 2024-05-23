@@ -47,6 +47,9 @@ class CardServices {
           imageURLs: imageURLs),
     );
     await TopicServices().addCard(id: topic_id, card_id: id);
+    Topic topic = Hive.box<Topic>('topics').values.toList()[topic_id];
+
+    topic.subject_id != 1000000000 ? await SubjectServices().addCardNTopic(id: topic.subject_id, card_id: id) : null;
   }
 
   Future removeCard({

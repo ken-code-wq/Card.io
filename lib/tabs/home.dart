@@ -459,37 +459,39 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            Container(
-              height: context.screenHeight * 0.0651,
-              width: context.screenWidth,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      margin: const EdgeInsets.only(left: 10),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(context.screenHeight * 0.1), color: Colors.grey.shade200),
-                      child: TextField(
-                        maxLines: 4,
-                        decoration: InputDecoration(border: InputBorder.none, hintText: 'What do you want to tell us ?', hintStyle: TextStyle(color: Colors.grey.shade600.withOpacity(.6))),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    padding: const EdgeInsets.all(4),
-                    width: 70,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.deepPurpleAccent.withOpacity(.3)),
-                    alignment: Alignment.center,
-                    child: const Icon(
-                      Icons.send_rounded,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                  )
-                ],
-              ),
-            ),
+
+            // Container(
+            //   height: context.screenHeight * 0.0651,
+            //   width: context.screenWidth,
+            //   child: Row(
+            //     children: [
+            //       Expanded(
+            //         child: Container(
+            //           padding: const EdgeInsets.symmetric(horizontal: 20),
+            //           margin: const EdgeInsets.only(left: 10),
+            //           alignment: Alignment.center,
+            //           decoration: BoxDecoration(borderRadius: BorderRadius.circular(context.screenHeight * 0.1), color: Colors.grey.shade200),
+            //           child: TextField(
+            //             maxLines: 4,
+            //             decoration: InputDecoration(border: InputBorder.none, hintText: 'What do you want to tell us ?', hintStyle: TextStyle(color: Colors.grey.shade600.withOpacity(.6))),
+            //           ),
+            //         ),
+            //       ),
+            //       Container(
+            //         margin: const EdgeInsets.symmetric(horizontal: 5),
+            //         padding: const EdgeInsets.all(4),
+            //         width: 70,
+            //         decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.deepPurpleAccent.withOpacity(.3)),
+            //         alignment: Alignment.center,
+            //         child: const Icon(
+            //           Icons.send_rounded,
+            //           color: Colors.deepPurpleAccent,
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // ),
+
             SizedBox(
               height: context.screenHeight * 0.2,
             )

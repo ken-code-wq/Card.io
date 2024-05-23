@@ -120,7 +120,7 @@ class _AddCartState extends State<AddCart> {
                         .px24(),
                     // const Divider().px20().px2(),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                     AnimatedContainer(
                       duration: const Duration(microseconds: 900),
@@ -217,19 +217,6 @@ class _AddCartState extends State<AddCart> {
                         ],
                       ),
                     ),
-
-                    // "Select difficulty".text.fontWeight(FontWeight.w500).make().py4().px24(),
-                    // const Divider().px20().px2(),
-                    // // const SizedBox(
-                    // //   height: 15,
-                    // // ),
-                    // // DifficultySelector(
-                    // //   type: BoxType.card,
-                    // // ),
-                    const SizedBox(
-                      height: 55,
-                    ),
-                    // topicMiniCard(0, false),
                   ],
                 ),
               ),

@@ -108,17 +108,58 @@ class _TopicCardState extends State<TopicCard> {
                         ),
                         Hero(
                           tag: "Topic ${widget.index}",
-                          child: FAProgressBar(
-                            currentValue: widget.topics.values.toList()[widget.index].directions!['easy']!.length / topicL * 100,
-                            backgroundColor: Colors.white.withOpacity(.2),
-                            size: 10,
-                            progressColor: Color(boxColor[widget.topics.values.toList()[widget.index].color]),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(right: widget.topics.values.toList()[widget.index].directions!['easy']!.length != 0 ? 2 : 0),
+                                width: widget.topics.values.toList()[widget.index].directions!['easy']!.length / topicL * (context.screenWidth * 0.9 - 40),
+                                height: 10,
+                                child: FAProgressBar(
+                                  currentValue: 100,
+                                  backgroundColor: Colors.white.withOpacity(.2),
+                                  size: 10,
+                                  progressColor: Colors.blue,
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(right: widget.topics.values.toList()[widget.index].directions!['good']!.length != 0 ? 2 : 0),
+                                width: widget.topics.values.toList()[widget.index].directions!['good']!.length / topicL * (context.screenWidth * 0.9 - 40),
+                                height: 10,
+                                child: FAProgressBar(
+                                  currentValue: 100,
+                                  backgroundColor: Colors.white.withOpacity(.2),
+                                  size: 10,
+                                  progressColor: Colors.green,
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(right: widget.topics.values.toList()[widget.index].directions!['hard']!.length != 0 ? 2 : 0),
+                                width: widget.topics.values.toList()[widget.index].directions!['hard']!.length / topicL * (context.screenWidth * 0.9 - 40),
+                                height: 10,
+                                child: FAProgressBar(
+                                  currentValue: 100,
+                                  backgroundColor: Colors.white.withOpacity(.2),
+                                  size: 10,
+                                  progressColor: Colors.orange,
+                                ),
+                              ),
+                              SizedBox(
+                                width: widget.topics.values.toList()[widget.index].directions!['again']!.length / topicL * (context.screenWidth * 0.9 - 40),
+                                height: 10,
+                                child: FAProgressBar(
+                                  currentValue: 100,
+                                  backgroundColor: Colors.white.withOpacity(.2),
+                                  size: 10,
+                                  progressColor: Colors.red,
+                                  // progressColor: Color(boxColor[widget.topics.values.toList()[widget.index].color]),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            "${widget.topics.values.toList()[widget.index].card_ids.length} Cards".text.scale(1.051).make(),
                             "${widget.topics.values.toList()[widget.index].directions!['easy']!.length} /${widget.topics.values.toList()[widget.index].card_ids.length} cards learned".text.make(),
                           ],
                         ),
