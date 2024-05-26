@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 List<Map> levelsBoxes = [
   {'name': 'Easy', 'color': Colors.green.shade500.value},
@@ -47,6 +48,8 @@ List<int> boxLightColor = [
   Colors.brown.shade100.value,
   Color.fromARGB(255, 244, 181, 255).value,
 ];
+
+TextStyle rowStyle = GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 20);
 
 int difficulty_card = 0;
 int difficulty_topic = 0;

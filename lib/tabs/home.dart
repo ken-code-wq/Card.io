@@ -100,365 +100,40 @@ class _HomeState extends State<Home> {
             AppBar(
               surfaceTintColor: Colors.transparent,
               actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 35,
+                    child: Image.asset('assets/streak-flame.png'),
+                  ),
+                  ShaderMask(
+                    shaderCallback: (bounds) {
+                      return RadialGradient(
+                        center: Alignment.topLeft,
+                        radius: 1.0,
+                        colors: <Color>[
+                          Colors.amber.withOpacity(1),
+                          Colors.orange.withOpacity(1),
+                          Colors.red.withOpacity(1),
+                        ],
+                        tileMode: TileMode.mirror,
+                      ).createShader(bounds);
+                    },
+                    child: Text("102 day streak",
+                        maxLines: 3,
+                        overflow: TextOverflow.fade,
+                        style: GoogleFonts.aBeeZee(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        )).px4(),
+                  ),
+                ],
+              ),
             ),
             greeting(context),
             bestTopic(context),
-            SizedBox(
-              height: context.screenHeight * 0.36,
-              width: context.screenWidth,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ZoomTapAnimation(
-                    child: SizedBox(
-                      height: context.screenHeight * 0.36,
-                      width: context.screenWidth * 0.45,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            height: context.screenHeight * 0.36,
-                            width: context.screenWidth * 0.45,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(64 / 3),
-                              gradient: const LinearGradient(colors: [
-                                Colors.amber,
-                                Colors.orange,
-                                Colors.red,
-                              ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                            height: context.screenHeight * 0.36,
-                            width: context.screenWidth * 0.45,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: MyTheme().isDark ? Colors.black : Colors.white,
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            height: context.screenHeight * 0.36,
-                            width: context.screenWidth * 0.45,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(64 / 3),
-                              gradient: LinearGradient(colors: [
-                                Colors.amber.withOpacity(.1),
-                                Colors.orange.withOpacity(.1),
-                                Colors.red.withOpacity(.1),
-                              ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: context.screenHeight * 0.15,
-                                  child: Image.asset('assets/streak-flame.png'),
-                                ),
-                                SizedBox(
-                                  child: Column(
-                                    children: [
-                                      Text("84", style: GoogleFonts.aBeeZee(fontSize: 60, fontWeight: FontWeight.w900, color: Colors.orange)),
-                                      Text("Day Streak", style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red)),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: ZoomTapAnimation(
-                          child: Container(
-                            width: context.screenWidth * 0.45,
-                            decoration: BoxDecoration(
-                              color: Colors.blue.shade400.withOpacity(.1),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Blur(
-                                    blur: 20,
-                                    onTop: SizedBox(
-                                      width: context.screenWidth * 0.45,
-                                      height: context.screenHeight * 0.36,
-                                    ),
-                                  ),
-                                ),
-                                ShaderMask(
-                                  shaderCallback: (bounds) {
-                                    return RadialGradient(
-                                      center: Alignment.topLeft,
-                                      radius: 1.0,
-                                      colors: <Color>[Colors.blueAccent.shade200, Colors.lightBlue.shade700],
-                                      tileMode: TileMode.mirror,
-                                    ).createShader(bounds);
-                                  },
-                                  child: Text("Try AI generated quizzes",
-                                      maxLines: 3,
-                                      overflow: TextOverflow.fade,
-                                      style: GoogleFonts.aBeeZee(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      )).py8().px12(),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: context.screenWidth * 0.1 / 3),
-                      Expanded(
-                        child: ZoomTapAnimation(
-                          onTap: () {
-                            vibrate(amplitude: 20, duration: 30);
-                            setState(() {
-                              // Hive.box('prefs').put('isDark', val);
-                              MyTheme().switchTheme(isDark: !MyTheme().isDark);
-                              MyTheme().refresh();
-                            });
-                          },
-                          child: Container(
-                            width: context.screenWidth * 0.45,
-                            decoration: BoxDecoration(
-                              color: MyTheme().isDark ? Colors.blue.shade600.withOpacity(.7) : Colors.blue.withOpacity(.7),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Icon(Icons.dark_mode_rounded),
-                                    Switch(
-                                      inactiveThumbColor: Colors.blue.shade100,
-                                      inactiveTrackColor: Colors.black,
-                                      onChanged: (val) {
-                                        vibrate(amplitude: 20, duration: 30);
-                                        setState(() {
-                                          // Hive.box('prefs').put('isDark', val);
-                                          MyTheme().switchTheme(isDark: val);
-                                          MyTheme().refresh();
-                                        });
-                                      },
-                                      value: MyTheme().isDark,
-                                    )
-                                  ],
-                                ).px12().py4(),
-                                Text("Toggle dark mode", style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.w600)).py8().px12(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Container(
-              color: Colors.transparent,
-              margin: const EdgeInsets.symmetric(vertical: 40),
-              height: context.screenHeight * 0.32,
-              width: context.screenWidth,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Revise these topics",
-                        style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w500, fontSize: 25),
-                      ),
-                      ZoomTapAnimation(
-                        onTap: () {
-                          setState(() {
-                            currentIndex = 1;
-                          });
-                        },
-                        child: Container(
-                          height: 30,
-                          width: 40,
-                          alignment: Alignment.center,
-                          child: Text(
-                            "All",
-                            style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w500, color: Colors.blue),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ).px12(),
-                  const SizedBox(height: 15),
-                  SizedBox(
-                    height: context.screenHeight * 0.25,
-                    width: context.screenWidth,
-                    child: CustomScrollView(
-                      scrollDirection: Axis.horizontal,
-                      slivers: [
-                        SliverList.builder(
-                          itemBuilder: (context, number) {
-                            int index = 0;
-                            if (upToDown) {
-                              index = topics.length - number - 1;
-                            } else {
-                              index = number;
-                            }
-                            int sId = topics.toList()[index].subject_id;
-                            return SizedBox(
-                              width: context.screenWidth * 0.8,
-                              child: ZoomTapAnimation(
-                                onLongTap: () {
-                                  vibrate(amplitude: 20, duration: 30);
-                                  VxBottomSheet.bottomSheetView(
-                                    context,
-                                    backgroundColor: !MyTheme().isDark ? Color(boxLightColor[topics.toList()[index].color]) : Colors.grey.shade900,
-                                    child: SizedBox(
-                                      height: context.screenHeight * 0.35,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          ZoomTapAnimation(
-                                            child: ListTile(
-                                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
-                                              tileColor: Color(boxColor[topics.toList()[index].color]).withOpacity(.3),
-                                              leading: "🖋".text.headline2(context).make(),
-                                              title: "Edit".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
-                                              subtitle: const Text("Change name, color and Subject"),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          ZoomTapAnimation(
-                                            onTap: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      insetPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(20.0),
-                                                      ),
-                                                      title: Text(
-                                                        "Are you sure you want to delete this topic ?",
-                                                        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-                                                      ),
-                                                      content: const Text("Deleting this topic does not delete the cards associated to this topic, unless you say so. \nWhat would you want to delete ?"),
-                                                      actions: [
-                                                        SingleChildScrollView(
-                                                          scrollDirection: Axis.horizontal,
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                            children: [
-                                                              TextButton(
-                                                                style: TextButton.styleFrom(
-                                                                  backgroundColor: Colors.grey[700],
-                                                                ),
-                                                                onPressed: () {
-                                                                  Navigator.pop(context);
-                                                                },
-                                                                child: const Text(
-                                                                  "Cancel",
-                                                                  style: TextStyle(color: Colors.white),
-                                                                ),
-                                                              ),
-                                                              const SizedBox(width: 10.0),
-                                                              TextButton(
-                                                                style: TextButton.styleFrom(
-                                                                  backgroundColor: Colors.red.shade300,
-                                                                ),
-                                                                onPressed: () async {
-                                                                  await TopicServices().remove(id: index);
-                                                                  // ignore: use_build_context_synchronously
-                                                                  Navigator.pop(context);
-                                                                  Navigator.pop(context);
-                                                                },
-                                                                child: const Text(
-                                                                  "Topic only",
-                                                                  style: TextStyle(color: Colors.white),
-                                                                ),
-                                                              ),
-                                                              const SizedBox(width: 15.0),
-                                                              TextButton(
-                                                                style: TextButton.styleFrom(
-                                                                  backgroundColor: Colors.red.shade900,
-                                                                ),
-                                                                onPressed: () async {
-                                                                  Navigator.pop(context);
-                                                                  Navigator.pop(context);
-                                                                  //TODO
-                                                                },
-                                                                child: const Text(
-                                                                  "Everything",
-                                                                  style: TextStyle(
-                                                                    color: Colors.white,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    );
-                                                  });
-                                            },
-                                            child: ListTile(
-                                              tileColor: Color(boxColor[topics.toList()[index].color]).withOpacity(.3),
-                                              leading: "❌".text.headline2(context).make(),
-                                              title: "Delete".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
-                                              subtitle: const Text("Delete topic but not all cards this topic"),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          ZoomTapAnimation(
-                                            child: ListTile(
-                                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16))),
-                                              tileColor: Color(boxColor[topics.toList()[index].color]).withOpacity(.3),
-                                              leading: "👓".text.headline2(context).make(),
-                                              title: "More".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
-                                            ),
-                                          ),
-                                        ],
-                                      ).px8(),
-                                    ),
-                                    minHeight: .35,
-                                    maxHeight: .7,
-                                  );
-                                },
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return TopicPage(
-                                        index: index,
-                                        color: topics.toList()[index].color,
-                                      );
-                                    }),
-                                  );
-                                },
-                                child: TopicCard(index: index, topics: Hive.box<Topic>('topics'), sId: sId),
-                                // child: topicMiniCard(index, false, true, context),
-                              ),
-                            ).px8();
-                          },
-                          itemCount: topics.length <= 3 ? topics.length : 4,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             // Container(
             //   height: context.screenHeight * 0.0651,
@@ -502,6 +177,201 @@ class _HomeState extends State<Home> {
   }
 }
 
+Widget revision(BuildContext context) {
+  List<Topic> topics = Hive.box<Topic>('topics').values.toList();
+  return Container(
+    color: Colors.transparent,
+    margin: const EdgeInsets.symmetric(vertical: 40),
+    height: context.screenHeight * 0.32,
+    width: context.screenWidth,
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Revise these topics",
+              style: rowStyle,
+            ),
+            ZoomTapAnimation(
+              onTap: () {
+                // setState(() {
+                //   currentIndex = 1;
+                // });
+              },
+              child: Container(
+                height: 30,
+                width: 40,
+                alignment: Alignment.center,
+                child: Text(
+                  "All",
+                  style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w500, color: Colors.blue),
+                ),
+              ),
+            ),
+          ],
+        ).px12(),
+        const SizedBox(height: 15),
+        SizedBox(
+          height: context.screenHeight * 0.25,
+          width: context.screenWidth,
+          child: CustomScrollView(
+            scrollDirection: Axis.horizontal,
+            slivers: [
+              SliverList.builder(
+                itemBuilder: (context, number) {
+                  int index = 0;
+                  if (upToDown) {
+                    index = topics.length - number - 1;
+                  } else {
+                    index = number;
+                  }
+                  int sId = topics.toList()[index].subject_id;
+                  return SizedBox(
+                    width: context.screenWidth * 0.8,
+                    child: ZoomTapAnimation(
+                      onLongTap: () {
+                        vibrate(amplitude: 20, duration: 30);
+                        VxBottomSheet.bottomSheetView(
+                          context,
+                          backgroundColor: !MyTheme().isDark ? Color(boxLightColor[topics.toList()[index].color]) : Colors.grey.shade900,
+                          child: SizedBox(
+                            height: context.screenHeight * 0.35,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ZoomTapAnimation(
+                                  child: ListTile(
+                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+                                    tileColor: Color(boxColor[topics.toList()[index].color]).withOpacity(.3),
+                                    leading: "🖋".text.headline2(context).make(),
+                                    title: "Edit".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
+                                    subtitle: const Text("Change name, color and Subject"),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                ZoomTapAnimation(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            insetPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20.0),
+                                            ),
+                                            title: Text(
+                                              "Are you sure you want to delete this topic ?",
+                                              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                                            ),
+                                            content: const Text("Deleting this topic does not delete the cards associated to this topic, unless you say so. \nWhat would you want to delete ?"),
+                                            actions: [
+                                              SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor: Colors.grey[700],
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        "Cancel",
+                                                        style: TextStyle(color: Colors.white),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 10.0),
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor: Colors.red.shade300,
+                                                      ),
+                                                      onPressed: () async {
+                                                        await TopicServices().remove(id: index);
+                                                        // ignore: use_build_context_synchronously
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        "Topic only",
+                                                        style: TextStyle(color: Colors.white),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 15.0),
+                                                    TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor: Colors.red.shade900,
+                                                      ),
+                                                      onPressed: () async {
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        //TODO
+                                                      },
+                                                      child: const Text(
+                                                        "Everything",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: ListTile(
+                                    tileColor: Color(boxColor[topics.toList()[index].color]).withOpacity(.3),
+                                    leading: "❌".text.headline2(context).make(),
+                                    title: "Delete".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
+                                    subtitle: const Text("Delete topic but not all cards this topic"),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                ZoomTapAnimation(
+                                  child: ListTile(
+                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16))),
+                                    tileColor: Color(boxColor[topics.toList()[index].color]).withOpacity(.3),
+                                    leading: "👓".text.headline2(context).make(),
+                                    title: "More".text.headline4(context).textStyle(GoogleFonts.aBeeZee(fontSize: 30, fontWeight: FontWeight.w700)).make(),
+                                  ),
+                                ),
+                              ],
+                            ).px8(),
+                          ),
+                          minHeight: .35,
+                          maxHeight: .7,
+                        );
+                      },
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return TopicPage(
+                              index: index,
+                              color: topics.toList()[index].color,
+                            );
+                          }),
+                        );
+                      },
+                      child: TopicCard(index: index, topics: Hive.box<Topic>('topics'), sId: sId),
+                      // child: topicMiniCard(index, false, true, context),
+                    ),
+                  ).px8();
+                },
+                itemCount: topics.length <= 3 ? topics.length : 4,
+              )
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 Widget greeting(BuildContext context) {
   return Container(
     height: context.screenHeight * 0.13,
@@ -529,6 +399,7 @@ Widget greeting(BuildContext context) {
                 ),
                 Text(
                   names[DateTime.now().weekday - 1],
+                  //package:google_fonts/google_fonts.dart 'Pearl',
                   style: GoogleFonts.aBeeZee(fontSize: 35, fontWeight: FontWeight.w700),
                 )
               ],
@@ -646,6 +517,174 @@ Widget tqopicStat(BuildContext context) {
   );
 }
 
+Widget collumnRow(BuildContext context) {
+  return SizedBox(
+    height: context.screenHeight * 0.36,
+    width: context.screenWidth,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ZoomTapAnimation(
+          child: SizedBox(
+            height: context.screenHeight * 0.36,
+            width: context.screenWidth * 0.45,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: context.screenHeight * 0.36,
+                  width: context.screenWidth * 0.45,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(64 / 3),
+                    gradient: const LinearGradient(colors: [
+                      Colors.amber,
+                      Colors.orange,
+                      Colors.red,
+                    ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  height: context.screenHeight * 0.36,
+                  width: context.screenWidth * 0.45,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: MyTheme().isDark ? Colors.black : Colors.white,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  height: context.screenHeight * 0.36,
+                  width: context.screenWidth * 0.45,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(64 / 3),
+                    gradient: LinearGradient(colors: [
+                      Colors.amber.withOpacity(.1),
+                      Colors.orange.withOpacity(.1),
+                      Colors.red.withOpacity(.1),
+                    ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: context.screenHeight * 0.15,
+                        child: Image.asset('assets/streak-flame.png'),
+                      ),
+                      SizedBox(
+                        child: Column(
+                          children: [
+                            Text("84", style: GoogleFonts.aBeeZee(fontSize: 60, fontWeight: FontWeight.w900, color: Colors.orange)),
+                            Text("Day Streak", style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: ZoomTapAnimation(
+                child: Container(
+                  width: context.screenWidth * 0.45,
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade400.withOpacity(.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Blur(
+                          blur: 20,
+                          onTop: SizedBox(
+                            width: context.screenWidth * 0.45,
+                            height: context.screenHeight * 0.36,
+                          ),
+                        ),
+                      ),
+                      ShaderMask(
+                        shaderCallback: (bounds) {
+                          return RadialGradient(
+                            center: Alignment.topLeft,
+                            radius: 1.0,
+                            colors: <Color>[Colors.blueAccent.shade200, Colors.lightBlue.shade700],
+                            tileMode: TileMode.mirror,
+                          ).createShader(bounds);
+                        },
+                        child: Text("Try AI generated quizzes",
+                            maxLines: 3,
+                            overflow: TextOverflow.fade,
+                            style: GoogleFonts.aBeeZee(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            )).py8().px12(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: context.screenWidth * 0.1 / 3),
+            Expanded(
+              child: ZoomTapAnimation(
+                onTap: () {
+                  vibrate(amplitude: 20, duration: 30);
+                  // setState(() {
+                  //   // Hive.box('prefs').put('isDark', val);
+                  //   MyTheme().switchTheme(isDark: !MyTheme().isDark);
+                  //   MyTheme().refresh();
+                  // });
+                },
+                child: Container(
+                  width: context.screenWidth * 0.45,
+                  decoration: BoxDecoration(
+                    color: MyTheme().isDark ? Colors.blue.shade600.withOpacity(.7) : Colors.blue.withOpacity(.7),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Icon(Icons.dark_mode_rounded),
+                          Switch(
+                            inactiveThumbColor: Colors.blue.shade100,
+                            inactiveTrackColor: Colors.black,
+                            onChanged: (val) {
+                              vibrate(amplitude: 20, duration: 30);
+                              // setState(() {
+                              //   // Hive.box('prefs').put('isDark', val);
+                              //   MyTheme().switchTheme(isDark: val);
+                              //   MyTheme().refresh();
+                              // });
+                            },
+                            value: MyTheme().isDark,
+                          )
+                        ],
+                      ).px12().py4(),
+                      Text("Toggle dark mode", style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.w600)).py8().px12(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
+    ),
+  );
+}
+
 Widget bestTopic(BuildContext context) {
   final ValueNotifier<double> _valueNotifier = ValueNotifier(0);
   var subjects = Hive.box<Subject>('subjects');
@@ -656,25 +695,32 @@ Widget bestTopic(BuildContext context) {
         int maxE = 0;
         int tE = 0;
 
-        for (int i = 0; i <= topics.length; i++) {
+        for (int i = 0; i < topics.length; i++) {
           try {
             if (topics.values.toList()[i].card_ids.isEmpty) {
               int cardL = 1;
               int maxT = topics.values.toList()[i].directions!['easy']!.length;
-              if (maxT >= maxE && maxT != 1) {
+              if (maxT >= maxE) {
                 tE = i;
                 maxE = maxT;
                 valE = (maxE / cardL * 100).ceil();
               }
             } else {
               int maxT = topics.values.toList()[i].directions!['easy']!.length;
-              if (maxT >= maxE && maxT != 1) {
+              if (maxT >= maxE) {
                 tE = i;
                 maxE = maxT;
                 valE = (maxE / topics.values.toList()[i].card_ids.length * 100).ceil();
               }
             }
-          } catch (e) {}
+
+            print(valE);
+            print(maxE);
+            print(tE);
+            print(valE);
+          } catch (e) {
+            print(e);
+          }
         }
         return ZoomTapAnimation(
           onTap: () {

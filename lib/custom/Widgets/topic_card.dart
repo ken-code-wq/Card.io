@@ -94,7 +94,7 @@ class _TopicCardState extends State<TopicCard> {
                               padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                               decoration: BoxDecoration(border: Border.all(color: Color(boxColor[widget.topics.values.toList()[widget.index].color]), width: 2), color: Colors.transparent, borderRadius: BorderRadius.circular(14)),
                               child: Text(
-                                widget.sId != 1000000000 ? subjects.values.toList()[widget.sId].name : '<Unknown Subject>',
+                                widget.sId != 1000000000 ? subjects.values.toList()[widget.sId].name : '<No Subject>',
                                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: !MyTheme().isDark ? Color(boxColor[widget.topics.values.toList()[widget.index].color]) : Colors.white),
                               ),
                             ),

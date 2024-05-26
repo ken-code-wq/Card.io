@@ -62,19 +62,104 @@ void main() async {
     }
   }
 
-  if (await Permission.storage.request().isGranted || await Permission.manageExternalStorage.request().isGranted) {
+  if (await Permission.storage.request().isGranted) {
     MyTheme().switchGStatus(isGranted: true);
   } else {
     await Permission.storage.request();
   }
   await Permission.storage.request();
-  await Permission.manageExternalStorage.request();
   if (await Permission.storage.request().isGranted) {
-    await Hive.openBox<Flashcard>('flashcards', path: newPath);
-    await Hive.openBox<Topic>('topics', path: newPath);
-    await Hive.openBox<Subject>('subjects', path: newPath);
     await Hive.openBox<Deck>('decks', path: newPath);
+    await Hive.openBox<Subject>('subjects', path: newPath);
+    await Hive.openBox<Topic>('topics', path: newPath);
+    await Hive.openBox<Flashcard>('flashcards', path: newPath);
+
+    if (Hive.box<Topic>('topics').isEmpty && Hive.box<Flashcard>('flashcards').isEmpty) {
+      await Hive.box<Topic>('topics').add(
+        Topic(
+          id: 0,
+          name: "Introductory Topic",
+          card_ids: [0, 1, 2, 3],
+          difficulty: 0,
+          color: 4,
+          font: 0,
+          directions: {'again': [], 'hard': [], 'good': [], 'easy': []},
+        ),
+      );
+
+      await Hive.box<Flashcard>('flashcards').add(
+        Flashcard(
+          id: 0,
+          topic_id: 0,
+          question: 'Welcome to Cards.io ! \nTap the card to turn it over and see if you got the answer right',
+          answer: 'Swipe right if you understand and left if you do not  understand.',
+          difficulty_user: 0,
+          times_appeared: 0,
+          times_correct: 0,
+          usefullness: 0,
+          rate_of_appearance: 0,
+          times_spent: [],
+          ratings: [0],
+          fonts: [],
+          isImage: false,
+        ),
+      );
+      await Hive.box<Flashcard>('flashcards').add(
+        Flashcard(
+          id: 1,
+          topic_id: 0,
+          question: 'To create a card you need a topic.',
+          answer: 'Here is how the categorization goes \n Cards < Topic < Subject < Deck',
+          difficulty_user: 0,
+          times_appeared: 0,
+          times_correct: 0,
+          usefullness: 0,
+          rate_of_appearance: 0,
+          times_spent: [],
+          ratings: [0],
+          fonts: [],
+          isImage: false,
+        ),
+      );
+
+      await Hive.box<Flashcard>('flashcards').add(
+        Flashcard(
+          id: 2,
+          topic_id: 0,
+          question: 'Some motivational quotes to get you going',
+          answer: '🥇 Believe you can and you are halfway there \n🥈 Learning is a lifelng journey',
+          difficulty_user: 0,
+          times_appeared: 0,
+          times_correct: 0,
+          usefullness: 0,
+          rate_of_appearance: 0,
+          times_spent: [],
+          ratings: [0],
+          fonts: [],
+          isImage: false,
+        ),
+      );
+
+      await Hive.box<Flashcard>('flashcards').add(
+        Flashcard(
+          id: 3,
+          topic_id: 0,
+          question: 'You are all set now 🙂',
+          answer: 'Have fun 👋',
+          difficulty_user: 0,
+          times_appeared: 0,
+          times_correct: 0,
+          usefullness: 0,
+          rate_of_appearance: 0,
+          times_spent: [],
+          ratings: [0],
+          fonts: [],
+          isImage: false,
+        ),
+      );
+    }
   }
+
   runApp(const MyApp());
 }
 
