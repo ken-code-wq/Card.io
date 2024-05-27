@@ -185,7 +185,7 @@ class _RevisionState extends State<Revision> {
                       isDone = true;
                       confettiController.play();
                       await TopicServices().editTopic(id: widget.id, directions: {'again': again, 'hard': hard, 'good': good, 'easy': easy});
-                      print(Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(widget.card_ids[cards.last])!.topic_id].directions ?? 0);
+                      // print(Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(widget.card_ids[cards.last])!.topic_id].directions ?? 0);
                     },
                     scale: .8,
                     onSwipeDirectionChange: (initial, finalD) {

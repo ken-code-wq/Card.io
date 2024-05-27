@@ -1,28 +1,20 @@
 // ignore_for_file: unnecessary_const, empty_catches
 
-import 'dart:ui';
-
 import 'package:cards/classes/hive_adapter.dart';
 import 'package:cards/constants/constants.dart';
-import 'package:cards/custom/Widgets/card.dart';
-import 'package:cards/custom/Widgets/empty_card.dart';
 import 'package:cards/services/services.dart';
 import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
-import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-
-import '../Screens/add_card.dart';
 import '../constants/config/config.dart';
 import '../custom/Widgets/blur.dart';
 import '../custom/Widgets/topic_card.dart';
 import '../gamification/vibration_tap.dart';
-import '../main.dart';
+import '../pages/revision_page.dart';
 import '../pages/topic.dart';
 import 'library.dart';
 
@@ -38,6 +30,7 @@ class Home extends StatefulWidget {
 //08/26
 //Code: 417
 //Ruth Glover Boulo
+// A week way
 List greetings = ['Good morning', 'Good afternoon', 'Good evening'];
 List names = ['Levi', 'Annie', 'Mikasa', 'Eren', 'Hanje', 'Zeek', 'Pyxis'];
 int dayTime = 0;
@@ -89,15 +82,16 @@ class _HomeState extends State<Home> {
     setState(() {
       val = (max * 100).ceil();
     });
-    return Scaffold(
-      drawer: const Drawer(
-        shape: BeveledRectangleBorder(),
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            AppBar(
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        drawer: const Drawer(
+          shape: BeveledRectangleBorder(),
+        ),
+        body: CustomScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          slivers: [
+            SliverAppBar(
               surfaceTintColor: Colors.transparent,
               actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
               title: Row(
@@ -132,43 +126,74 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            greeting(context),
-            bestTopic(context),
-
-            // Container(
-            //   height: context.screenHeight * 0.0651,
-            //   width: context.screenWidth,
-            //   child: Row(
-            //     children: [
-            //       Expanded(
-            //         child: Container(
-            //           padding: const EdgeInsets.symmetric(horizontal: 20),
-            //           margin: const EdgeInsets.only(left: 10),
-            //           alignment: Alignment.center,
-            //           decoration: BoxDecoration(borderRadius: BorderRadius.circular(context.screenHeight * 0.1), color: Colors.grey.shade200),
-            //           child: TextField(
-            //             maxLines: 4,
-            //             decoration: InputDecoration(border: InputBorder.none, hintText: 'What do you want to tell us ?', hintStyle: TextStyle(color: Colors.grey.shade600.withOpacity(.6))),
-            //           ),
-            //         ),
-            //       ),
-            //       Container(
-            //         margin: const EdgeInsets.symmetric(horizontal: 5),
-            //         padding: const EdgeInsets.all(4),
-            //         width: 70,
-            //         decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.deepPurpleAccent.withOpacity(.3)),
-            //         alignment: Alignment.center,
-            //         child: const Icon(
-            //           Icons.send_rounded,
-            //           color: Colors.deepPurpleAccent,
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // ),
-
-            SizedBox(
-              height: context.screenHeight * 0.2,
+            SliverToBoxAdapter(
+              child: greeting(context),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: context.screenHeight * 0.08,
+                width: context.screenWidth * 0.6,
+                child: TabBar(
+                  padding: EdgeInsets.zero,
+                  // dividerColor: Color(boxColor[widget.color]),
+                  labelStyle: GoogleFonts.aBeeZee(color: MyTheme().isDark ? Colors.white : Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                  indicatorColor: MyTheme().isDark ? Colors.white : Colors.black,
+                  indicatorWeight: 4,
+                  unselectedLabelStyle: TextStyle(color: MyTheme().isDark ? Colors.white60 : Colors.grey.shade800, fontSize: 15, fontWeight: FontWeight.bold),
+                  tabs: const [
+                    Tab(
+                      text: 'Learn',
+                    ),
+                    Tab(
+                      text: 'Explore',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverFillRemaining(
+              child: SizedBox(
+                child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    CustomScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      slivers: [
+                        const SliverToBoxAdapter(
+                          child: SizedBox(height: 30),
+                        ),
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              return ValueListenableBuilder(
+                                  valueListenable: Hive.box<Topic>('topics').listenable(),
+                                  builder: (context, topicss, child) {
+                                    return dueTopic(context, topicss.values.toList()[index]);
+                                  });
+                            },
+                            childCount: topics.length,
+                          ),
+                        ),
+                        const SliverToBoxAdapter(
+                          child: SizedBox(height: 60),
+                        ),
+                      ],
+                    ),
+                    CustomScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      slivers: [
+                        SliverList(
+                          delegate: SliverChildListDelegate([bestTopic(context), collumnRow(context, setState)]),
+                        ),
+                        const SliverToBoxAdapter(
+                          child: SizedBox(height: 60),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             )
           ],
         ),
@@ -517,7 +542,7 @@ Widget tqopicStat(BuildContext context) {
   );
 }
 
-Widget collumnRow(BuildContext context) {
+Widget collumnRow(BuildContext context, void Function(void Function()) setState) {
   return SizedBox(
     height: context.screenHeight * 0.36,
     width: context.screenWidth,
@@ -574,7 +599,7 @@ Widget collumnRow(BuildContext context) {
                       SizedBox(
                         child: Column(
                           children: [
-                            Text("84", style: GoogleFonts.aBeeZee(fontSize: 60, fontWeight: FontWeight.w900, color: Colors.orange)),
+                            Text("102", style: GoogleFonts.aBeeZee(fontSize: 60, fontWeight: FontWeight.w900, color: Colors.orange)),
                             Text("Day Streak", style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red)),
                           ],
                         ),
@@ -638,11 +663,11 @@ Widget collumnRow(BuildContext context) {
               child: ZoomTapAnimation(
                 onTap: () {
                   vibrate(amplitude: 20, duration: 30);
-                  // setState(() {
-                  //   // Hive.box('prefs').put('isDark', val);
-                  //   MyTheme().switchTheme(isDark: !MyTheme().isDark);
-                  //   MyTheme().refresh();
-                  // });
+                  setState(() {
+                    // Hive.box('prefs').put('isDark', val);
+                    MyTheme().switchTheme(isDark: !MyTheme().isDark);
+                    MyTheme().refresh();
+                  });
                 },
                 child: Container(
                   width: context.screenWidth * 0.45,
@@ -662,11 +687,11 @@ Widget collumnRow(BuildContext context) {
                             inactiveTrackColor: Colors.black,
                             onChanged: (val) {
                               vibrate(amplitude: 20, duration: 30);
-                              // setState(() {
-                              //   // Hive.box('prefs').put('isDark', val);
-                              //   MyTheme().switchTheme(isDark: val);
-                              //   MyTheme().refresh();
-                              // });
+                              setState(() {
+                                // Hive.box('prefs').put('isDark', val);
+                                MyTheme().switchTheme(isDark: val);
+                                MyTheme().refresh();
+                              });
                             },
                             value: MyTheme().isDark,
                           )
@@ -681,6 +706,226 @@ Widget collumnRow(BuildContext context) {
           ],
         )
       ],
+    ),
+  );
+}
+
+Widget dueTopic(BuildContext context, Topic topic) {
+  int topicL = topic.card_ids.isEmpty ? 1 : topic.card_ids.length;
+  return ZoomTapAnimation(
+    onTap: () async {
+      for (int i = 0; i < topic.card_ids.length; i++) {
+        try {
+          await CardServices().editCard(id: topic.card_ids[i], topic_id: topic.id);
+        } catch (e) {
+          print(e);
+        }
+      }
+      List<Flashcard> cardIns = List.generate(topic.card_ids.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topic.card_ids[index]]);
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return Revision(
+            cards: cardIns,
+            id: topic.id,
+            card_ids: topic.card_ids,
+          );
+        }),
+      );
+    },
+    child: Container(
+      width: context.screenWidth,
+      height: 150,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: MyTheme().isDark ? Color(boxColor[topic.color]).withOpacity(.2) : Color(boxLightColor[topic.color]).withOpacity(.4),
+        borderRadius: BorderRadius.circular(40),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        '${(topic.card_ids.length - topic.card_ids.length / 2).toInt()}',
+                        style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 45, color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white),
+                      ),
+                      Text(
+                        '/${topic.card_ids.length}',
+                        style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 20, color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    'Cards due',
+                    style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 18, color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white),
+                  ),
+                ],
+              ).px8(),
+              Text(
+                topic.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.aBeeZee(
+                  fontSize: topic.name.length <= 10 ? 40 : 30,
+                  fontWeight: FontWeight.w600,
+                  color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white,
+                ),
+              ),
+            ],
+          ).px(15).py(4),
+          Row(
+            children: [
+              Container(
+                margin: EdgeInsets.only(right: topic.directions!['easy']!.isNotEmpty ? 2 : 0),
+                width: topic.directions!['easy']!.length / topicL * (context.screenWidth * 0.9 - 60),
+                height: 10,
+                child: FAProgressBar(
+                  currentValue: 100,
+                  backgroundColor: Colors.white.withOpacity(.2),
+                  size: 10,
+                  progressColor: Colors.blue,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(right: topic.directions!['good']!.isNotEmpty ? 2 : 0),
+                width: topic.directions!['good']!.length / topicL * (context.screenWidth * 0.9 - 60),
+                height: 10,
+                child: FAProgressBar(
+                  currentValue: 100,
+                  backgroundColor: Colors.white.withOpacity(.2),
+                  size: 10,
+                  progressColor: Colors.green,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(right: topic.directions!['hard']!.isNotEmpty ? 2 : 0),
+                width: topic.directions!['hard']!.length / topicL * (context.screenWidth * 0.9 - 60),
+                height: 10,
+                child: FAProgressBar(
+                  currentValue: 100,
+                  backgroundColor: Colors.white.withOpacity(.2),
+                  size: 10,
+                  progressColor: Colors.orange,
+                ),
+              ),
+              SizedBox(
+                width: topic.directions!['again']!.length / topicL * (context.screenWidth * 0.9 - 60),
+                height: 10,
+                child: FAProgressBar(
+                  currentValue: 100,
+                  backgroundColor: Colors.white.withOpacity(.2),
+                  size: 10,
+                  progressColor: Colors.red,
+                  // progressColor: Color(boxColor[topic.color]),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: topicL - (topic.directions!['easy']!.length + topic.directions!['good']!.length + topic.directions!['hard']!.length + topic.directions!['again']!.length) != 0 ? 2 : 0),
+                width: (topicL - (topic.directions!['easy']!.length + topic.directions!['good']!.length + topic.directions!['hard']!.length + topic.directions!['again']!.length)) / topicL * (context.screenWidth * 0.9 - 60),
+                height: 10,
+                child: FAProgressBar(
+                  currentValue: 100,
+                  backgroundColor: Colors.white.withOpacity(.2),
+                  size: 10,
+                  progressColor: Colors.grey.shade400,
+                ),
+              ),
+            ],
+          ).px(20),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 5,
+                    backgroundColor: Colors.blue,
+                  ).px12(),
+                  Text(
+                    "${topic.directions?['easy']!.length}",
+                    style: GoogleFonts.aBeeZee(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 5,
+                    backgroundColor: Colors.green,
+                  ).px12(),
+                  Text(
+                    "${topic.directions?['good']!.length}",
+                    style: GoogleFonts.aBeeZee(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 5,
+                    backgroundColor: Colors.red,
+                  ).px12(),
+                  Text(
+                    "${topic.directions?['again']!.length}",
+                    style: GoogleFonts.aBeeZee(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 5,
+                    backgroundColor: Colors.orange,
+                  ).px12(),
+                  Text(
+                    "${topic.directions?['hard']!.length}",
+                    style: GoogleFonts.aBeeZee(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 5,
+                    backgroundColor: Colors.grey.shade400,
+                  ).px12(),
+                  Text(
+                    "${(topicL - (topic.directions!['easy']!.length + topic.directions!['good']!.length + topic.directions!['hard']!.length + topic.directions!['again']!.length))}",
+                    style: GoogleFonts.aBeeZee(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ).px(15),
+          const SizedBox(height: 10),
+        ],
+      ),
     ),
   );
 }
@@ -701,20 +946,20 @@ Widget bestTopic(BuildContext context) {
               int cardL = 1;
               int maxT = topics.values.toList()[i].directions!['easy']!.length;
               if (maxT >= maxE) {
-                tE = i;
+                tE = topics.values.toList()[i].id;
                 maxE = maxT;
                 valE = (maxE / cardL * 100).ceil();
               }
             } else {
               int maxT = topics.values.toList()[i].directions!['easy']!.length;
               if (maxT >= maxE) {
-                tE = i;
+                tE = topics.values.toList()[i].id;
                 maxE = maxT;
                 valE = (maxE / topics.values.toList()[i].card_ids.length * 100).ceil();
               }
             }
 
-            print(valE);
+            print(topics.values.toList()[tE].name);
             print(maxE);
             print(tE);
             print(valE);
@@ -739,24 +984,14 @@ Widget bestTopic(BuildContext context) {
             height: 150,
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             decoration: BoxDecoration(
-              // boxShadow: const [
-              //   BoxShadow(color: Colors.grey, blurRadius: 4, spreadRadius: .4),
-              // ],
-
               color: MyTheme().isDark ? Color(boxColor[topics.values.toList()[tE].color]).withOpacity(.2) : Color(boxLightColor[topics.values.toList()[tE].color]).withOpacity(.4),
               borderRadius: BorderRadius.circular(40),
-              // border: Border.symmetric(
-              //   vertical: BorderSide(
-              //     color: !MyTheme().isDark ? Color(boxColor[topics.values.toList()[tE].color]) : Colors.white,
-              //     width: 8,
-              //   ),
-              // ),
             ),
             child: Row(
               children: [
                 Container(
                   height: 120,
-                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
                   child: DashedCircularProgressBar.aspectRatio(
                     aspectRatio: 1, // width ÷ height
                     valueNotifier: _valueNotifier,
@@ -779,7 +1014,7 @@ Widget bestTopic(BuildContext context) {
                               children: [
                                 Text(
                                   '${value.ceil().toInt()}%',
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 35, color: !MyTheme().isDark ? Color(boxColor[topics.values.toList()[tE].color]) : Colors.white),
+                                  style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 35, color: !MyTheme().isDark ? Color(boxColor[topics.values.toList()[tE].color]) : Colors.white),
                                 ),
                               ],
                             );

@@ -62,11 +62,6 @@ void main() async {
     }
   }
 
-  if (await Permission.storage.request().isGranted) {
-    MyTheme().switchGStatus(isGranted: true);
-  } else {
-    await Permission.storage.request();
-  }
   await Permission.storage.request();
   if (await Permission.storage.request().isGranted) {
     await Hive.openBox<Deck>('decks', path: newPath);
@@ -286,8 +281,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Icon(Icons.add),
               ),
               bottomNavigationBar: NavigationBar(
-                surfaceTintColor: Colors.white,
-                backgroundColor: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
+                surfaceTintColor: Colors.transparent,
+                backgroundColor: !MyTheme().isDark ? Colors.white : Colors.black,
                 elevation: 8,
                 destinations: [
                   const NavigationDestination(icon: Icon(Icons.home), label: 'Home').px(2.5),

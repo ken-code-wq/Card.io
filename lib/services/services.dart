@@ -75,26 +75,25 @@ class CardServices {
     int? usefullness,
     List<int>? fonts,
   }) async {
-    var card = Hive.box<Flashcard>('flashcards').get(id);
-    await Hive.box<Flashcard>('flashcards').put(
-      Hive.box<Flashcard>('flashcards').values.length,
+    await Hive.box<Flashcard>('flashcards').putAt(
+      id,
       Flashcard(
         id: id,
-        topic_id: topic_id ?? card!.topic_id,
-        question: question ?? card!.question,
-        answer: answer ?? card!.answer,
-        difficulty_user: difficulty_user ?? card!.difficulty_user,
-        times_appeared: times_appeared ?? card!.times_appeared,
-        times_correct: times_correct ?? card!.times_correct,
-        usefullness: usefullness ?? card!.usefullness,
-        rate_of_appearance: rate_of_appearance ?? card!.rate_of_appearance,
-        times_spent: times_spent ?? card!.times_spent,
-        ratings: ratings ?? card!.ratings,
-        fonts: fonts ?? card!.fonts,
-        subject_id: subject_id ?? card!.subject_id,
-        deck_id: deck_id ?? card!.deck_id,
-        adjusted_difficulty: adjusted_difficulty ?? card!.adjusted_difficulty,
-        isImage: card!.isImage,
+        topic_id: topic_id ?? Hive.box<Flashcard>('flashcards').get(id)!.topic_id,
+        question: question ?? Hive.box<Flashcard>('flashcards').get(id)!.question,
+        answer: answer ?? Hive.box<Flashcard>('flashcards').get(id)!.answer,
+        difficulty_user: difficulty_user ?? Hive.box<Flashcard>('flashcards').get(id)!.difficulty_user,
+        times_appeared: times_appeared ?? Hive.box<Flashcard>('flashcards').get(id)!.times_appeared,
+        times_correct: times_correct ?? Hive.box<Flashcard>('flashcards').get(id)!.times_correct,
+        usefullness: usefullness ?? Hive.box<Flashcard>('flashcards').get(id)!.usefullness,
+        rate_of_appearance: rate_of_appearance ?? Hive.box<Flashcard>('flashcards').get(id)!.rate_of_appearance,
+        times_spent: times_spent ?? Hive.box<Flashcard>('flashcards').get(id)!.times_spent,
+        ratings: ratings ?? Hive.box<Flashcard>('flashcards').get(id)!.ratings,
+        fonts: fonts ?? Hive.box<Flashcard>('flashcards').get(id)!.fonts,
+        subject_id: subject_id ?? Hive.box<Flashcard>('flashcards').get(id)!.subject_id,
+        deck_id: deck_id ?? Hive.box<Flashcard>('flashcards').get(id)!.deck_id,
+        adjusted_difficulty: adjusted_difficulty ?? Hive.box<Flashcard>('flashcards').get(id)!.adjusted_difficulty,
+        isImage: Hive.box<Flashcard>('flashcards').get(id)!.isImage,
       ),
     );
   }

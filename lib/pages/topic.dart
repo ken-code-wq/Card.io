@@ -48,10 +48,10 @@ class _TopicPageState extends State<TopicPage> {
     return ValueListenableBuilder(
         valueListenable: Hive.box<Topic>('topics').listenable(),
         builder: (context, topicss, child) {
+          print(widget.index);
           List<Topic> topics = topicss.values.toList();
           Topic topic = topicss.values.toList()[widget.index];
           List<Flashcard> cards = Hive.box<Flashcard>('flashcards').values.toList();
-          List cardIds = topics[widget.index].card_ids;
           List days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
           int again = 0;
           int hard = 0;
@@ -66,7 +66,7 @@ class _TopicPageState extends State<TopicPage> {
             hard = topics[widget.index].directions!['hard']!.length;
             good = topics[widget.index].directions!['good']!.length;
             easy = topics[widget.index].directions!['easy']!.length;
-            not = topicLength - (again + hard + good + easy);
+            not = topics[widget.index].card_ids.length - (again + hard + good + easy);
           } catch (e) {
             TopicServices().editTopic(id: widget.index, directions: {'again': [], 'hard': [], 'good': [], 'easy': []});
           }
@@ -179,7 +179,7 @@ class _TopicPageState extends State<TopicPage> {
                                             children: [
                                               ZoomTapAnimation(
                                                 onTap: () {
-                                                  print(topicLength);
+                                                  // bottomS('Not reviewed', cardIns, ids, color, topic)
                                                 },
                                                 child: Container(
                                                   width: context.screenWidth * 0.9 + 10,
@@ -230,7 +230,7 @@ class _TopicPageState extends State<TopicPage> {
                                                         if (again > 0) {
                                                           List<Flashcard> cardIns = List.generate(again, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].directions!['again']![index]]);
 
-                                                          VxBottomSheet.bottomSheetView(context, child: bottomS('To study', cardIns, topics[widget.index].directions!['again']!, Colors.red), maxHeight: .8, minHeight: .8, roundedFromTop: true);
+                                                          VxBottomSheet.bottomSheetView(context, child: bottomS('To study', cardIns, topics[widget.index].directions!['again']!, Colors.red, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
                                                         }
                                                       },
                                                       child: rev(topicLength: topicLength, direction: again, color: Colors.red, val: _valueNotifierA, topic: 'To study', des: 'You really need to study these'),
@@ -241,7 +241,7 @@ class _TopicPageState extends State<TopicPage> {
                                                         if (hard > 0) {
                                                           List<Flashcard> cardIns = List.generate(hard, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].directions!['hard']![index]]);
 
-                                                          VxBottomSheet.bottomSheetView(context, child: bottomS('Mediocre', cardIns, topics[widget.index].directions!['hard']!, Colors.orange), maxHeight: .8, minHeight: .8, roundedFromTop: true);
+                                                          VxBottomSheet.bottomSheetView(context, child: bottomS('Mediocre', cardIns, topics[widget.index].directions!['hard']!, Colors.orange, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
                                                         }
                                                       },
                                                       child: rev(topicLength: topicLength, direction: hard, color: Colors.orange, val: _valueNotifierH, topic: 'Mediocre', des: 'You made some progress here'),
@@ -262,7 +262,7 @@ class _TopicPageState extends State<TopicPage> {
                                                         if (easy > 0) {
                                                           List<Flashcard> cardIns = List.generate(easy, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].directions!['easy']![index]]);
 
-                                                          VxBottomSheet.bottomSheetView(context, child: bottomS('Perfect', cardIns, topics[widget.index].directions!['easy']!, Colors.blue), maxHeight: .8, minHeight: .8, roundedFromTop: true);
+                                                          VxBottomSheet.bottomSheetView(context, child: bottomS('Perfect', cardIns, topics[widget.index].directions!['easy']!, Colors.blue, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
                                                         }
                                                       },
                                                       child: rev(topicLength: topicLength, direction: easy, color: Colors.blue, val: _valueNotifierE, topic: 'Perfect', des: 'You nailed these flashcards'),
@@ -273,7 +273,7 @@ class _TopicPageState extends State<TopicPage> {
                                                         if (good > 0) {
                                                           List<Flashcard> cardIns = List.generate(good, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].directions!['good']![index]]);
 
-                                                          VxBottomSheet.bottomSheetView(context, child: bottomS('To revise', cardIns, topics[widget.index].directions!['good']!, Colors.green), maxHeight: .8, minHeight: .8, roundedFromTop: true);
+                                                          VxBottomSheet.bottomSheetView(context, child: bottomS('To revise', cardIns, topics[widget.index].directions!['good']!, Colors.green, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
                                                         }
                                                       },
                                                       child: rev(topicLength: topicLength, direction: good, color: Colors.green, val: _valueNotifierG, topic: 'To revise', des: 'You need to read through thesee'),
@@ -300,7 +300,7 @@ class _TopicPageState extends State<TopicPage> {
                                             children: [
                                               Text(
                                                 "Flash cards",
-                                                style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w500, fontSize: 25),
+                                                style: rowStyle,
                                               ),
                                               Text(
                                                 "Take a quiz",
@@ -324,6 +324,7 @@ class _TopicPageState extends State<TopicPage> {
                                                 mainAxisSpacing: 4,
                                                 scrollDirection: Axis.horizontal,
                                                 itemCount: topics[widget.index].card_ids.length,
+                                                // itemCount: topics[widget.index].card_ids/,
                                                 crossAxisSpacing: 7,
                                                 itemBuilder: (context, index) {
                                                   return Hero(
@@ -337,7 +338,7 @@ class _TopicPageState extends State<TopicPage> {
                                                               child: Material(
                                                                   color: Colors.transparent,
                                                                   child: FlippingCard(
-                                                                    number: cardIds[index],
+                                                                    number: topics[widget.index].card_ids[index],
                                                                     front: false,
                                                                   )),
                                                             ),
@@ -359,7 +360,7 @@ class _TopicPageState extends State<TopicPage> {
                                                           color: Colors.transparent,
                                                           child: Center(
                                                             child: Text(
-                                                              "${Hive.box<Flashcard>('flashcards').get(cardIds[index])?.question}",
+                                                              "${Hive.box<Flashcard>('flashcards').get(topics[widget.index].card_ids[index])?.question}",
                                                               overflow: TextOverflow.ellipsis,
                                                               textAlign: TextAlign.center,
                                                               style: GoogleFonts.aBeeZee(
@@ -403,24 +404,24 @@ class _TopicPageState extends State<TopicPage> {
                                       child: Column(
                                         children: [
                                           const SizedBox(height: 20),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Progress",
-                                                style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w500, fontSize: 25),
-                                              ),
-                                              Text(
-                                                "More stats",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Color(
-                                                    boxColor[widget.color],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ).px12(),
+                                          // Row(
+                                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          //   children: [
+                                          //     Text(
+                                          //       "Progress",
+                                          //       style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w500, fontSize: 25),
+                                          //     ),
+                                          //     Text(
+                                          //       "More stats",
+                                          //       style: TextStyle(
+                                          //         fontWeight: FontWeight.w500,
+                                          //         color: Color(
+                                          //           boxColor[widget.color],
+                                          //         ),
+                                          //       ),
+                                          //     ),
+                                          //   ],
+                                          // ).px12(),
                                           const SizedBox(height: 20),
                                           SizedBox(
                                             height: context.screenHeight * 0.25,
@@ -546,21 +547,30 @@ class _TopicPageState extends State<TopicPage> {
                       icon: const Icon(Icons.add),
                       onPressed: () async {
                         await addCards(cards, topic.card_ids, topics, topic, context, widget.index);
-                        cardIds = topics[widget.index].card_ids;
+                        // topics[widget.index].card_ids = topics[widget.index].card_ids;
                       },
                     ),
                     const SizedBox(width: 20),
                     FloatingActionButton.extended(
                       backgroundColor: Color(boxColor[widget.color]).withOpacity(.5),
                       onPressed: () async {
-                        List<Flashcard> cardIns = List.generate(cardIds.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[index]);
+                        for (int i = 0; i < topic.card_ids.length; i++) {
+                          print(cards[topics[widget.index].card_ids[i]].topic_id);
+                          try {
+                            await CardServices().editCard(id: topics[widget.index].card_ids[i], topic_id: widget.index);
+                          } catch (e) {
+                            print(e);
+                          }
+                        }
+                        List<Flashcard> cardIns = List.generate(topics[widget.index].card_ids.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].card_ids[index]]);
+                        // ignore: use_build_context_synchronously
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {
                             return Revision(
                               cards: cardIns,
                               id: widget.index,
-                              card_ids: cardIds,
+                              card_ids: topics[widget.index].card_ids,
                             );
                           }),
                         );
@@ -578,7 +588,7 @@ class _TopicPageState extends State<TopicPage> {
         });
   }
 
-  Widget bottomS(String title, List<Flashcard> cardIns, List ids, Color color) {
+  Widget bottomS(String title, List<Flashcard> cardIns, List ids, Color color, Topic topic) {
     return Container(
       height: double.maxFinite,
       width: double.maxFinite,
@@ -652,7 +662,7 @@ class _TopicPageState extends State<TopicPage> {
                           color: Colors.transparent,
                           child: Center(
                             child: Text(
-                              "${Hive.box<Flashcard>('flashcards').get(ids[index])?.question}",
+                              "${Hive.box<Flashcard>('flashcards').get(topic.card_ids[ids[index]])?.question}",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.aBeeZee(
@@ -860,7 +870,6 @@ Future addCards(List<Flashcard> cards, List<int> topic_cards, List<Topic> topics
                     List<Flashcard> filt = [];
                     filt.addAll(cards);
                     filt.removeWhere((element) => topic_cards.contains(element.id));
-                    print(filt);
                     return ZoomTapAnimation(
                       onTap: () {
                         vibrate(amplitude: 20, duration: 30);

@@ -44,6 +44,7 @@ class QuestionFace extends StatelessWidget {
                   width: 280,
                   decoration: BoxDecoration(
                     color: Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].color ?? 0]),
+                    // color: Colors.brown,
                     borderRadius: BorderRadius.circular(25),
                   ),
                 ),
@@ -51,6 +52,7 @@ class QuestionFace extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 2.0),
                   child: Text(
                     Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].name,
+                    // 'Cool',
                     style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
