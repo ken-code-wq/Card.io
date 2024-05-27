@@ -66,6 +66,13 @@ class QuestionFace extends StatelessWidget {
               height: 413,
               width: 280,
               child: Center(
+                // child: Expanded(
+                //   child: MarkdownBody(
+                //     // key: const ValueKey<String>("zmarkdown-parse-body"),
+                //     data: Hive.box<Flashcard>('flashcards').get(number)?.question ?? none,
+                //     selectable: true,
+                //   ),
+                // ),
                 child: Text(
                   Hive.box<Flashcard>('flashcards').get(number)?.question ?? none,
                   textAlign: TextAlign.center,

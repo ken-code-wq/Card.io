@@ -9,7 +9,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../classes/hive_adapter.dart';
-import '../custom/Widgets/difficulty_selector.dart';
+import 'package:markdown_editor_plus/markdown_editor_plus.dart';
 import '../services/services.dart';
 import 'package:cards/constants/config/config.dart';
 import 'add_topic.dart';
@@ -89,6 +89,8 @@ class _AddCartState extends State<AddCart> {
                     const SizedBox(
                       height: 15,
                     ),
+                    // MarkdownField(),
+                    // MarkdownToolbar(controller: controller, toolbar: toolbar),
                     TextFormField(
                       style: GoogleFonts.aBeeZee(
                         fontSize: 17,
@@ -175,11 +177,12 @@ class _AddCartState extends State<AddCart> {
                                   return const CircularProgressIndicator().centered();
                                 }
                               }),
-                          TextFormField(
+                          SplittedMarkdownFormField(
                             style: GoogleFonts.aBeeZee(
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
                             ),
+                            emojiConvert: true,
                             onTap: () async {
                               try {
                                 List<Map> defs = [];
@@ -210,10 +213,18 @@ class _AddCartState extends State<AddCart> {
                             controller: answer,
                             textCapitalization: TextCapitalization.sentences,
                             decoration: const InputDecoration(hintText: "Type answer", border: InputBorder.none),
-                            keyboardType: TextInputType.multiline,
+                            // keyboardType: TextInputType.multiline,
                             minLines: 1,
                             maxLines: 9,
                           ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade200).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                          // MarkdownToolbar(
+                          //     controller: answer,
+                          //     toolbar: const ToolbarOptions(
+                          //       copy: true,
+                          //       paste: true,
+                          //       cut: true,
+                          //       selectAll: true,
+                          //     )),
                         ],
                       ),
                     ),
@@ -231,7 +242,7 @@ class _AddCartState extends State<AddCart> {
                     elevation: 0,
                     onPressed: () {},
                     backgroundColor: Colors.black,
-                    child: Icon(Icons.add, color: Colors.white),
+                    child: const Icon(Icons.add, color: Colors.white),
                     shape: const StadiumBorder(),
                   ).px(10),
                   FloatingActionButton.extended(
@@ -240,7 +251,7 @@ class _AddCartState extends State<AddCart> {
                     onPressed: () async {
                       if (answer.text.trim().isNotEmpty && question.text.trim().isNotEmpty) {
                         await CardServices().createCard(
-                          id: Hive.box<Flashcard>('flashcards').length + 1,
+                          id: Hive.box<Flashcard>('flashcards').length,
                           topic_id: topic,
                           question: question.text.trim(),
                           answer: answer.text.trim(),

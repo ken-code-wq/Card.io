@@ -266,6 +266,7 @@ class TopicServices {
     int? rate_of_appearance,
     Map? more,
     int? subject_id,
+    List<int>? card_ids,
     // required int subject_id,
   }) async {
     Topic topic = Hive.box<Topic>('topics').values.toList()[id];
@@ -274,7 +275,7 @@ class TopicServices {
       Topic(
         id: id,
         name: name ?? topic.name,
-        card_ids: topic.card_ids,
+        card_ids: card_ids ?? topic.card_ids,
         color: color ?? topic.color,
         font: font ?? topic.font,
         difficulty: difficulty ?? topic.difficulty,

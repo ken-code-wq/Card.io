@@ -74,6 +74,7 @@ class _TopicPageState extends State<TopicPage> {
             length: 2,
             child: Scaffold(
               body: CustomScrollView(
+                physics: const NeverScrollableScrollPhysics(),
                 slivers: [
                   //AppBar
                   SliverAppBar.large(
@@ -178,8 +179,25 @@ class _TopicPageState extends State<TopicPage> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               ZoomTapAnimation(
-                                                onTap: () {
-                                                  // bottomS('Not reviewed', cardIns, ids, color, topic)
+                                                onTap: () async {
+                                                  List all = [];
+                                                  all.addAll(topics[widget.index].card_ids);
+                                                  all.remove(topics[widget.index].directions!['again']!);
+                                                  all.remove(topics[widget.index].directions!['hard']!);
+                                                  all.remove(topics[widget.index].directions!['good']!);
+                                                  all.remove(topics[widget.index].directions!['easy']!);
+                                                  // Hive.box<Flashcard>('flashcards').deleteAt(67)
+                                                  await TopicServices().editTopic(id: widget.index, card_ids: [1, 2, 3, 4, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 31, 34, 35, 36, 37, 38, 39, 40, 41]);
+                                                  //TODO
+                                                  if (all.length > 0) {
+                                                    try {
+                                                      List<Flashcard> cardIns = List.generate(all.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[all[index]]);
+
+                                                      VxBottomSheet.bottomSheetView(context, child: bottomS('To study', cardIns, all, Colors.grey.shade700, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
+                                                    } catch (e) {
+                                                      print(e);
+                                                    }
+                                                  }
                                                 },
                                                 child: Container(
                                                   width: context.screenWidth * 0.9 + 10,
@@ -555,14 +573,20 @@ class _TopicPageState extends State<TopicPage> {
                       backgroundColor: Color(boxColor[widget.color]).withOpacity(.5),
                       onPressed: () async {
                         for (int i = 0; i < topic.card_ids.length; i++) {
-                          print(cards[topics[widget.index].card_ids[i]].topic_id);
+                          // print(cards[topics[widget.index].card_ids[i]].topic_id);
                           try {
                             await CardServices().editCard(id: topics[widget.index].card_ids[i], topic_id: widget.index);
                           } catch (e) {
                             print(e);
                           }
                         }
-                        List<Flashcard> cardIns = List.generate(topics[widget.index].card_ids.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].card_ids[index]]);
+                        List<Flashcard> cardIns = List.generate(topics[widget.index].card_ids.length - 1, (index) {
+                          try {
+                            return Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].card_ids[index]];
+                          } catch (e) {
+                            return Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].card_ids[index - 1]];
+                          }
+                        });
                         // ignore: use_build_context_synchronously
                         Navigator.push(
                           context,

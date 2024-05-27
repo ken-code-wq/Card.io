@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 
 import '../../classes/hive_adapter.dart';
-import 'package:cards/constants/config/config.dart';
+import 'package:flutter_markdown/src/widget.dart';
 
 class AnswerFace extends StatelessWidget {
   final int number;
@@ -31,15 +31,20 @@ class AnswerFace extends StatelessWidget {
         boxShadow: [BoxShadow(color: Color(boxColor[col]), spreadRadius: 1.0)],
       ),
       child: Center(
-        child: AutoSizeText(
-          Hive.box<Flashcard>('flashcards').get(number)!.answer ?? none,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.aBeeZee(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Color(boxColor[col]),
-          ),
+        child: MarkdownBody(
+          // key: const ValueKey<String>("zmarkdown-parse-body"),
+          data: Hive.box<Flashcard>('flashcards').get(number)?.answer ?? none,
+          selectable: true,
         ),
+        // child: AutoSizeText(
+        //   Hive.box<Flashcard>('flashcards').get(number)!.answer ?? none,
+        //   textAlign: TextAlign.center,
+        //   style: GoogleFonts.aBeeZee(
+        //     fontSize: 30,
+        //     fontWeight: FontWeight.bold,
+        //     color: Color(boxColor[col]),
+        //   ),
+        // ),
       ),
     );
   }

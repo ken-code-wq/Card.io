@@ -94,34 +94,39 @@ class _HomeState extends State<Home> {
             SliverAppBar(
               surfaceTintColor: Colors.transparent,
               actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
+              centerTitle: true,
               title: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 35,
+                    height: 30,
                     child: Image.asset('assets/streak-flame.png'),
                   ),
-                  ShaderMask(
-                    shaderCallback: (bounds) {
-                      return RadialGradient(
-                        center: Alignment.topLeft,
-                        radius: 1.0,
-                        colors: <Color>[
-                          Colors.amber.withOpacity(1),
-                          Colors.orange.withOpacity(1),
-                          Colors.red.withOpacity(1),
-                        ],
-                        tileMode: TileMode.mirror,
-                      ).createShader(bounds);
-                    },
-                    child: Text("102 day streak",
-                        maxLines: 3,
-                        overflow: TextOverflow.fade,
-                        style: GoogleFonts.aBeeZee(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        )).px4(),
+                  Container(
+                    alignment: Alignment.center,
+                    height: 25,
+                    child: ShaderMask(
+                      shaderCallback: (bounds) {
+                        return RadialGradient(
+                          center: Alignment.topLeft,
+                          radius: 1.0,
+                          colors: <Color>[
+                            Colors.amber.withOpacity(1),
+                            Colors.orange.withOpacity(1),
+                            Colors.red.withOpacity(1),
+                          ],
+                        ).createShader(bounds);
+                      },
+                      child: Text("102",
+                          maxLines: 3,
+                          overflow: TextOverflow.fade,
+                          style: GoogleFonts.aBeeZee(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          )).px4(),
+                    ),
                   ),
                 ],
               ),
@@ -720,23 +725,23 @@ Widget dueTopic(BuildContext context, Topic topic) {
         } catch (e) {
           print(e);
         }
+        List<Flashcard> cardIns = List.generate(topic.card_ids.length - 1, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topic.card_ids[index]]);
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) {
+            return Revision(
+              cards: cardIns,
+              id: topic.id,
+              card_ids: topic.card_ids,
+            );
+          }),
+        );
       }
-      List<Flashcard> cardIns = List.generate(topic.card_ids.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topic.card_ids[index]]);
-      // ignore: use_build_context_synchronously
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) {
-          return Revision(
-            cards: cardIns,
-            id: topic.id,
-            card_ids: topic.card_ids,
-          );
-        }),
-      );
     },
     child: Container(
       width: context.screenWidth,
-      height: 150,
+      height: 170,
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: MyTheme().isDark ? Color(boxColor[topic.color]).withOpacity(.2) : Color(boxLightColor[topic.color]).withOpacity(.4),

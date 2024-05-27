@@ -114,7 +114,9 @@ class _RevisionState extends State<Revision> {
                     ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text("No")),
                     ElevatedButton(
                         onPressed: () {
-                          isDone = true;
+                          setState(() {
+                            isDone = true;
+                          });
                           Navigator.pop(context);
                           Navigator.pop(context);
                         },
@@ -122,7 +124,7 @@ class _RevisionState extends State<Revision> {
                   ],
                 );
               });
-          return false;
+          return !isDone;
         }
       },
       child: Stack(
