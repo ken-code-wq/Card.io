@@ -154,15 +154,120 @@ class _TopicCardState extends State<TopicCard> {
                                   // progressColor: Color(boxColor[widget.topics.values.toList()[widget.index].color]),
                                 ),
                               ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: topicL -
+                                                (widget.topics.values.toList()[widget.index].directions!['easy']!.length +
+                                                    widget.topics.values.toList()[widget.index].directions!['good']!.length +
+                                                    widget.topics.values.toList()[widget.index].directions!['hard']!.length +
+                                                    widget.topics.values.toList()[widget.index].directions!['again']!.length) !=
+                                            0
+                                        ? 2
+                                        : 0),
+                                width: (topicL -
+                                        (widget.topics.values.toList()[widget.index].directions!['easy']!.length +
+                                            widget.topics.values.toList()[widget.index].directions!['good']!.length +
+                                            widget.topics.values.toList()[widget.index].directions!['hard']!.length +
+                                            widget.topics.values.toList()[widget.index].directions!['again']!.length)) /
+                                    topicL *
+                                    (context.screenWidth * 0.9 - 60),
+                                height: 10,
+                                child: FAProgressBar(
+                                  currentValue: 100,
+                                  backgroundColor: Colors.white.withOpacity(.2),
+                                  size: 10,
+                                  progressColor: Colors.grey.shade400,
+                                ),
+                              ),
                             ],
                           ),
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            "${widget.topics.values.toList()[widget.index].directions!['easy']!.length} /${widget.topics.values.toList()[widget.index].card_ids.length} cards learned".text.make(),
+                            Row(
+                              children: [
+                                const CircleAvatar(
+                                  radius: 5,
+                                  backgroundColor: Colors.blue,
+                                ).px12(),
+                                Text(
+                                  "${widget.topics.values.toList()[widget.index].directions?['easy']!.length}",
+                                  style: GoogleFonts.aBeeZee(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const CircleAvatar(
+                                  radius: 5,
+                                  backgroundColor: Colors.green,
+                                ).px12(),
+                                Text(
+                                  "${widget.topics.values.toList()[widget.index].directions?['good']!.length}",
+                                  style: GoogleFonts.aBeeZee(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const CircleAvatar(
+                                  radius: 5,
+                                  backgroundColor: Colors.red,
+                                ).px12(),
+                                Text(
+                                  "${widget.topics.values.toList()[widget.index].directions?['again']!.length}",
+                                  style: GoogleFonts.aBeeZee(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const CircleAvatar(
+                                  radius: 5,
+                                  backgroundColor: Colors.orange,
+                                ).px12(),
+                                Text(
+                                  "${widget.topics.values.toList()[widget.index].directions?['hard']!.length}",
+                                  style: GoogleFonts.aBeeZee(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 5,
+                                  backgroundColor: Colors.grey.shade400,
+                                ).px12(),
+                                Text(
+                                  "${(topicL - (widget.topics.values.toList()[widget.index].directions!['easy']!.length + widget.topics.values.toList()[widget.index].directions!['good']!.length + widget.topics.values.toList()[widget.index].directions!['hard']!.length + widget.topics.values.toList()[widget.index].directions!['again']!.length))}",
+                                  style: GoogleFonts.aBeeZee(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
-                        ),
+                        )
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   children: [
+                        //     "${widget.topics.values.toList()[widget.index].directions!['easy']!.length} /${widget.topics.values.toList()[widget.index].card_ids.length} cards learned".text.make(),
+                        //   ],
+                        // ),
                       ],
                     ).px16(),
                   ),

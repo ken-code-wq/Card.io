@@ -9,6 +9,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -99,6 +100,8 @@ class _RevisionState extends State<Revision> {
 
   @override
   Widget build(BuildContext context) {
+    List<Topic> topics = Hive.box<Topic>('topics').values.toList();
+    Topic topic = topics[widget.id];
     return WillPopScope(
       onWillPop: () async {
         if (isDone) {
@@ -130,54 +133,113 @@ class _RevisionState extends State<Revision> {
       child: Stack(
         children: [
           Scaffold(
+            // extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text(
+                topic.name,
+                style: GoogleFonts.aBeeZee(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                  color: Color(boxColor[topic.color]),
+                ),
+              ),
+              backgroundColor: Colors.transparent,
+            ),
             body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(
-                  height: 60,
-                ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  height: 15,
-                  child: Stack(
+                  height: 14,
+                  child: Row(
                     children: [
-                      FAProgressBar(
-                        backgroundColor: Colors.transparent,
-                        currentValue: (again.length.toDouble() + hard.length.toDouble() + good.length.toDouble() + easy.length.toDouble()) * 100 / widget.card_ids.length,
-                        changeProgressColor: getC(current_index),
-                        // onChanged: (val) {},
-                        progressColor: Colors.red,
+                      AnimatedContainer(
+                        margin: const EdgeInsets.only(right: 2),
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.bounceOut,
+                        height: 14,
+                        width: (easy.length / widget.card_ids.length) * (MediaQuery.of(context).size.width - 32),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      FAProgressBar(
-                        backgroundColor: Colors.transparent,
-                        currentValue: (hard.length.toDouble() + good.length.toDouble() + easy.length.toDouble()) * 100 / (widget.card_ids.length),
-                        changeProgressColor: getC(current_index),
-                        // onChanged: (val) {},
-                        progressColor: Colors.orange,
+                      AnimatedContainer(
+                        margin: const EdgeInsets.only(right: 2),
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.bounceOut,
+                        height: 14,
+                        width: (good.length / widget.card_ids.length) * (MediaQuery.of(context).size.width - 32),
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      FAProgressBar(
-                        backgroundColor: Colors.transparent,
-                        currentValue: (good.length.toDouble() + easy.length.toDouble()) * 100 / widget.card_ids.length,
-                        changeProgressColor: getC(current_index),
-                        // onChanged: (val) {},
-                        progressColor: Colors.green,
+                      AnimatedContainer(
+                        margin: const EdgeInsets.only(right: 2),
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.bounceOut,
+                        height: 14,
+                        width: (hard.length / widget.card_ids.length) * (MediaQuery.of(context).size.width - 32),
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      FAProgressBar(
-                        backgroundColor: Colors.transparent,
-                        currentValue: easy.length.toDouble() * 100 / widget.card_ids.length,
-                        changeProgressColor: getC(current_index),
-                        // onChanged: (val) {},
-                        progressColor: Colors.blue,
+                      AnimatedContainer(
+                        margin: const EdgeInsets.only(right: 2),
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.bounceOut,
+                        height: 14,
+                        width: (again.length / widget.card_ids.length) * (MediaQuery.of(context).size.width - 32),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ],
                   ),
+
+                  // child: Stack(
+                  //   children: [
+                  //     FAProgressBar(
+                  //       backgroundColor: Colors.transparent,
+                  //       currentValue: (again.length.toDouble() + hard.length.toDouble() + good.length.toDouble() + easy.length.toDouble()) * 100 / widget.card_ids.length,
+                  //       changeProgressColor: getC(current_index),
+                  //       // onChanged: (val) {},
+                  //       progressColor: Colors.red,
+                  //     ),
+                  //     FAProgressBar(
+                  //       backgroundColor: Colors.transparent,
+                  //       currentValue: (hard.length.toDouble() + good.length.toDouble() + easy.length.toDouble()) * 100 / (widget.card_ids.length),
+                  //       changeProgressColor: getC(current_index),
+                  //       // onChanged: (val) {},
+                  //       progressColor: Colors.orange,
+                  //     ),
+                  //     FAProgressBar(
+                  //       backgroundColor: Colors.transparent,
+                  //       currentValue: (good.length.toDouble() + easy.length.toDouble()) * 100 / widget.card_ids.length,
+                  //       changeProgressColor: getC(current_index),
+                  //       // onChanged: (val) {},
+                  //       progressColor: Colors.green,
+                  //     ),
+                  //     FAProgressBar(
+                  //       backgroundColor: Colors.transparent,
+                  //       currentValue: easy.length.toDouble() * 100 / widget.card_ids.length,
+                  //       changeProgressColor: getC(current_index),
+                  //       // onChanged: (val) {},
+                  //       progressColor: Colors.blue,
+                  //     ),
+                  //   ],
+                  // ),
                 ).px12(),
                 const SizedBox(
                   height: 40,
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.68,
                   width: MediaQuery.of(context).size.width,
                   child: CardSwiper(
                     isLoop: false,

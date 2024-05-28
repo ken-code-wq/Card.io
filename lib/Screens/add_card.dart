@@ -178,6 +178,7 @@ class _AddCartState extends State<AddCart> {
                                 }
                               }),
                           SplittedMarkdownFormField(
+                            toolbarBackground: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade200,
                             style: GoogleFonts.aBeeZee(
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
@@ -242,8 +243,8 @@ class _AddCartState extends State<AddCart> {
                     elevation: 0,
                     onPressed: () {},
                     backgroundColor: Colors.black,
-                    child: const Icon(Icons.add, color: Colors.white),
                     shape: const StadiumBorder(),
+                    child: const Icon(Icons.add, color: Colors.white),
                   ).px(10),
                   FloatingActionButton.extended(
                     heroTag: 'add',

@@ -3,6 +3,7 @@ import 'package:cards/constants/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import '../../classes/hive_adapter.dart';
 
@@ -21,7 +22,7 @@ class QuestionFace extends StatelessWidget {
     };
     String none = "none";
     return Container(
-      height: 550,
+      height: context.screenHeight * 0.6,
       width: 280,
       decoration: BoxDecoration(
         color: MyTheme().isDark ? Colors.grey.shade900 : Colors.grey.shade100,

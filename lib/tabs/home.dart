@@ -725,19 +725,19 @@ Widget dueTopic(BuildContext context, Topic topic) {
         } catch (e) {
           print(e);
         }
-        List<Flashcard> cardIns = List.generate(topic.card_ids.length - 1, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topic.card_ids[index]]);
-        // ignore: use_build_context_synchronously
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) {
-            return Revision(
-              cards: cardIns,
-              id: topic.id,
-              card_ids: topic.card_ids,
-            );
-          }),
-        );
       }
+      List<Flashcard> cardIns = List.generate(topic.card_ids.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topic.card_ids[index]]);
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return Revision(
+            cards: cardIns,
+            id: topic.id,
+            card_ids: topic.card_ids,
+          );
+        }),
+      );
     },
     child: Container(
       width: context.screenWidth,
@@ -776,14 +776,19 @@ Widget dueTopic(BuildContext context, Topic topic) {
                   ),
                 ],
               ).px8(),
-              Text(
-                topic.name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.aBeeZee(
-                  fontSize: topic.name.length <= 10 ? 40 : 30,
-                  fontWeight: FontWeight.w600,
-                  color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white,
+              SizedBox(
+                height: 90,
+                width: context.screenWidth - 40 - 16 - 110,
+                child: Text(
+                  topic.name,
+                  maxLines: 2,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.aBeeZee(
+                    fontSize: topic.name.length <= 10 ? 40 : 30,
+                    fontWeight: FontWeight.w600,
+                    color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white,
+                  ),
                 ),
               ),
             ],

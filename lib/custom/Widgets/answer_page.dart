@@ -3,6 +3,7 @@ import 'package:cards/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import '../../classes/hive_adapter.dart';
 import 'package:flutter_markdown/src/widget.dart';
@@ -23,7 +24,7 @@ class AnswerFace extends StatelessWidget {
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      height: 550,
+      height: context.screenHeight * 0.6,
       width: 280,
       decoration: BoxDecoration(
         color: Color(boxLightColor[col]),
