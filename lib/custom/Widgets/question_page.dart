@@ -54,7 +54,7 @@ class QuestionFace extends StatelessWidget {
                   child: Text(
                     Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].name,
                     // 'Cool',
-                    style: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.aBeeZee(fontSize: 18, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -78,7 +78,7 @@ class QuestionFace extends StatelessWidget {
                   Hive.box<Flashcard>('flashcards').get(number)?.question ?? none,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.aBeeZee(
-                    fontSize: 40,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                     shadows: [
                       Shadow(color: MyTheme().isDark ? Colors.grey.shade700 : Colors.grey.shade200, blurRadius: 15),

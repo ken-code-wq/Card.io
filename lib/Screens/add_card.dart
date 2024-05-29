@@ -125,6 +125,7 @@ class _AddCartState extends State<AddCart> {
                       height: 10,
                     ),
                     AnimatedContainer(
+                      width: context.screenWidth - 100,
                       duration: const Duration(microseconds: 900),
                       child: Column(
                         children: [
@@ -215,8 +216,8 @@ class _AddCartState extends State<AddCart> {
                             textCapitalization: TextCapitalization.sentences,
                             decoration: const InputDecoration(hintText: "Type answer", border: InputBorder.none),
                             // keyboardType: TextInputType.multiline,
-                            minLines: 1,
-                            maxLines: 9,
+                            minLines: 4,
+                            maxLines: 15,
                           ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade200).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
                           // MarkdownToolbar(
                           //     controller: answer,
