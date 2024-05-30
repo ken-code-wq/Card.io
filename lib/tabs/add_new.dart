@@ -36,7 +36,7 @@ class _AddNewState extends State<AddNew> {
                 onTap: () {
                   Navigator.pop(context);
                   if (index == 1) {
-                    VxBottomSheet.bottomSheetView(context, child: const AddCart(), maxHeight: .85, minHeight: .85, roundedFromTop: true);
+                    VxBottomSheet.bottomSheetView(context, child: const AddCart(), maxHeight: .9, minHeight: .9, roundedFromTop: true);
                   } else if (index == 2) {
                     VxBottomSheet.bottomSheetView(context, child: const AddTopic(), maxHeight: 1, minHeight: .9, roundedFromTop: true);
                   } else if (index == 3) {

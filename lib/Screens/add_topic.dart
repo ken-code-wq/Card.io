@@ -1,18 +1,23 @@
-import 'package:cards/classes/hive_adapter.dart';
-import 'package:cards/services/services.dart';
 import 'package:flutter/material.dart';
-import 'package:cards/constants/config/config.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
+import 'package:cards/classes/hive_adapter.dart';
+import 'package:cards/constants/config/config.dart';
+import 'package:cards/services/services.dart';
+
 import '../constants/constants.dart';
 import '../custom/Widgets/difficulty_selector.dart';
 
 class AddTopic extends StatefulWidget {
-  const AddTopic({super.key});
+  final Topic? topic;
+  const AddTopic({
+    Key? key,
+    this.topic,
+  }) : super(key: key);
 
   @override
   State<AddTopic> createState() => _AddTopicState();
@@ -21,8 +26,24 @@ class AddTopic extends StatefulWidget {
 class _AddTopicState extends State<AddTopic> {
   int col = 0;
   int subject = 0;
+  bool edit = false;
 
   TextEditingController name = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.topic != null) {
+      setState(() {
+        name.text = widget.topic!.name;
+        col = widget.topic!.color;
+        subject = widget.topic!.subject_id + 1;
+        difficulty_topic = widget.topic!.difficulty;
+        edit = true;
+      });
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,15 +185,26 @@ class _AddTopicState extends State<AddTopic> {
             FloatingActionButton.extended(
               onPressed: () async {
                 if (name.text.trim().isNotEmpty) {
-                  await TopicServices().create(
-                    id: topics.length + 1,
-                    name: name.text,
-                    color: col,
-                    font: 0,
-                    difficulty: difficulty_topic,
-                    subject_id: subject != 0 ? subject - 1 : 1000000000,
-                    directions: {'again': [], 'hard': [], 'good': [], 'easy': []},
-                  );
+                  if (!edit) {
+                    await TopicServices().create(
+                      id: topics.length + 1,
+                      name: name.text,
+                      color: col,
+                      font: 0,
+                      difficulty: difficulty_topic,
+                      subject_id: subject != 0 ? subject - 1 : 1000000000,
+                      directions: {'again': [], 'hard': [], 'good': [], 'easy': []},
+                    );
+                  } else {
+                    await TopicServices().editTopic(
+                      id: widget.topic!.id,
+                      name: name.text,
+                      color: col,
+                      font: 0,
+                      difficulty: difficulty_topic,
+                      subject_id: subject != 0 ? subject - 1 : 1000000000,
+                    );
+                  }
 
                   name.clear();
                   Navigator.pop(context);
@@ -263,12 +295,13 @@ class _AddTopicState extends State<AddTopic> {
             onTap: () {
               VxBottomSheet.bottomSheetView(context, child: subjectList(subjects), maxHeight: .7, minHeight: .7);
             },
-            child: subject != 0 ? SubjectMiniCard(context, subject, subjects[subject - 1], true, false) : SubjectMiniCard(context, subject, subjects[0], true, false),
+            child: subject != 0 && subject != 1000000001 ? SubjectMiniCard(context, subject, subjects[subject - 1], true, false) : SubjectMiniCard(context, 0, subjects[0], true, false),
           );
         }).px(8);
   }
 }
 
+// ignore: non_constant_identifier_names
 Widget SubjectMiniCard(BuildContext context, int subject, Subject sbject, bool showC, bool sel) {
   return ListTile(
     selected: true,

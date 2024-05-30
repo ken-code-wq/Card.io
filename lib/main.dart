@@ -243,88 +243,89 @@ class _MyHomePageState extends State<MyHomePage> {
           valueListenable: Hive.box('prefs').listenable(),
           builder: (context, isDark, child) {
             SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-            SystemChrome.setSystemUIOverlayStyle(
-              SystemUiOverlayStyle(
-                systemNavigationBarIconBrightness: MyTheme().isDark ? Brightness.dark : Brightness.light,
-                systemNavigationBarColor: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
-              ),
-            );
 
-            return Scaffold(
-              resizeToAvoidBottomInset: false,
-              body: pages[currentIndex],
-              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: FloatingActionButton(
-                // backgroundColor: MyTheme().isDark ? Colors.black : Colors.purple,
-                shape: const CircleBorder(),
-                onPressed: () {
-                  vibrate(amplitude: 20, duration: 30);
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return SizedBox(
-                          height: context.screenHeight * 0.45,
-                          child: const AlertDialog(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 5),
-                            title: Text('Add a new...'),
-                            content: AddNew(),
-                          ),
-                        );
-                      });
-                  // showModalBottomSheet(
-                  //     context: context,
-                  //     constraints: BoxConstraints(maxHeight: context.screenHeight * 0.45),
-                  //     builder: (context) {
-                  //       return const AddNew();
-                  //     });
-                },
-                child: const Icon(Icons.add),
+            return AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle(
+                statusBarIconBrightness: !MyTheme().isDark ? Brightness.dark : Brightness.light,
+                systemNavigationBarIconBrightness: !MyTheme().isDark ? Brightness.dark : Brightness.light,
+                systemNavigationBarColor: MyTheme().isDark ? Colors.black : Colors.white,
               ),
-              bottomNavigationBar: NavigationBar(
-                surfaceTintColor: Colors.transparent,
-                backgroundColor: !MyTheme().isDark ? Colors.white : Colors.black,
-                elevation: 8,
-                destinations: [
-                  const NavigationDestination(icon: Icon(Icons.home), label: 'Home').px(2.5),
-                  const NavigationDestination(icon: Icon(Icons.list), label: 'Library').px(2.5),
-                  const NavigationDestination(icon: Icon(Icons.search), label: 'Search').px(2.5),
-                  const NavigationDestination(icon: Icon(Icons.settings), label: 'Settings').px(2.5),
-                ],
-                // indicatorColor: Colors.deepPurple.shade400,
-                selectedIndex: currentIndex,
-                onDestinationSelected: (value) {
-                  // Provider.of<ThemeModal>(context, listen: false).setCoin(generalBox.getAt(1));
-                  setState(() {
-                    currentIndex = value;
-                  });
-                },
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: pages[currentIndex],
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+                floatingActionButton: FloatingActionButton(
+                  // backgroundColor: MyTheme().isDark ? Colors.black : Colors.purple,
+                  shape: const CircleBorder(),
+                  onPressed: () {
+                    vibrate(amplitude: 20, duration: 30);
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return SizedBox(
+                            height: context.screenHeight * 0.45,
+                            child: const AlertDialog(
+                              contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                              title: Text('Add a new...'),
+                              content: AddNew(),
+                            ),
+                          );
+                        });
+                    // showModalBottomSheet(
+                    //     context: context,
+                    //     constraints: BoxConstraints(maxHeight: context.screenHeight * 0.45),
+                    //     builder: (context) {
+                    //       return const AddNew();
+                    //     });
+                  },
+                  child: const Icon(Icons.add),
+                ),
+                bottomNavigationBar: NavigationBar(
+                  surfaceTintColor: Colors.transparent,
+                  backgroundColor: !MyTheme().isDark ? Colors.white : Colors.black,
+                  elevation: 8,
+                  destinations: [
+                    const NavigationDestination(icon: Icon(Icons.home), label: 'Home').px(2.5),
+                    const NavigationDestination(icon: Icon(Icons.list), label: 'Library').px(2.5),
+                    const NavigationDestination(icon: Icon(Icons.search), label: 'Search').px(2.5),
+                    const NavigationDestination(icon: Icon(Icons.settings), label: 'Settings').px(2.5),
+                  ],
+                  // indicatorColor: Colors.deepPurple.shade400,
+                  selectedIndex: currentIndex,
+                  onDestinationSelected: (value) {
+                    // Provider.of<ThemeModal>(context, listen: false).setCoin(generalBox.getAt(1));
+                    setState(() {
+                      currentIndex = value;
+                    });
+                  },
+                ),
+                // bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+                //   backgroundColor: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
+                //   height: context.screenHeight * 0.1,
+                //   leftCornerRadius: 0,
+                //   rightCornerRadius: 0,
+                //   elevation: 5,
+                //   notchMargin: -50,
+                //   itemCount: 4,
+                //   tabBuilder: ((index, isActive) {
+                //     return Tab(
+                //       icon: Image(
+                //         image: AssetImage(
+                //           images[index],
+                //         ),
+                //         height: isActive ? context.screenHeight * 0.07 : context.screenHeight * 0.03,
+                //       ),
+                //     );
+                //   }),
+                //   activeIndex: currentIndex,
+                //   gapLocation: GapLocation.center,
+                //   notchSmoothness: NotchSmoothness.verySmoothEdge,
+                //   onTap: (index) {
+                //     vibrate(amplitude: 10, duration: 30);
+                //     setState(() => currentIndex = index);
+                //   },
+                // ),
               ),
-              // bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-              //   backgroundColor: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
-              //   height: context.screenHeight * 0.1,
-              //   leftCornerRadius: 0,
-              //   rightCornerRadius: 0,
-              //   elevation: 5,
-              //   notchMargin: -50,
-              //   itemCount: 4,
-              //   tabBuilder: ((index, isActive) {
-              //     return Tab(
-              //       icon: Image(
-              //         image: AssetImage(
-              //           images[index],
-              //         ),
-              //         height: isActive ? context.screenHeight * 0.07 : context.screenHeight * 0.03,
-              //       ),
-              //     );
-              //   }),
-              //   activeIndex: currentIndex,
-              //   gapLocation: GapLocation.center,
-              //   notchSmoothness: NotchSmoothness.verySmoothEdge,
-              //   onTap: (index) {
-              //     vibrate(amplitude: 10, duration: 30);
-              //     setState(() => currentIndex = index);
-              //   },
-              // ),
             );
           }),
     );

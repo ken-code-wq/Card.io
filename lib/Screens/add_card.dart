@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+import 'package:markdown_editor_plus/src/toolbar.dart';
 
 import '../classes/hive_adapter.dart';
 import 'package:markdown_editor_plus/markdown_editor_plus.dart';
@@ -28,10 +29,24 @@ int topic = 0;
 TextEditingController question = TextEditingController();
 TextEditingController answer = TextEditingController();
 
+late Toolbar _toolbar;
+
 // {
 
 // }
 class _AddCartState extends State<AddCart> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    _toolbar = Toolbar(
+      controller: answer,
+      // bringEditorToFocus: () {
+      //   _focusNode.requestFocus();
+      // },
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,7 +140,7 @@ class _AddCartState extends State<AddCart> {
                       height: 10,
                     ),
                     AnimatedContainer(
-                      width: context.screenWidth - 100,
+                      width: context.screenWidth,
                       duration: const Duration(microseconds: 900),
                       child: Column(
                         children: [
@@ -178,47 +193,48 @@ class _AddCartState extends State<AddCart> {
                                   return const CircularProgressIndicator().centered();
                                 }
                               }),
-                          SplittedMarkdownFormField(
-                            toolbarBackground: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade200,
-                            style: GoogleFonts.aBeeZee(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            emojiConvert: true,
-                            onTap: () async {
-                              try {
-                                List<Map> defs = [];
-                                List definitions = await getDefinition(term: question.text.trim());
-                                for (Map info in definitions) {
-                                  List meanings = info["meanings"];
-                                  for (Map partOfSpeech in meanings) {
-                                    Map result = {'partOfSpeech': partOfSpeech['partOfSpeech']};
-                                    List ds = partOfSpeech['definitions'];
-                                    for (Map definition in ds) {
-                                      Map add = {'definition': definition['definition']};
-                                      result.addAll(add);
-                                      //("done $result");
-                                      //("done $add");
-                                      //({'partOfSpeech': partOfSpeech['partOfSpeech'], 'definition': definition['definition']});
-                                      defs.add({
-                                        'partOfSpeech': partOfSpeech['partOfSpeech'],
-                                        'definition': definition['definition'],
-                                      });
+                          SizedBox(
+                            width: context.screenWidth,
+                            child: SplittedMarkdownFormField(
+                              enableToolBar: false,
+                              toolbarBackground: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+                              style: GoogleFonts.aBeeZee(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              emojiConvert: true,
+                              onTap: () async {
+                                try {
+                                  List<Map> defs = [];
+                                  List definitions = await getDefinition(term: question.text.trim());
+                                  for (Map info in definitions) {
+                                    List meanings = info["meanings"];
+                                    for (Map partOfSpeech in meanings) {
+                                      Map result = {'partOfSpeech': partOfSpeech['partOfSpeech']};
+                                      List ds = partOfSpeech['definitions'];
+                                      for (Map definition in ds) {
+                                        Map add = {'definition': definition['definition']};
+                                        result.addAll(add);
+                                        defs.add({
+                                          'partOfSpeech': partOfSpeech['partOfSpeech'],
+                                          'definition': definition['definition'],
+                                        });
+                                      }
                                     }
                                   }
+                                  print(defs);
+                                } catch (e) {
+                                  print(e);
                                 }
-                                print(defs);
-                              } catch (e) {
-                                print(e);
-                              }
-                            },
-                            controller: answer,
-                            textCapitalization: TextCapitalization.sentences,
-                            decoration: const InputDecoration(hintText: "Type answer", border: InputBorder.none),
-                            // keyboardType: TextInputType.multiline,
-                            minLines: 4,
-                            maxLines: 15,
-                          ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade200).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                              },
+                              controller: answer,
+                              textCapitalization: TextCapitalization.sentences,
+                              decoration: const InputDecoration(hintText: "Type answer", border: InputBorder.none),
+                              // keyboardType: TextInputType.multiline,
+                              minLines: 4,
+                              maxLines: 15,
+                            ).animatedBox.animDuration(const Duration(milliseconds: 200)).color(MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade200).padding(const EdgeInsets.symmetric(horizontal: 5, vertical: 7)).px20.rounded.make().px20().px2(),
+                          ),
                           // MarkdownToolbar(
                           //     controller: answer,
                           //     toolbar: const ToolbarOptions(
@@ -230,75 +246,95 @@ class _AddCartState extends State<AddCart> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      width: context.screenWidth,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          FloatingActionButton(
+                            heroTag: 'add',
+                            elevation: 0,
+                            onPressed: () {},
+                            backgroundColor: Colors.black,
+                            shape: const StadiumBorder(),
+                            child: const Icon(Icons.add, color: Colors.white),
+                          ).px(10),
+                          FloatingActionButton.extended(
+                            heroTag: 'add',
+                            elevation: 0,
+                            onPressed: () async {
+                              if (answer.text.trim().isNotEmpty && question.text.trim().isNotEmpty) {
+                                await CardServices().createCard(
+                                  id: Hive.box<Flashcard>('flashcards').length,
+                                  topic_id: topic,
+                                  question: question.text.trim(),
+                                  answer: answer.text.trim(),
+                                  difficulty_user: difficulty_card,
+                                  usefullness: 5,
+                                  fonts: [0, 0],
+                                  isImage: false,
+                                );
+                                question.clear();
+                                answer.clear();
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    duration: const Duration(seconds: 4, milliseconds: 500),
+                                    elevation: 15,
+                                    backgroundColor: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade400,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    behavior: SnackBarBehavior.floating,
+                                    content: const Text(
+                                      "❗❗Fill in both question and answer❗❗",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            backgroundColor: Colors.blue,
+                            label: SizedBox(
+                              width: context.screenWidth - 150,
+                              child: Center(
+                                child: Text(
+                                  'Create',
+                                  style: GoogleFonts.aBeeZee(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            shape: const StadiumBorder(),
+                          ).px(8),
+                        ],
+                      ).py(15),
+                    )
                   ],
                 ),
               ),
             ),
             SizedBox(
               width: context.screenWidth,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FloatingActionButton(
-                    heroTag: 'add',
-                    elevation: 0,
-                    onPressed: () {},
-                    backgroundColor: Colors.black,
-                    shape: const StadiumBorder(),
-                    child: const Icon(Icons.add, color: Colors.white),
-                  ).px(10),
-                  FloatingActionButton.extended(
-                    heroTag: 'add',
-                    elevation: 0,
-                    onPressed: () async {
-                      if (answer.text.trim().isNotEmpty && question.text.trim().isNotEmpty) {
-                        await CardServices().createCard(
-                          id: Hive.box<Flashcard>('flashcards').length,
-                          topic_id: topic,
-                          question: question.text.trim(),
-                          answer: answer.text.trim(),
-                          difficulty_user: difficulty_card,
-                          usefullness: 5,
-                          fonts: [0, 0],
-                          isImage: false,
-                        );
-                        question.clear();
-                        answer.clear();
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            duration: const Duration(seconds: 4, milliseconds: 500),
-                            elevation: 15,
-                            backgroundColor: MyTheme().isDark ? Colors.grey.shade800 : Colors.grey.shade400,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                            content: const Text(
-                              "❗❗Fill in both question and answer❗❗",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    backgroundColor: Colors.blue,
-                    label: SizedBox(
-                      width: context.screenWidth - 150,
-                      child: Center(
-                        child: Text(
-                          'Create',
-                          style: GoogleFonts.aBeeZee(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    shape: const StadiumBorder(),
-                  ).px(8),
-                ],
+              child: MarkdownToolbar(
+                showPreviewButton: true,
+                // key: const ValueKey<String>("zmarkdowntoolbar"),
+                controller: answer,
+                emojiConvert: true,
+                toolbarBackground: Colors.transparent,
+                toolbar: _toolbar,
+                onPreviewChanged: () {
+                  setState(() {
+                    preview = !preview;
+                  });
+                },
+                onActionCompleted: () {
+                  setState(() {});
+                },
+                showEmojiSelection: true,
               ).py(15),
             )
           ],

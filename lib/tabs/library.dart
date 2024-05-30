@@ -37,89 +37,89 @@ class _LibraryState extends State<Library> {
       statusBarIconBrightness: MyTheme().isDark ? Brightness.dark : Brightness.light,
       statusBarBrightness: MyTheme().isDark ? Brightness.dark : Brightness.light,
     ));
-    print("OK");
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness: !MyTheme().isDark ? Brightness.dark : Brightness.light,
-      systemNavigationBarIconBrightness: MyTheme().isDark ? Brightness.dark : Brightness.light,
-      systemNavigationBarColor: Colors.black,
-    ));
-    return ValueListenableBuilder(
-      valueListenable: Hive.box('prefs').listenable(),
-      builder: (context, dark, child) => SafeArea(
-        child: DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            appBar: AppBar(
-              title: "Library".text.semiBold.scale(2).make(),
-              actions: [
-                ZoomTapAnimation(
-                  onTap: () {
-                    setState(() {
-                      upToDown = !upToDown;
-                    });
-                  },
-                  child: Icon(
-                    Icons.swap_vert_rounded,
-                    color: upToDown
-                        ? MyTheme().isDark
-                            ? Colors.white
-                            : Colors.deepPurple
-                        : Colors.grey.shade700,
-                  ).px16(),
-                )
-              ],
-              backgroundColor: Colors.transparent,
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(context.screenHeight * 0.1),
-                child: Expanded(
-                  child: Container(
-                    color: Colors.transparent,
-                    child: TabBar(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      labelStyle: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.bold),
-                      indicatorWeight: 8,
-                      unselectedLabelStyle: GoogleFonts.aBeeZee(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarIconBrightness: !MyTheme().isDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarIconBrightness: !MyTheme().isDark ? Brightness.dark : Brightness.light,
+      ),
+      child: ValueListenableBuilder(
+        valueListenable: Hive.box('prefs').listenable(),
+        builder: (context, dark, child) => SafeArea(
+          child: DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              appBar: AppBar(
+                title: "Library".text.semiBold.scale(2).make(),
+                actions: [
+                  ZoomTapAnimation(
+                    onTap: () {
+                      setState(() {
+                        upToDown = !upToDown;
+                      });
+                    },
+                    child: Icon(
+                      Icons.swap_vert_rounded,
+                      color: upToDown
+                          ? MyTheme().isDark
+                              ? Colors.white
+                              : Colors.deepPurple
+                          : Colors.grey.shade700,
+                    ).px16(),
+                  )
+                ],
+                backgroundColor: Colors.transparent,
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(context.screenHeight * 0.1),
+                  child: Expanded(
+                    child: Container(
+                      color: Colors.transparent,
+                      child: TabBar(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        labelStyle: GoogleFonts.aBeeZee(fontSize: 20, fontWeight: FontWeight.bold),
+                        indicatorWeight: 8,
+                        unselectedLabelStyle: GoogleFonts.aBeeZee(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        tabs: [
+                          AnimatedContainer(
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
+                            duration: const Duration(milliseconds: 100),
+                            height: 50,
+                            alignment: Alignment.center,
+                            child: const Text('Topics'),
+                          ),
+                          AnimatedContainer(
+                            margin: EdgeInsets.zero,
+                            duration: const Duration(milliseconds: 100),
+                            height: 50,
+                            alignment: Alignment.center,
+                            child: const Text('Subjects', maxLines: 1),
+                          ),
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 100),
+                            height: 50,
+                            alignment: Alignment.center,
+                            child: const Text('Decks'),
+                          ),
+                        ],
                       ),
-                      tabs: [
-                        AnimatedContainer(
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
-                          duration: const Duration(milliseconds: 100),
-                          height: 50,
-                          alignment: Alignment.center,
-                          child: const Text('Topics'),
-                        ),
-                        AnimatedContainer(
-                          margin: EdgeInsets.zero,
-                          duration: const Duration(milliseconds: 100),
-                          height: 50,
-                          alignment: Alignment.center,
-                          child: const Text('Subjects', maxLines: 1),
-                        ),
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 100),
-                          height: 50,
-                          alignment: Alignment.center,
-                          child: const Text('Decks'),
-                        ),
-                      ],
                     ),
                   ),
                 ),
               ),
-            ),
-            body: TabBarView(
-              // physics: const NeverScrollableScrollPhysics(),
-              children: [
-                topics(),
-                subjects(),
-                decks(),
-              ],
+              body: TabBarView(
+                // physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  topics(),
+                  subjects(),
+                  decks(),
+                ],
+              ),
             ),
           ),
         ),
@@ -188,6 +188,10 @@ class _LibraryState extends State<Library> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ZoomTapAnimation(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    VxBottomSheet.bottomSheetView(context, child: AddTopic(topic: topics.values.toList()[index]), maxHeight: 1, minHeight: .9, roundedFromTop: true);
+                                  },
                                   child: ListTile(
                                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
                                     tileColor: Color(boxColor[topics.values.toList()[index].color]).withOpacity(.3),
@@ -236,7 +240,7 @@ class _LibraryState extends State<Library> {
                                                         backgroundColor: Colors.red.shade300,
                                                       ),
                                                       onPressed: () async {
-                                                        await TopicServices().remove(id: index);
+                                                        // await TopicServices().remove(id: index);
                                                         // ignore: use_build_context_synchronously
                                                         Navigator.pop(context);
                                                         Navigator.pop(context);

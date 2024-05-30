@@ -23,17 +23,18 @@ class QuestionFace extends StatelessWidget {
     String none = "none";
     return Container(
       height: context.screenHeight * 0.6,
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       width: 280,
       decoration: BoxDecoration(
         color: MyTheme().isDark ? Colors.grey.shade900 : Colors.grey.shade100,
         borderRadius: BorderRadius.circular(550 / 28),
-        boxShadow: [BoxShadow(color: Colors.grey, spreadRadius: 1.0)],
+        boxShadow: const [BoxShadow(color: Colors.grey, spreadRadius: 1.0)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           SizedBox(
-            height: 60,
+            height: 40,
             width: 280,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,7 +65,7 @@ class QuestionFace extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
-              height: 413,
+              height: 413 - 44.2,
               width: 280,
               child: Center(
                 // child: Expanded(

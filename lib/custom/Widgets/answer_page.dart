@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cards/constants/config/config.dart';
 import 'package:cards/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +28,7 @@ class AnswerFace extends StatelessWidget {
       height: context.screenHeight * 0.6,
       width: 280,
       decoration: BoxDecoration(
-        color: Color(boxLightColor[col]),
+        color: !MyTheme().isDark ? Color(boxLightColor[col]) : Color(boxColor[col]),
         borderRadius: BorderRadius.circular(550 / 28),
         boxShadow: [BoxShadow(color: Color(boxColor[col]), spreadRadius: 1.0)],
       ),

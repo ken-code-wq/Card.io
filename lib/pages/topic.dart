@@ -7,6 +7,7 @@ import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_markdown/src/widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -178,65 +179,6 @@ class _TopicPageState extends State<TopicPage> {
                                           Column(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              ZoomTapAnimation(
-                                                onTap: () async {
-                                                  List all = [];
-                                                  all.addAll(topics[widget.index].card_ids);
-                                                  all.remove(topics[widget.index].directions!['again']!);
-                                                  all.remove(topics[widget.index].directions!['hard']!);
-                                                  all.remove(topics[widget.index].directions!['good']!);
-                                                  all.remove(topics[widget.index].directions!['easy']!);
-                                                  // Hive.box<Flashcard>('flashcards').deleteAt(67)
-                                                  await TopicServices().editTopic(id: widget.index, card_ids: [1, 2, 3, 4, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 31, 34, 35, 36, 37, 38, 39, 40, 41]);
-                                                  //TODO
-                                                  if (all.length > 0) {
-                                                    try {
-                                                      List<Flashcard> cardIns = List.generate(all.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[all[index]]);
-
-                                                      VxBottomSheet.bottomSheetView(context, child: bottomS('To study', cardIns, all, Colors.grey.shade700, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
-                                                    } catch (e) {
-                                                      print(e);
-                                                    }
-                                                  }
-                                                },
-                                                child: Container(
-                                                  width: context.screenWidth * 0.9 + 10,
-                                                  height: context.screenHeight * 0.7 * 1 / 5,
-                                                  decoration: BoxDecoration(
-                                                    color: MyTheme().isDark ? Colors.grey.shade500.withOpacity(.4) : Colors.grey.withOpacity(.3),
-                                                    borderRadius: BorderRadius.circular(20),
-                                                  ),
-                                                  child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: context.screenWidth * 0.2,
-                                                        child: chart(not, topicLength, Colors.grey.shade800, _valueNotifierNew),
-                                                      ).px8().py8(),
-                                                      SizedBox(
-                                                        width: context.screenWidth * 0.7 - 10,
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              "Not reviewed",
-                                                              style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 25),
-                                                            ).px(4),
-                                                            Text(
-                                                              "Study these to gauge your knowledge concerning them",
-                                                              maxLines: 2,
-                                                              style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w500, fontSize: 16),
-                                                            ).px(4),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              //Space
-                                              SizedBox(height: context.screenWidth * 0.1 - 20),
                                               SizedBox(
                                                 width: context.screenWidth,
                                                 child: Row(
@@ -299,105 +241,72 @@ class _TopicPageState extends State<TopicPage> {
                                                   ],
                                                 ),
                                               ),
+
+                                              //Space
+                                              SizedBox(height: context.screenWidth * 0.1 - 20),
+                                              ZoomTapAnimation(
+                                                onTap: () async {
+                                                  List all = [];
+                                                  all.addAll(topics[widget.index].card_ids);
+                                                  all.remove(topics[widget.index].directions!['again']!);
+                                                  all.remove(topics[widget.index].directions!['hard']!);
+                                                  all.remove(topics[widget.index].directions!['good']!);
+                                                  all.remove(topics[widget.index].directions!['easy']!);
+                                                  // Hive.box<Flashcard>('flashcards').deleteAt(67)
+                                                  //TODO
+                                                  if (all.length > 0) {
+                                                    try {
+                                                      List<Flashcard> cardIns = List.generate(all.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[all[index]]);
+
+                                                      VxBottomSheet.bottomSheetView(context, child: bottomS('To study', cardIns, all, Colors.grey.shade700, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
+                                                    } catch (e) {
+                                                      print(e);
+                                                    }
+                                                  }
+                                                },
+                                                child: Container(
+                                                  width: context.screenWidth * 0.9 + 10,
+                                                  height: context.screenHeight * 0.7 * 1 / 5,
+                                                  decoration: BoxDecoration(
+                                                    color: MyTheme().isDark ? Colors.grey.shade500.withOpacity(.4) : Colors.grey.withOpacity(.3),
+                                                    borderRadius: BorderRadius.circular(20),
+                                                  ),
+                                                  child: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: context.screenWidth * 0.2,
+                                                        child: chart(not, topicLength, Colors.grey.shade800, _valueNotifierNew),
+                                                      ).px8().py8(),
+                                                      SizedBox(
+                                                        width: context.screenWidth * 0.7 - 10,
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                              "Not reviewed",
+                                                              style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 25),
+                                                            ).px(4),
+                                                            Text(
+                                                              "Study these to gauge your knowledge concerning them",
+                                                              maxLines: 2,
+                                                              style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w500, fontSize: 16),
+                                                            ).px(4),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
                                             ],
                                           ).px(10),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  //FlashCards
-                                  SliverToBoxAdapter(
-                                    child: SizedBox(
-                                      height: context.screenHeight * 0.3 + 30,
-                                      width: context.screenWidth,
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(height: 28),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Flash cards",
-                                                style: rowStyle,
-                                              ),
-                                              Text(
-                                                "Take a quiz",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Color(
-                                                    boxColor[widget.color],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ).px12(),
-                                          const SizedBox(height: 15),
-                                          SizedBox(
-                                              height: context.screenHeight * 0.21,
-                                              width: context.screenWidth,
-                                              child: MasonryGridView.builder(
-                                                gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 3,
-                                                ),
-                                                mainAxisSpacing: 4,
-                                                scrollDirection: Axis.horizontal,
-                                                itemCount: topics[widget.index].card_ids.length,
-                                                // itemCount: topics[widget.index].card_ids/,
-                                                crossAxisSpacing: 7,
-                                                itemBuilder: (context, index) {
-                                                  return Hero(
-                                                    tag: index,
-                                                    child: ZoomTapAnimation(
-                                                      onTap: () {
-                                                        Navigator.push(context, HeroDialogRoute(builder: (BuildContext context) {
-                                                          return Center(
-                                                            child: Hero(
-                                                              tag: index,
-                                                              child: Material(
-                                                                  color: Colors.transparent,
-                                                                  child: FlippingCard(
-                                                                    number: topics[widget.index].card_ids[index],
-                                                                    front: false,
-                                                                  )),
-                                                            ),
-                                                          );
-                                                        }));
-                                                      },
-                                                      child: Container(
-                                                        margin: const EdgeInsets.only(left: 7),
-                                                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                        height: context.screenHeight * 0.1,
-                                                        // width: context.screenWidth * 0.52,
-                                                        decoration: BoxDecoration(
-                                                          color: Color(
-                                                            boxColor[widget.color],
-                                                          ).withOpacity(.45),
-                                                          borderRadius: BorderRadius.circular((context.screenHeight * 0.1 - 4) / 4),
-                                                        ),
-                                                        child: Material(
-                                                          color: Colors.transparent,
-                                                          child: Center(
-                                                            child: Text(
-                                                              "${Hive.box<Flashcard>('flashcards').get(topics[widget.index].card_ids[index])?.question}",
-                                                              overflow: TextOverflow.ellipsis,
-                                                              textAlign: TextAlign.center,
-                                                              style: GoogleFonts.aBeeZee(
-                                                                fontSize: 25,
-                                                                fontWeight: FontWeight.bold,
-                                                              ),
-                                                              maxLines: 1,
-                                                            ).centered(),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+
                                   //Bottom Space
                                   SliverToBoxAdapter(
                                     child: SizedBox(
@@ -417,32 +326,32 @@ class _TopicPageState extends State<TopicPage> {
                                   //Progress
                                   SliverToBoxAdapter(
                                     child: SizedBox(
-                                      height: context.screenHeight * 0.51,
+                                      height: context.screenHeight * 0.4 + 30,
                                       width: context.screenWidth,
                                       child: Column(
                                         children: [
-                                          const SizedBox(height: 20),
-                                          // Row(
-                                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          //   children: [
-                                          //     Text(
-                                          //       "Progress",
-                                          //       style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w500, fontSize: 25),
-                                          //     ),
-                                          //     Text(
-                                          //       "More stats",
-                                          //       style: TextStyle(
-                                          //         fontWeight: FontWeight.w500,
-                                          //         color: Color(
-                                          //           boxColor[widget.color],
-                                          //         ),
-                                          //       ),
-                                          //     ),
-                                          //   ],
-                                          // ).px12(),
+                                          const SizedBox(height: 15),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Progress",
+                                                style: rowStyle,
+                                              ),
+                                              Text(
+                                                "More stats",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Color(
+                                                    boxColor[widget.color],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ).px12(),
                                           const SizedBox(height: 20),
                                           SizedBox(
-                                            height: context.screenHeight * 0.25,
+                                            height: context.screenHeight * 0.2,
                                             width: context.screenWidth,
                                             child: Stack(
                                               alignment: Alignment.center,
@@ -450,7 +359,7 @@ class _TopicPageState extends State<TopicPage> {
                                                 DashedCircularProgressBar.aspectRatio(
                                                   aspectRatio: 1, // width ÷ height
                                                   valueNotifier: _valueNotifier0,
-                                                  progress: (again + hard + good + easy) / topicLength * 100 - 5 * (topics[widget.index].card_ids.length / topicLength),
+                                                  progress: (again + hard + good + easy) / topicLength * 100 * (topics[widget.index].card_ids.length / topicLength),
                                                   maxProgress: 100,
                                                   corners: StrokeCap.round,
                                                   seekColor: Colors.transparent,
@@ -511,11 +420,11 @@ class _TopicPageState extends State<TopicPage> {
                                                             children: [
                                                               Text(
                                                                 '${value.ceil().toInt()}%',
-                                                                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 60),
+                                                                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 30),
                                                               ),
                                                               const Text(
                                                                 'Learnt',
-                                                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+                                                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                                                               ),
                                                             ],
                                                           );
@@ -525,24 +434,228 @@ class _TopicPageState extends State<TopicPage> {
                                               ],
                                             ),
                                           ),
-                                          dataTag(percentage: ((easy) / topicLength * 100).ceil().toDouble(), severity: 3).py8(),
-                                          dataTag(percentage: ((again + hard + good) / topicLength * 100).floor().toDouble(), severity: 2),
-                                          dataTag(percentage: ((topicLength - again - hard - good - easy) / topicLength * 100).ceil().toDouble(), severity: 1).py8(),
+                                          dataTag(percentage: ((easy) / topicLength * 100).ceil().toDouble(), severity: 3).py8().px(20),
+                                          dataTag(percentage: ((again + hard + good) / topicLength * 100).floor().toDouble(), severity: 2).px(20),
+                                          dataTag(percentage: ((topicLength - again - hard - good - easy) / topicLength * 100).ceil().toDouble(), severity: 1).py8().px(20),
                                         ],
                                       ).px12(),
                                     ),
                                   ),
+
+                                  //FlashCards
+                                  // SliverToBoxAdapter(
+                                  //   child: SizedBox(
+                                  //     height: context.screenHeight * 0.3 + 30,
+                                  //     width: context.screenWidth,
+                                  //     child: Column(
+                                  //       children: [
+                                  //         const SizedBox(height: 28),
+                                  // Row(
+                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //   children: [
+                                  //     Text(
+                                  //       "Flash cards",
+                                  //       style: rowStyle,
+                                  //     ),
+                                  //     Text(
+                                  //       "Take a quiz",
+                                  //       style: TextStyle(
+                                  //         fontWeight: FontWeight.w500,
+                                  //         color: Color(
+                                  //           boxColor[widget.color],
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ).px12(),
+                                  //         const SizedBox(height: 15),
+                                  //         SizedBox(
+                                  //             height: context.screenHeight * 0.21,
+                                  //             width: context.screenWidth,
+                                  //             child: MasonryGridView.builder(
+                                  //               gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                  //                 crossAxisCount: 3,
+                                  //               ),
+                                  //               mainAxisSpacing: 4,
+                                  //               scrollDirection: Axis.horizontal,
+                                  //               itemCount: topics[widget.index].card_ids.length,
+                                  //               // itemCount: topics[widget.index].card_ids/,
+                                  //               crossAxisSpacing: 7,
+                                  //               itemBuilder: (context, index) {
+                                  //                 return Hero(
+                                  //                   tag: index,
+                                  //                   child: ZoomTapAnimation(
+                                  //                     onTap: () {
+                                  //                       Navigator.push(context, HeroDialogRoute(builder: (BuildContext context) {
+                                  //                         return Center(
+                                  //                           child: Hero(
+                                  //                             tag: index,
+                                  //                             child: Material(
+                                  //                                 color: Colors.transparent,
+                                  //                                 child: FlippingCard(
+                                  //                                   number: topics[widget.index].card_ids[index],
+                                  //                                   front: false,
+                                  //                                 )),
+                                  //                           ),
+                                  //                         );
+                                  //                       }));
+                                  //                     },
+                                  //                     child: Container(
+                                  //                       margin: const EdgeInsets.only(left: 7),
+                                  //                       padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  //                       height: context.screenHeight * 0.1,
+                                  //                       // width: context.screenWidth * 0.52,
+                                  //                       decoration: BoxDecoration(
+                                  //                         color: Color(
+                                  //                           boxColor[widget.color],
+                                  //                         ).withOpacity(.45),
+                                  //                         borderRadius: BorderRadius.circular((context.screenHeight * 0.1 - 4) / 4),
+                                  //                       ),
+                                  //                       child: Material(
+                                  //                         color: Colors.transparent,
+                                  //                         child: Center(
+                                  //                           child: Text(
+                                  //                             "${Hive.box<Flashcard>('flashcards').get(topics[widget.index].card_ids[index])?.question}",
+                                  //                             overflow: TextOverflow.ellipsis,
+                                  //                             textAlign: TextAlign.center,
+                                  //                             style: GoogleFonts.aBeeZee(
+                                  //                               fontSize: 25,
+                                  //                               fontWeight: FontWeight.bold,
+                                  //                             ),
+                                  //                             maxLines: 1,
+                                  //                           ).centered(),
+                                  //                         ),
+                                  //                       ),
+                                  //                     ),
+                                  //                   ),
+                                  //                 );
+                                  //               },
+                                  //             )),
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // ),
+
                                   //Space
                                   const SliverToBoxAdapter(
                                     child: SizedBox(
-                                      height: 30,
+                                      height: 20,
                                     ),
+                                  ),
+
+                                  SliverToBoxAdapter(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Flash cards",
+                                          style: rowStyle,
+                                        ),
+                                        Text(
+                                          "Take a quiz",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(
+                                              boxColor[widget.color],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ).px12(),
                                   ),
 
                                   //Space
                                   const SliverToBoxAdapter(
                                     child: SizedBox(
-                                      height: 30,
+                                      height: 10,
+                                    ),
+                                  ),
+
+                                  SliverGrid.builder(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                                    itemBuilder: (context, index) {
+                                      return Hero(
+                                        tag: index,
+                                        child: ZoomTapAnimation(
+                                          onTap: () {
+                                            Navigator.push(context, HeroDialogRoute(builder: (BuildContext context) {
+                                              return Center(
+                                                child: Hero(
+                                                  tag: index,
+                                                  child: Material(
+                                                      color: Colors.transparent,
+                                                      child: FlippingCard(
+                                                        number: topics[widget.index].card_ids[index],
+                                                        front: false,
+                                                      )),
+                                                ),
+                                              );
+                                            }));
+                                          },
+                                          onLongTap: () {},
+                                          child: Container(
+                                            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                                            height: context.screenHeight * 0.13,
+                                            constraints: BoxConstraints(maxHeight: context.screenHeight * 0.2),
+                                            // width: context.screenWidth * 0.52,
+                                            decoration: BoxDecoration(
+                                              color: Color(
+                                                boxColor[widget.color],
+                                              ).withOpacity(.45),
+                                              borderRadius: BorderRadius.circular((context.screenHeight * 0.1 - 4) / 4),
+                                            ),
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "${Hive.box<Flashcard>('flashcards').get(topics[widget.index].card_ids[index])?.question}",
+                                                    overflow: TextOverflow.ellipsis,
+                                                    textAlign: TextAlign.center,
+                                                    style: GoogleFonts.aBeeZee(
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                    maxLines: 2,
+                                                  ),
+                                                  Expanded(
+                                                    child: ListView(
+                                                      physics: NeverScrollableScrollPhysics(),
+                                                      children: [
+                                                        MarkdownBody(
+                                                          fitContent: false,
+                                                          data: "${Hive.box<Flashcard>('flashcards').get(topics[widget.index].card_ids[index])?.answer}",
+                                                          selectable: false,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  // Text(
+                                                  //   "${Hive.box<Flashcard>('flashcards').get(topics[widget.index].card_ids[index])?.answer}",
+                                                  //   overflow: TextOverflow.ellipsis,
+                                                  //   textAlign: TextAlign.left,
+                                                  //   style: GoogleFonts.aBeeZee(
+                                                  //     fontSize: 15,
+                                                  //     fontWeight: FontWeight.bold,
+                                                  //   ),
+                                                  //   maxLines: 5,
+                                                  // ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    itemCount: topics[widget.index].card_ids.length,
+                                  ),
+
+                                  //Space
+                                  const SliverToBoxAdapter(
+                                    child: SizedBox(
+                                      height: 90,
                                     ),
                                   ),
                                 ],
@@ -663,7 +776,7 @@ class _TopicPageState extends State<TopicPage> {
                               child: Material(
                                 color: Colors.transparent,
                                 child: FlippingCard(
-                                  number: ids[index],
+                                  number: topic.card_ids[ids[index]],
                                   front: false,
                                 ),
                               ),
