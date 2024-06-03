@@ -9,6 +9,7 @@ import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.da
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:animations/animations.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import '../constants/config/config.dart';
 import '../custom/Widgets/blur.dart';
@@ -717,224 +718,230 @@ Widget collumnRow(BuildContext context, void Function(void Function()) setState)
 
 Widget dueTopic(BuildContext context, Topic topic) {
   int topicL = topic.card_ids.isEmpty ? 1 : topic.card_ids.length;
-  return ZoomTapAnimation(
-    onTap: () async {
-      for (int i = 0; i < topic.card_ids.length; i++) {
-        try {
-          await CardServices().editCard(id: topic.card_ids[i], topic_id: topic.id);
-        } catch (e) {
-          print(e);
-        }
-      }
-      List<Flashcard> cardIns = List.generate(topic.card_ids.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topic.card_ids[index]]);
-      // ignore: use_build_context_synchronously
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) {
-          return Revision(
-            cards: cardIns,
-            id: topic.id,
-            card_ids: topic.card_ids,
+  return Hero(
+    tag: topic.id,
+    child: Material(
+      color: Colors.transparent,
+      child: ZoomTapAnimation(
+        onTap: () async {
+          // for (int i = 0; i < topic.card_ids.length; i++) {
+          //   try {
+          //     await CardServices().editCard(id: topic.card_ids[i], topic_id: topic.id);
+          //   } catch (e) {
+          //     print(e);
+          //   }
+          // }
+          List<Flashcard> cardIns = List.generate(topic.card_ids.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topic.card_ids[index]]);
+          // ignore: use_build_context_synchronously
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return Revision(
+                cards: cardIns,
+                id: topic.id,
+                card_ids: topic.card_ids,
+              );
+            }),
           );
-        }),
-      );
-    },
-    child: Container(
-      width: context.screenWidth,
-      height: 170,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: BoxDecoration(
-        color: MyTheme().isDark ? Color(boxColor[topic.color]).withOpacity(.2) : Color(boxLightColor[topic.color]).withOpacity(.4),
-        borderRadius: BorderRadius.circular(40),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        },
+        child: Container(
+          width: context.screenWidth,
+          height: 170,
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: MyTheme().isDark ? Color(boxColor[topic.color]).withOpacity(.2) : Color(boxLightColor[topic.color]).withOpacity(.4),
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '${(topic.card_ids.length - topic.card_ids.length / 2).toInt()}',
+                            style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 45, color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white),
+                          ),
+                          Text(
+                            '/${topic.card_ids.length}',
+                            style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 20, color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        'Cards due',
+                        style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 18, color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white),
+                      ),
+                    ],
+                  ).px8(),
+                  SizedBox(
+                    height: 90,
+                    width: context.screenWidth - 40 - 16 - 110,
+                    child: Text(
+                      topic.name,
+                      maxLines: 2,
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.aBeeZee(
+                        fontSize: topic.name.length <= 10 ? 40 : 30,
+                        fontWeight: FontWeight.w600,
+                        color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ).px(15).py(4),
+              Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(right: topic.directions!['easy']!.isNotEmpty ? 2 : 0),
+                    width: topic.directions!['easy']!.length / topicL * (context.screenWidth * 0.9 - 60),
+                    height: 10,
+                    child: FAProgressBar(
+                      currentValue: 100,
+                      backgroundColor: Colors.white.withOpacity(.2),
+                      size: 10,
+                      progressColor: Colors.blue,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(right: topic.directions!['good']!.isNotEmpty ? 2 : 0),
+                    width: topic.directions!['good']!.length / topicL * (context.screenWidth * 0.9 - 60),
+                    height: 10,
+                    child: FAProgressBar(
+                      currentValue: 100,
+                      backgroundColor: Colors.white.withOpacity(.2),
+                      size: 10,
+                      progressColor: Colors.green,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(right: topic.directions!['hard']!.isNotEmpty ? 2 : 0),
+                    width: topic.directions!['hard']!.length / topicL * (context.screenWidth * 0.9 - 60),
+                    height: 10,
+                    child: FAProgressBar(
+                      currentValue: 100,
+                      backgroundColor: Colors.white.withOpacity(.2),
+                      size: 10,
+                      progressColor: Colors.orange,
+                    ),
+                  ),
+                  SizedBox(
+                    width: topic.directions!['again']!.length / topicL * (context.screenWidth * 0.9 - 60),
+                    height: 10,
+                    child: FAProgressBar(
+                      currentValue: 100,
+                      backgroundColor: Colors.white.withOpacity(.2),
+                      size: 10,
+                      progressColor: Colors.red,
+                      // progressColor: Color(boxColor[topic.color]),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: topicL - (topic.directions!['easy']!.length + topic.directions!['good']!.length + topic.directions!['hard']!.length + topic.directions!['again']!.length) != 0 ? 2 : 0),
+                    width: (topicL - (topic.directions!['easy']!.length + topic.directions!['good']!.length + topic.directions!['hard']!.length + topic.directions!['again']!.length)) / topicL * (context.screenWidth * 0.9 - 60),
+                    height: 10,
+                    child: FAProgressBar(
+                      currentValue: 100,
+                      backgroundColor: Colors.white.withOpacity(.2),
+                      size: 10,
+                      progressColor: Colors.grey.shade400,
+                    ),
+                  ),
+                ],
+              ).px(20),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
+                      const CircleAvatar(
+                        radius: 5,
+                        backgroundColor: Colors.blue,
+                      ).px12(),
                       Text(
-                        '${(topic.card_ids.length - topic.card_ids.length / 2).toInt()}',
-                        style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 45, color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white),
-                      ),
-                      Text(
-                        '/${topic.card_ids.length}',
-                        style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 20, color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white),
+                        "${topic.directions?['easy']!.length}",
+                        style: GoogleFonts.aBeeZee(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),
-                  Text(
-                    'Cards due',
-                    style: GoogleFonts.aBeeZee(fontWeight: FontWeight.w600, fontSize: 18, color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white),
+                  Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 5,
+                        backgroundColor: Colors.green,
+                      ).px12(),
+                      Text(
+                        "${topic.directions?['good']!.length}",
+                        style: GoogleFonts.aBeeZee(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 5,
+                        backgroundColor: Colors.red,
+                      ).px12(),
+                      Text(
+                        "${topic.directions?['again']!.length}",
+                        style: GoogleFonts.aBeeZee(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 5,
+                        backgroundColor: Colors.orange,
+                      ).px12(),
+                      Text(
+                        "${topic.directions?['hard']!.length}",
+                        style: GoogleFonts.aBeeZee(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 5,
+                        backgroundColor: Colors.grey.shade400,
+                      ).px12(),
+                      Text(
+                        "${(topicL - (topic.directions!['easy']!.length + topic.directions!['good']!.length + topic.directions!['hard']!.length + topic.directions!['again']!.length))}",
+                        style: GoogleFonts.aBeeZee(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-              ).px8(),
-              SizedBox(
-                height: 90,
-                width: context.screenWidth - 40 - 16 - 110,
-                child: Text(
-                  topic.name,
-                  maxLines: 2,
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.aBeeZee(
-                    fontSize: topic.name.length <= 10 ? 40 : 30,
-                    fontWeight: FontWeight.w600,
-                    color: !MyTheme().isDark ? Color(boxColor[topic.color]) : Colors.white,
-                  ),
-                ),
-              ),
+              ).px(15),
+              const SizedBox(height: 10),
             ],
-          ).px(15).py(4),
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.only(right: topic.directions!['easy']!.isNotEmpty ? 2 : 0),
-                width: topic.directions!['easy']!.length / topicL * (context.screenWidth * 0.9 - 60),
-                height: 10,
-                child: FAProgressBar(
-                  currentValue: 100,
-                  backgroundColor: Colors.white.withOpacity(.2),
-                  size: 10,
-                  progressColor: Colors.blue,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(right: topic.directions!['good']!.isNotEmpty ? 2 : 0),
-                width: topic.directions!['good']!.length / topicL * (context.screenWidth * 0.9 - 60),
-                height: 10,
-                child: FAProgressBar(
-                  currentValue: 100,
-                  backgroundColor: Colors.white.withOpacity(.2),
-                  size: 10,
-                  progressColor: Colors.green,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(right: topic.directions!['hard']!.isNotEmpty ? 2 : 0),
-                width: topic.directions!['hard']!.length / topicL * (context.screenWidth * 0.9 - 60),
-                height: 10,
-                child: FAProgressBar(
-                  currentValue: 100,
-                  backgroundColor: Colors.white.withOpacity(.2),
-                  size: 10,
-                  progressColor: Colors.orange,
-                ),
-              ),
-              SizedBox(
-                width: topic.directions!['again']!.length / topicL * (context.screenWidth * 0.9 - 60),
-                height: 10,
-                child: FAProgressBar(
-                  currentValue: 100,
-                  backgroundColor: Colors.white.withOpacity(.2),
-                  size: 10,
-                  progressColor: Colors.red,
-                  // progressColor: Color(boxColor[topic.color]),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: topicL - (topic.directions!['easy']!.length + topic.directions!['good']!.length + topic.directions!['hard']!.length + topic.directions!['again']!.length) != 0 ? 2 : 0),
-                width: (topicL - (topic.directions!['easy']!.length + topic.directions!['good']!.length + topic.directions!['hard']!.length + topic.directions!['again']!.length)) / topicL * (context.screenWidth * 0.9 - 60),
-                height: 10,
-                child: FAProgressBar(
-                  currentValue: 100,
-                  backgroundColor: Colors.white.withOpacity(.2),
-                  size: 10,
-                  progressColor: Colors.grey.shade400,
-                ),
-              ),
-            ],
-          ).px(20),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 5,
-                    backgroundColor: Colors.blue,
-                  ).px12(),
-                  Text(
-                    "${topic.directions?['easy']!.length}",
-                    style: GoogleFonts.aBeeZee(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 5,
-                    backgroundColor: Colors.green,
-                  ).px12(),
-                  Text(
-                    "${topic.directions?['good']!.length}",
-                    style: GoogleFonts.aBeeZee(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 5,
-                    backgroundColor: Colors.red,
-                  ).px12(),
-                  Text(
-                    "${topic.directions?['again']!.length}",
-                    style: GoogleFonts.aBeeZee(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 5,
-                    backgroundColor: Colors.orange,
-                  ).px12(),
-                  Text(
-                    "${topic.directions?['hard']!.length}",
-                    style: GoogleFonts.aBeeZee(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 5,
-                    backgroundColor: Colors.grey.shade400,
-                  ).px12(),
-                  Text(
-                    "${(topicL - (topic.directions!['easy']!.length + topic.directions!['good']!.length + topic.directions!['hard']!.length + topic.directions!['again']!.length))}",
-                    style: GoogleFonts.aBeeZee(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ).px(15),
-          const SizedBox(height: 10),
-        ],
+          ),
+        ),
       ),
     ),
   );

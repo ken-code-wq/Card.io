@@ -249,6 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 statusBarIconBrightness: !MyTheme().isDark ? Brightness.dark : Brightness.light,
                 systemNavigationBarIconBrightness: !MyTheme().isDark ? Brightness.dark : Brightness.light,
                 systemNavigationBarColor: MyTheme().isDark ? Colors.black : Colors.white,
+                systemNavigationBarDividerColor: Colors.transparent,
               ),
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
