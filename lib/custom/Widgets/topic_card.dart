@@ -219,10 +219,10 @@ class _TopicCardState extends State<TopicCard> {
                               children: [
                                 const CircleAvatar(
                                   radius: 5,
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: Colors.orange,
                                 ).px12(),
                                 Text(
-                                  "${widget.topics.values.toList()[widget.index].directions?['again']!.length}",
+                                  "${widget.topics.values.toList()[widget.index].directions?['hard']!.length}",
                                   style: GoogleFonts.aBeeZee(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -234,10 +234,10 @@ class _TopicCardState extends State<TopicCard> {
                               children: [
                                 const CircleAvatar(
                                   radius: 5,
-                                  backgroundColor: Colors.orange,
+                                  backgroundColor: Colors.red,
                                 ).px12(),
                                 Text(
-                                  "${widget.topics.values.toList()[widget.index].directions?['hard']!.length}",
+                                  "${widget.topics.values.toList()[widget.index].directions?['again']!.length}",
                                   style: GoogleFonts.aBeeZee(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -252,7 +252,7 @@ class _TopicCardState extends State<TopicCard> {
                                   backgroundColor: Colors.grey.shade400,
                                 ).px12(),
                                 Text(
-                                  "${(topicL - (widget.topics.values.toList()[widget.index].directions!['easy']!.length + widget.topics.values.toList()[widget.index].directions!['good']!.length + widget.topics.values.toList()[widget.index].directions!['hard']!.length + widget.topics.values.toList()[widget.index].directions!['again']!.length))}",
+                                  "${(widget.topics.values.toList()[widget.index].card_ids.length - (widget.topics.values.toList()[widget.index].directions!['easy']!.length + widget.topics.values.toList()[widget.index].directions!['good']!.length + widget.topics.values.toList()[widget.index].directions!['hard']!.length + widget.topics.values.toList()[widget.index].directions!['again']!.length))}",
                                   style: GoogleFonts.aBeeZee(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,

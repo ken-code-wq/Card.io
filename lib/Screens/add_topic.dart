@@ -295,7 +295,24 @@ class _AddTopicState extends State<AddTopic> {
             onTap: () {
               VxBottomSheet.bottomSheetView(context, child: subjectList(subjects), maxHeight: .7, minHeight: .7);
             },
-            child: subject != 0 && subject != 1000000001 ? SubjectMiniCard(context, subject, subjects[subject - 1], true, false) : SubjectMiniCard(context, 0, subjects[0], true, false),
+            child: subject != 0 && subject != 1000000001
+                ? SubjectMiniCard(context, subject, subjects[subject - 1], true, false)
+                : SubjectMiniCard(
+                    context,
+                    0,
+                    Subject(
+                      id: 4,
+                      name: '',
+                      topic_ids: [],
+                      card_ids: [],
+                      difficulty: 1,
+                      times_appeared: 2,
+                      times_correct: 5,
+                      color: 1,
+                      font: 4,
+                    ),
+                    true,
+                    false),
           );
         }).px(8);
   }

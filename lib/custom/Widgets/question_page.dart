@@ -8,7 +8,7 @@ import 'package:velocity_x/velocity_x.dart';
 import '../../classes/hive_adapter.dart';
 
 class QuestionFace extends StatelessWidget {
-  final int number;
+  final Flashcard number;
   const QuestionFace({super.key, required this.number});
 
   @override
@@ -45,7 +45,7 @@ class QuestionFace extends StatelessWidget {
                   height: 10,
                   width: 280,
                   decoration: BoxDecoration(
-                    color: Color(boxColor[Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].color ?? 0]),
+                    color: Color(boxColor[Hive.box<Topic>('topics').values.toList()[number!.topic_id].color ?? 0]),
                     // color: Colors.brown,
                     borderRadius: BorderRadius.circular(25),
                   ),
@@ -53,7 +53,7 @@ class QuestionFace extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 2.0),
                   child: Text(
-                    Hive.box<Topic>('topics').values.toList()[Hive.box<Flashcard>('flashcards').get(number)!.topic_id].name,
+                    Hive.box<Topic>('topics').values.toList()[number!.topic_id].name,
                     // 'Cool',
                     style: GoogleFonts.aBeeZee(fontSize: 18, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
@@ -76,7 +76,7 @@ class QuestionFace extends StatelessWidget {
                 //   ),
                 // ),
                 child: Text(
-                  Hive.box<Flashcard>('flashcards').get(number)?.question ?? none,
+                  number?.question ?? none,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.aBeeZee(
                     fontSize: 24,

@@ -264,16 +264,37 @@ class _AddCartState extends State<AddCart> {
                             elevation: 0,
                             onPressed: () async {
                               if (answer.text.trim().isNotEmpty && question.text.trim().isNotEmpty) {
-                                await CardServices().createCard(
-                                  id: Hive.box<Flashcard>('flashcards').length,
-                                  topic_id: topic,
-                                  question: question.text.trim(),
-                                  answer: answer.text.trim(),
-                                  difficulty_user: difficulty_card,
-                                  usefullness: 5,
-                                  fonts: [0, 0],
-                                  isImage: false,
+                                // await CardServices().createCard(
+                                //   id: topics .length,
+                                //   topic_id: topic,
+                                //   question: question.text.trim(),
+                                //   answer: answer.text.trim(),
+                                //   difficulty_user: difficulty_card,
+                                //   usefullness: 5,
+                                //   fonts: [0, 0],
+                                //   isImage: false,
+                                // );
+                                List<Flashcard> cds = [];
+                                cds.addAll(Hive.box<Topic>('topics').values.toList()[topic].card_ids);
+                                cds.add(
+                                  Flashcard(
+                                    id: Hive.box<Topic>('topics').values.toList()[topic].card_ids.length,
+                                    topic_id: topic,
+                                    question: question.text.trim(),
+                                    answer: answer.text.trim(),
+                                    difficulty_user: difficulty_card,
+                                    times_appeared: 0,
+                                    times_correct: 0,
+                                    usefullness: 0,
+                                    rate_of_appearance: 0,
+                                    times_spent: [0],
+                                    ratings: [0],
+                                    fonts: [0],
+                                    isImage: false,
+                                    isAI: false,
+                                  ),
                                 );
+                                TopicServices().editTopic(id: topic, card_ids: cds);
                                 question.clear();
                                 answer.clear();
                               } else {

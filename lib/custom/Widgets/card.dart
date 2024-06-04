@@ -4,10 +4,11 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 
+import '../../classes/hive_adapter.dart';
 import 'answer_page.dart';
 
 class FlippingCard extends StatefulWidget {
-  final int number;
+  final Flashcard number;
   final bool front;
   const FlippingCard({super.key, required this.number, this.front = true});
 

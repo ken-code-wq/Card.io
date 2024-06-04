@@ -33,14 +33,15 @@ class FlashcardAdapter extends TypeAdapter<Flashcard> {
       fonts: (fields[13] as List).cast<int>(),
       adjusted_difficulty: fields[14] as double?,
       isImage: fields[15] as bool,
-      imageURLs: (fields[16] as List?)?.cast<dynamic>(),
+      imageURLs: (fields[17] as List?)?.cast<dynamic>(),
+      isAI: fields[16] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Flashcard obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(18)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -74,6 +75,8 @@ class FlashcardAdapter extends TypeAdapter<Flashcard> {
       ..writeByte(15)
       ..write(obj.isImage)
       ..writeByte(16)
+      ..write(obj.isAI)
+      ..writeByte(17)
       ..write(obj.imageURLs);
   }
 
@@ -165,7 +168,7 @@ class TopicAdapter extends TypeAdapter<Topic> {
     return Topic(
       id: fields[0] as int,
       name: fields[1] as String,
-      card_ids: (fields[2] as List).cast<int>(),
+      card_ids: (fields[2] as List).cast<Flashcard>(),
       color: fields[3] as int,
       font: fields[4] as int,
       deck_id: fields[5] as int?,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 import '../classes/hive_adapter.dart';
+import '../main.dart';
 
 // var cardss = Hive.box<Flashcard>('flashcards');
 // var subjectss = Hive.box<Subject>('subjects');
@@ -44,9 +45,28 @@ class CardServices {
           ratings: [],
           fonts: fonts,
           isImage: isImage,
+          isAI: false,
           imageURLs: imageURLs),
     );
-    await TopicServices().addCard(id: topic_id, card_id: id);
+    await TopicServices().addCard(
+      id: topic_id,
+      card_id: Flashcard(
+          id: id,
+          topic_id: topic_id,
+          question: question,
+          answer: answer,
+          difficulty_user: difficulty_user,
+          times_appeared: 0,
+          times_correct: 0,
+          usefullness: usefullness,
+          rate_of_appearance: 0,
+          times_spent: [],
+          ratings: [],
+          fonts: fonts,
+          isImage: isImage,
+          isAI: false,
+          imageURLs: imageURLs),
+    );
     Topic topic = Hive.box<Topic>('topics').values.toList()[topic_id];
 
     topic.subject_id != 1000000000 ? await SubjectServices().addCardNTopic(id: topic.subject_id, card_id: id) : null;
@@ -79,6 +99,7 @@ class CardServices {
       id,
       Flashcard(
         id: id,
+        isAI: Hive.box<Flashcard>('flashcards').get(id)!.isAI,
         topic_id: topic_id ?? Hive.box<Flashcard>('flashcards').get(id)!.topic_id,
         question: question ?? Hive.box<Flashcard>('flashcards').get(id)!.question,
         answer: answer ?? Hive.box<Flashcard>('flashcards').get(id)!.answer,
@@ -227,14 +248,16 @@ class TopicServices {
         directions: directions,
       ),
     );
+
+    await Hive.openBox<Flashcard>('$name-$id', path: newPath);
   }
 
   Future addCard({
     required int id,
-    required int card_id,
+    required Flashcard card_id,
   }) async {
     var topic = Hive.box<Topic>('topics').getAt(id);
-    List<int> card = [];
+    List<Flashcard> card = [];
     if (topic!.card_ids.isNotEmpty) {
       card.addAll(topic.card_ids);
     }
@@ -266,7 +289,7 @@ class TopicServices {
     int? rate_of_appearance,
     Map? more,
     int? subject_id,
-    List<int>? card_ids,
+    List<Flashcard>? card_ids,
     // required int subject_id,
   }) async {
     Topic topic = Hive.box<Topic>('topics').values.toList()[id];

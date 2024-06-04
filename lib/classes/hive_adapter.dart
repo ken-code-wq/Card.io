@@ -55,6 +55,9 @@ class Flashcard {
   bool isImage;
 
   @HiveField(16)
+  bool isAI;
+
+  @HiveField(17)
   List? imageURLs;
 
   Flashcard({
@@ -75,13 +78,8 @@ class Flashcard {
     this.adjusted_difficulty,
     required this.isImage,
     this.imageURLs,
+    required this.isAI,
   });
-
-  // Flashcard({
-  //   required this.name,
-  //   required this.age,
-  //   required this.friends,
-  // });
 }
 
 @HiveType(typeId: 2)
@@ -143,7 +141,7 @@ class Topic {
   String name;
 
   @HiveField(2)
-  List<int> card_ids;
+  List<Flashcard> card_ids;
 
   @HiveField(3)
   int color;

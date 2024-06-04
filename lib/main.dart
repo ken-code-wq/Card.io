@@ -22,7 +22,7 @@ import 'gamification/vibration_tap.dart';
 
 // ...
 
-const String newPath = '/storage/emulated/0/Kylae';
+const String newPath = '/storage/emulated/0/Cards.io';
 void main() async {
   await Hive.initFlutter();
   await Firebase.initializeApp(
@@ -67,22 +67,10 @@ void main() async {
     await Hive.openBox<Deck>('decks', path: newPath);
     await Hive.openBox<Subject>('subjects', path: newPath);
     await Hive.openBox<Topic>('topics', path: newPath);
-    await Hive.openBox<Flashcard>('flashcards', path: newPath);
+    // await Hive.openBox<Flashcard>('flashcards', path: '/storage/emulated/0');
 
-    if (Hive.box<Topic>('topics').isEmpty && Hive.box<Flashcard>('flashcards').isEmpty) {
-      await Hive.box<Topic>('topics').add(
-        Topic(
-          id: 0,
-          name: "Introductory Topic",
-          card_ids: [0, 1, 2, 3],
-          difficulty: 0,
-          color: 4,
-          font: 0,
-          directions: {'again': [], 'hard': [], 'good': [], 'easy': []},
-        ),
-      );
-
-      await Hive.box<Flashcard>('flashcards').add(
+    if (Hive.box<Topic>('topics').isEmpty) {
+      List<Flashcard> cards = [
         Flashcard(
           id: 0,
           topic_id: 0,
@@ -97,9 +85,8 @@ void main() async {
           ratings: [0],
           fonts: [],
           isImage: false,
+          isAI: false,
         ),
-      );
-      await Hive.box<Flashcard>('flashcards').add(
         Flashcard(
           id: 1,
           topic_id: 0,
@@ -114,10 +101,8 @@ void main() async {
           ratings: [0],
           fonts: [],
           isImage: false,
+          isAI: false,
         ),
-      );
-
-      await Hive.box<Flashcard>('flashcards').add(
         Flashcard(
           id: 2,
           topic_id: 0,
@@ -132,10 +117,8 @@ void main() async {
           ratings: [0],
           fonts: [],
           isImage: false,
+          isAI: false,
         ),
-      );
-
-      await Hive.box<Flashcard>('flashcards').add(
         Flashcard(
           id: 3,
           topic_id: 0,
@@ -150,6 +133,19 @@ void main() async {
           ratings: [0],
           fonts: [],
           isImage: false,
+          isAI: false,
+        ),
+      ];
+
+      await Hive.box<Topic>('topics').add(
+        Topic(
+          id: 0,
+          name: "Introductory Topic",
+          card_ids: cards,
+          difficulty: 0,
+          color: 4,
+          font: 0,
+          directions: {'again': [], 'hard': [], 'good': [], 'easy': []},
         ),
       );
     }

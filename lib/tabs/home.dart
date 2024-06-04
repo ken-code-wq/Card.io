@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_const, empty_catches
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cards/classes/hive_adapter.dart';
 import 'package:cards/constants/constants.dart';
 import 'package:cards/services/services.dart';
@@ -424,6 +425,21 @@ Widget greeting(BuildContext context) {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // SizedBox(
+                //   height: 32,
+                //   child: DefaultTextStyle(
+                //     style: GoogleFonts.aBeeZee(fontSize: 24, fontWeight: FontWeight.w600, color: !MyTheme().isDark ? Colors.black : Colors.white),
+                //     child: AnimatedTextKit(
+                //       isRepeatingAnimation: false,
+                //       animatedTexts: [
+                //         RotateAnimatedText(greetings[dayTime], rotateOut: false, transitionHeight: 70, alignment: Alignment.bottomLeft),
+                //       ],
+                //       onTap: () {
+                //         print("Tap Event");
+                //       },
+                //     ),
+                //   ),
+                // ),
                 Text(
                   greetings[dayTime],
                   style: GoogleFonts.aBeeZee(fontSize: 24, fontWeight: FontWeight.w600),
@@ -731,7 +747,7 @@ Widget dueTopic(BuildContext context, Topic topic) {
           //     print(e);
           //   }
           // }
-          List<Flashcard> cardIns = List.generate(topic.card_ids.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topic.card_ids[index]]);
+          List<Flashcard> cardIns = topic.card_ids;
           // ignore: use_build_context_synchronously
           Navigator.push(
             context,

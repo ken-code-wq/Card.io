@@ -17,6 +17,7 @@ import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import '../classes/hive_adapter.dart';
 import '../constants/constants.dart';
 import '../custom/hero_dialog.dart';
+import '../main.dart';
 import '../services/services.dart';
 import 'revision_page.dart';
 
@@ -44,15 +45,28 @@ class _TopicPageState extends State<TopicPage> {
   final ValueNotifier<double> _valueNotifierG = ValueNotifier(0);
   final ValueNotifier<double> _valueNotifierE = ValueNotifier(0);
   final ValueNotifier<double> _valueNotifierNew = ValueNotifier(0);
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: Hive.box<Topic>('topics').listenable(),
         builder: (context, topicss, child) {
-          print(widget.index);
           List<Topic> topics = topicss.values.toList();
           Topic topic = topicss.values.toList()[widget.index];
-          List<Flashcard> cards = Hive.box<Flashcard>('flashcards').values.toList();
+          // List<Flashcard> cards = Hive.box<Flashcard>('flashcards').values.toList();
+          // try {
+          //   Hive.openBox<Flashcard>('${Hive.box<Topic>('topics').values.toList()[widget.index].name}-${widget.index}-1', path: newPath);
+          //   for (int i = 0; i < Hive.box<Topic>('topics').values.toList()[widget.index].card_ids.length; i++) {
+          //     Hive.box<Flashcard>('${Hive.box<Topic>('topics').values.toList()[widget.index].name}-${widget.index}-1').add(Hive.box<Flashcard>('flashcards').values.toList()[Hive.box<Topic>('topics').values.toList()[widget.index].card_ids[i]]);
+          //     print(Hive.box<Flashcard>('flashcards').values.toList()[Hive.box<Topic>('topics').values.toList()[widget.index].card_ids[i]].question);
+          //     print(Hive.box<Flashcard>('${Hive.box<Topic>('topics').values.toList()[widget.index].name}-${widget.index}-1').getAt(i)!.question);
+          //     print("Look");
+          //   }
+          // } catch (e) {
+          //   print("$e roor");
+          // }
+          List<Flashcard> newCards = Hive.box<Flashcard>('${topic.name}-${widget.index}').values.toList();
+          print("quest ${newCards[0].question}");
           List days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
           int again = 0;
           int hard = 0;
@@ -188,7 +202,7 @@ class _TopicPageState extends State<TopicPage> {
                                                       onTap: () async {
                                                         //TODO
                                                         if (again > 0) {
-                                                          List<Flashcard> cardIns = List.generate(again, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].directions!['again']![index]]);
+                                                          List<Flashcard> cardIns = List.generate(again, (index) => newCards[topics[widget.index].directions!['again']![index]]);
 
                                                           VxBottomSheet.bottomSheetView(context, child: bottomS('To study', cardIns, topics[widget.index].directions!['again']!, Colors.red, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
                                                         }
@@ -199,7 +213,7 @@ class _TopicPageState extends State<TopicPage> {
                                                       onTap: () async {
                                                         //TODO
                                                         if (hard > 0) {
-                                                          List<Flashcard> cardIns = List.generate(hard, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].directions!['hard']![index]]);
+                                                          List<Flashcard> cardIns = List.generate(hard, (index) => newCards[topics[widget.index].directions!['hard']![index]]);
 
                                                           VxBottomSheet.bottomSheetView(context, child: bottomS('Mediocre', cardIns, topics[widget.index].directions!['hard']!, Colors.orange, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
                                                         }
@@ -220,7 +234,7 @@ class _TopicPageState extends State<TopicPage> {
                                                       onTap: () async {
                                                         //TODO
                                                         if (easy > 0) {
-                                                          List<Flashcard> cardIns = List.generate(easy, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].directions!['easy']![index]]);
+                                                          List<Flashcard> cardIns = List.generate(easy, (index) => newCards[topics[widget.index].directions!['easy']![index]]);
 
                                                           VxBottomSheet.bottomSheetView(context, child: bottomS('Perfect', cardIns, topics[widget.index].directions!['easy']!, Colors.blue, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
                                                         }
@@ -231,7 +245,7 @@ class _TopicPageState extends State<TopicPage> {
                                                       onTap: () async {
                                                         //TODO
                                                         if (good > 0) {
-                                                          List<Flashcard> cardIns = List.generate(good, (index) => Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].directions!['good']![index]]);
+                                                          List<Flashcard> cardIns = List.generate(good, (index) => newCards[topics[widget.index].directions!['good']![index]]);
 
                                                           VxBottomSheet.bottomSheetView(context, child: bottomS('To revise', cardIns, topics[widget.index].directions!['good']!, Colors.green, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
                                                         }
@@ -256,7 +270,7 @@ class _TopicPageState extends State<TopicPage> {
                                                   //TODO
                                                   if (all.length > 0) {
                                                     try {
-                                                      List<Flashcard> cardIns = List.generate(all.length, (index) => Hive.box<Flashcard>('flashcards').values.toList()[all[index]]);
+                                                      List<Flashcard> cardIns = List.generate(all.length, (index) => newCards[all[index]]);
 
                                                       VxBottomSheet.bottomSheetView(context, child: bottomS('To study', cardIns, all, Colors.grey.shade700, topic), maxHeight: .8, minHeight: .8, roundedFromTop: true);
                                                     } catch (e) {
@@ -358,57 +372,15 @@ class _TopicPageState extends State<TopicPage> {
                                               children: [
                                                 DashedCircularProgressBar.aspectRatio(
                                                   aspectRatio: 1, // width ÷ height
-                                                  valueNotifier: _valueNotifier0,
-                                                  progress: (again + hard + good + easy) / topicLength * 100 * (topics[widget.index].card_ids.length / topicLength),
-                                                  maxProgress: 100,
-                                                  corners: StrokeCap.round,
-                                                  seekColor: Colors.transparent,
-                                                  seekSize: 20,
-                                                  foregroundColor: Colors.red,
-                                                  backgroundColor: Colors.transparent,
-                                                  foregroundStrokeWidth: 20,
-                                                  backgroundStrokeWidth: 20,
-                                                  animation: true,
-                                                ),
-                                                DashedCircularProgressBar.aspectRatio(
-                                                  aspectRatio: 1, // width ÷ height
-                                                  valueNotifier: _valueNotifier1,
-                                                  progress: (hard + good + easy) / topicLength * 100,
-                                                  maxProgress: 100,
-                                                  corners: StrokeCap.round,
-                                                  seekColor: Colors.transparent,
-                                                  seekSize: 20,
-                                                  foregroundColor: Colors.orange,
-                                                  backgroundColor: Colors.transparent,
-                                                  foregroundStrokeWidth: 20,
-                                                  backgroundStrokeWidth: 20,
-                                                  animation: true,
-                                                ),
-                                                DashedCircularProgressBar.aspectRatio(
-                                                  aspectRatio: 1, // width ÷ height
-                                                  valueNotifier: _valueNotifier2,
-                                                  progress: (good + easy) / topicLength * 100,
-                                                  maxProgress: 100,
-                                                  corners: StrokeCap.round,
-                                                  seekColor: Colors.transparent,
-                                                  seekSize: 20,
-                                                  foregroundColor: Colors.green,
-                                                  backgroundColor: Colors.transparent,
-                                                  foregroundStrokeWidth: 20,
-                                                  backgroundStrokeWidth: 20,
-                                                  animation: true,
-                                                ),
-                                                DashedCircularProgressBar.aspectRatio(
-                                                  aspectRatio: 1, // width ÷ height
                                                   valueNotifier: _valueNotifier,
-                                                  progress: (easy) / topicLength * 100,
-                                                  maxProgress: 100,
+                                                  progress: easy / topicLength * 360 - (15 * ((good + hard + again) == 0 ? 0 : 1)),
+                                                  maxProgress: 360,
                                                   corners: StrokeCap.round,
                                                   seekColor: Colors.transparent,
                                                   seekSize: 20,
-                                                  foregroundColor: Colors.blue,
+                                                  foregroundColor: easy != 0 ? Colors.blue : Colors.transparent,
                                                   backgroundColor: Colors.transparent,
-                                                  foregroundStrokeWidth: 20,
+                                                  foregroundStrokeWidth: 15,
                                                   backgroundStrokeWidth: 20,
                                                   animation: true,
                                                   child: Center(
@@ -419,18 +391,76 @@ class _TopicPageState extends State<TopicPage> {
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
                                                               Text(
-                                                                '${value.ceil().toInt()}%',
-                                                                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 30),
+                                                                // '${(easy / topicLength * 100).ceil().toInt()}%',
+                                                                '${((easy + good) / topicLength * 100).ceil().toInt()} %',
+                                                                style: GoogleFonts.aBeeZee(
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 25,
+                                                                  // color: !MyTheme().isDark ? Color(boxColor[topics.values.toList()[tE].color]) : Colors.white,
+                                                                ),
                                                               ),
-                                                              const Text(
+                                                              Text(
+                                                                // '${(easy / topicLength * 100).ceil().toInt()}%',
                                                                 'Learnt',
-                                                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                                                                style: GoogleFonts.aBeeZee(
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 20,
+                                                                  // color: !MyTheme().isDark ? Color(boxColor[topics.values.toList()[tE].color]) : Colors.white,
+                                                                ),
                                                               ),
                                                             ],
                                                           );
                                                         }),
                                                   ),
-                                                )
+                                                ),
+                                                if (good != 0)
+                                                  DashedCircularProgressBar.aspectRatio(
+                                                    aspectRatio: 1, // width ÷ height
+                                                    valueNotifier: _valueNotifier0,
+                                                    startAngle: (easy) / topicLength * 360,
+                                                    progress: good / topicLength * 360 - (15 * ((easy + hard + again) == 0 ? 0 : 1)),
+                                                    maxProgress: 360,
+                                                    corners: StrokeCap.round,
+                                                    seekColor: Colors.transparent,
+                                                    seekSize: 20,
+                                                    foregroundColor: Colors.green,
+                                                    backgroundColor: Colors.transparent,
+                                                    foregroundStrokeWidth: 15,
+                                                    backgroundStrokeWidth: 20,
+                                                    animation: true,
+                                                  ),
+                                                if (hard != 0)
+                                                  DashedCircularProgressBar.aspectRatio(
+                                                    aspectRatio: 1, // width ÷ height
+                                                    valueNotifier: _valueNotifier1,
+                                                    startAngle: (easy + good) / topicLength * 360,
+                                                    progress: hard / topicLength * 360 - (15 * ((good + easy + again) == 0 ? 0 : 1)),
+                                                    maxProgress: 360,
+                                                    corners: StrokeCap.round,
+                                                    seekColor: Colors.transparent,
+                                                    seekSize: 20,
+                                                    foregroundColor: Colors.orange,
+                                                    backgroundColor: Colors.transparent,
+                                                    foregroundStrokeWidth: 15,
+                                                    backgroundStrokeWidth: 20,
+                                                    animation: true,
+                                                  ),
+                                                if (again != 0)
+                                                  DashedCircularProgressBar.aspectRatio(
+                                                    aspectRatio: 1, // width ÷ height
+                                                    valueNotifier: _valueNotifier2,
+                                                    startAngle: (easy + good + hard) / topicLength * 360,
+                                                    progress: again / topicLength * 360 - (15 * ((good + hard + easy) == 0 ? 0 : 1)),
+                                                    maxProgress: 360,
+                                                    corners: StrokeCap.round,
+                                                    seekColor: Colors.transparent,
+                                                    seekSize: 20,
+                                                    foregroundColor: Colors.red,
+                                                    backgroundColor: Colors.transparent,
+                                                    foregroundStrokeWidth: 15,
+                                                    backgroundStrokeWidth: 20,
+                                                    animation: true,
+                                                  ),
                                               ],
                                             ),
                                           ),
@@ -441,100 +471,6 @@ class _TopicPageState extends State<TopicPage> {
                                       ).px12(),
                                     ),
                                   ),
-
-                                  //FlashCards
-                                  // SliverToBoxAdapter(
-                                  //   child: SizedBox(
-                                  //     height: context.screenHeight * 0.3 + 30,
-                                  //     width: context.screenWidth,
-                                  //     child: Column(
-                                  //       children: [
-                                  //         const SizedBox(height: 28),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //   children: [
-                                  //     Text(
-                                  //       "Flash cards",
-                                  //       style: rowStyle,
-                                  //     ),
-                                  //     Text(
-                                  //       "Take a quiz",
-                                  //       style: TextStyle(
-                                  //         fontWeight: FontWeight.w500,
-                                  //         color: Color(
-                                  //           boxColor[widget.color],
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ).px12(),
-                                  //         const SizedBox(height: 15),
-                                  //         SizedBox(
-                                  //             height: context.screenHeight * 0.21,
-                                  //             width: context.screenWidth,
-                                  //             child: MasonryGridView.builder(
-                                  //               gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                                  //                 crossAxisCount: 3,
-                                  //               ),
-                                  //               mainAxisSpacing: 4,
-                                  //               scrollDirection: Axis.horizontal,
-                                  //               itemCount: topics[widget.index].card_ids.length,
-                                  //               // itemCount: topics[widget.index].card_ids/,
-                                  //               crossAxisSpacing: 7,
-                                  //               itemBuilder: (context, index) {
-                                  //                 return Hero(
-                                  //                   tag: index,
-                                  //                   child: ZoomTapAnimation(
-                                  //                     onTap: () {
-                                  //                       Navigator.push(context, HeroDialogRoute(builder: (BuildContext context) {
-                                  //                         return Center(
-                                  //                           child: Hero(
-                                  //                             tag: index,
-                                  //                             child: Material(
-                                  //                                 color: Colors.transparent,
-                                  //                                 child: FlippingCard(
-                                  //                                   number: topics[widget.index].card_ids[index],
-                                  //                                   front: false,
-                                  //                                 )),
-                                  //                           ),
-                                  //                         );
-                                  //                       }));
-                                  //                     },
-                                  //                     child: Container(
-                                  //                       margin: const EdgeInsets.only(left: 7),
-                                  //                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                                  //                       height: context.screenHeight * 0.1,
-                                  //                       // width: context.screenWidth * 0.52,
-                                  //                       decoration: BoxDecoration(
-                                  //                         color: Color(
-                                  //                           boxColor[widget.color],
-                                  //                         ).withOpacity(.45),
-                                  //                         borderRadius: BorderRadius.circular((context.screenHeight * 0.1 - 4) / 4),
-                                  //                       ),
-                                  //                       child: Material(
-                                  //                         color: Colors.transparent,
-                                  //                         child: Center(
-                                  //                           child: Text(
-                                  //                             "${Hive.box<Flashcard>('flashcards').get(topics[widget.index].card_ids[index])?.question}",
-                                  //                             overflow: TextOverflow.ellipsis,
-                                  //                             textAlign: TextAlign.center,
-                                  //                             style: GoogleFonts.aBeeZee(
-                                  //                               fontSize: 25,
-                                  //                               fontWeight: FontWeight.bold,
-                                  //                             ),
-                                  //                             maxLines: 1,
-                                  //                           ).centered(),
-                                  //                         ),
-                                  //                       ),
-                                  //                     ),
-                                  //                   ),
-                                  //                 );
-                                  //               },
-                                  //             )),
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // ),
 
                                   //Space
                                   const SliverToBoxAdapter(
@@ -585,7 +521,7 @@ class _TopicPageState extends State<TopicPage> {
                                                   child: Material(
                                                       color: Colors.transparent,
                                                       child: FlippingCard(
-                                                        number: topics[widget.index].card_ids[index],
+                                                        number: topic.card_ids[index],
                                                         front: false,
                                                       )),
                                                 ),
@@ -611,7 +547,7 @@ class _TopicPageState extends State<TopicPage> {
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "${Hive.box<Flashcard>('flashcards').get(topics[widget.index].card_ids[index])?.question}",
+                                                    "${topic.card_ids[index]?.question}",
                                                     overflow: TextOverflow.ellipsis,
                                                     textAlign: TextAlign.center,
                                                     style: GoogleFonts.aBeeZee(
@@ -626,7 +562,7 @@ class _TopicPageState extends State<TopicPage> {
                                                       children: [
                                                         MarkdownBody(
                                                           fitContent: false,
-                                                          data: "${Hive.box<Flashcard>('flashcards').get(topics[widget.index].card_ids[index])?.answer}",
+                                                          data: "${topic.card_ids[index]?.answer}",
                                                           selectable: false,
                                                         ),
                                                       ],
@@ -677,7 +613,7 @@ class _TopicPageState extends State<TopicPage> {
                     IconButton.outlined(
                       icon: const Icon(Icons.add),
                       onPressed: () async {
-                        await addCards(cards, topic.card_ids, topics, topic, context, widget.index);
+                        // await addCards(newCards, topic.card_ids, topics, topic, context, widget.index);
                         // topics[widget.index].card_ids = topics[widget.index].card_ids;
                       },
                     ),
@@ -685,21 +621,7 @@ class _TopicPageState extends State<TopicPage> {
                     FloatingActionButton.extended(
                       backgroundColor: Color(boxColor[widget.color]).withOpacity(.5),
                       onPressed: () async {
-                        for (int i = 0; i < topic.card_ids.length; i++) {
-                          // print(cards[topics[widget.index].card_ids[i]].topic_id);
-                          try {
-                            await CardServices().editCard(id: topics[widget.index].card_ids[i], topic_id: widget.index);
-                          } catch (e) {
-                            print(e);
-                          }
-                        }
-                        List<Flashcard> cardIns = List.generate(topics[widget.index].card_ids.length - 1, (index) {
-                          try {
-                            return Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].card_ids[index]];
-                          } catch (e) {
-                            return Hive.box<Flashcard>('flashcards').values.toList()[topics[widget.index].card_ids[index - 1]];
-                          }
-                        });
+                        List<Flashcard> cardIns = newCards;
                         // ignore: use_build_context_synchronously
                         Navigator.push(
                           context,
@@ -776,7 +698,7 @@ class _TopicPageState extends State<TopicPage> {
                               child: Material(
                                 color: Colors.transparent,
                                 child: FlippingCard(
-                                  number: topic.card_ids[ids[index]],
+                                  number: topic.card_ids[index],
                                   front: false,
                                 ),
                               ),
@@ -799,7 +721,7 @@ class _TopicPageState extends State<TopicPage> {
                           color: Colors.transparent,
                           child: Center(
                             child: Text(
-                              "${Hive.box<Flashcard>('flashcards').get(topic.card_ids[ids[index]])?.question}",
+                              "${topic.card_ids[index]?.question}",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.aBeeZee(
@@ -974,114 +896,4 @@ class _TopicPageState extends State<TopicPage> {
       ),
     );
   }
-}
-
-Future addCards(List<Flashcard> cards, List<int> topic_cards, List<Topic> topics, Topic deck, BuildContext context, int id) {
-  return VxBottomSheet.bottomSheetView(
-    context,
-    // backgroundColor: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
-    child: StatefulBuilder(builder: (context, setCState) {
-      return Container(
-        height: context.screenHeight * 0.8,
-        width: context.screenWidth,
-        padding: const EdgeInsets.only(top: 10),
-        decoration: BoxDecoration(color: !MyTheme().isDark ? Colors.white : Colors.grey.shade900, borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Container(
-                width: context.screenWidth * 0.9,
-                height: 90,
-                color: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
-                alignment: Alignment.centerLeft,
-                child: "Add cards".text.semiBold.scale(2.5).make().px12(),
-              ).centered(),
-            ),
-            Expanded(
-              flex: 5,
-              child: ListView.builder(
-                  itemCount: cards.length - topic_cards.length,
-                  itemBuilder: (context, index) {
-                    List<Flashcard> filt = [];
-                    filt.addAll(cards);
-                    filt.removeWhere((element) => topic_cards.contains(element.id));
-                    return ZoomTapAnimation(
-                      onTap: () {
-                        vibrate(amplitude: 20, duration: 30);
-                        setCState(() {
-                          topic_cards.contains(index + 1) ? topic_cards.remove(index + 1) : topic_cards.add(index + 1);
-                        });
-                      },
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        title: Text(
-                          filt[index].question,
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: GoogleFonts.aBeeZee(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        selected: true,
-                        subtitle: Text(
-                          'Topic: ${topics[filt[index].topic_id].name}',
-                          maxLines: 2,
-                          overflow: TextOverflow.fade,
-                        ),
-                        trailing: topic_cards.contains(filt[index].id) ? const Icon(Icons.check) : const Column(),
-                        selectedTileColor: !MyTheme().isDark ? Color(boxLightColor[topics[filt[index].topic_id].color]) : Color(boxColor[topics[filt[index].topic_id].color]).withOpacity(.4),
-                        leading: Padding(
-                          padding: const EdgeInsets.only(left: .0, top: 4, bottom: 4),
-                          child: CircleAvatar(
-                            radius: 15,
-                            backgroundColor: Color(boxColor[topics[filt[index].topic_id].color]),
-                          ),
-                        ),
-                      ).px8().py8(),
-                    );
-                  }),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                color: !MyTheme().isDark ? Colors.white : Colors.grey.shade900,
-                width: context.screenWidth,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: FloatingActionButton.extended(
-                        onPressed: () async {
-                          if (topic_cards.isNotEmpty) {
-                            for (int i = 0; i < topic_cards.length; i++) {
-                              await TopicServices().addCard(
-                                id: id,
-                                card_id: topic_cards[i] - 1,
-                              );
-                              await CardServices().editCard(id: topic_cards[i] - 1, topic_id: id);
-                            }
-                          }
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
-                        },
-                        label: const Text("Add"),
-                        elevation: .0,
-                        shape: const StadiumBorder(),
-                        backgroundColor: Color(boxColor[deck.color]).withOpacity(.4),
-                      ).px20(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }),
-    maxHeight: 1,
-    minHeight: .8,
-  );
 }

@@ -173,21 +173,21 @@ class _DeckPageState extends State<DeckPage> with SingleTickerProviderStateMixin
                                   return Hero(
                                     tag: index,
                                     child: ZoomTapAnimation(
-                                      onTap: () {
-                                        Navigator.push(context, HeroDialogRoute(builder: (BuildContext context) {
-                                          return Center(
-                                            child: Hero(
-                                              tag: index,
-                                              child: Material(
-                                                  color: Colors.transparent,
-                                                  child: FlippingCard(
-                                                    number: deck.card_ids![index],
-                                                    front: false,
-                                                  )),
-                                            ),
-                                          );
-                                        }));
-                                      },
+                                      // onTap: () {
+                                      //   Navigator.push(context, HeroDialogRoute(builder: (BuildContext context) {
+                                      //     return Center(
+                                      //       child: Hero(
+                                      //         tag: index,
+                                      //         child: Material(
+                                      //             color: Colors.transparent,
+                                      //             child: FlippingCard(
+                                      //               number: deck.card_ids![index],
+                                      //               front: false,
+                                      //             )),
+                                      //       ),
+                                      //     );
+                                      //   }));
+                                      // },
                                       child: Container(
                                         margin: const EdgeInsets.only(left: 7),
                                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -203,7 +203,8 @@ class _DeckPageState extends State<DeckPage> with SingleTickerProviderStateMixin
                                           color: Colors.transparent,
                                           child: Center(
                                             child: Text(
-                                              "${Hive.box<Flashcard>('flashcards').get(deck.card_ids![index])?.question}",
+                                              // "${Hive.box<Flashcard>('flashcards').get(deck.card_ids![index])?.question}",
+                                              "nkd",
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.center,
                                               style: GoogleFonts.aBeeZee(
